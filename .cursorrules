@@ -1,0 +1,11 @@
+Unreal Engine C++ Development Rules
+
+- Use modern Unreal C++ standards with explicit `UPROPERTY`, `UFUNCTION`, and `USTRUCT` metadata.
+- Keep authoritative game logic in C++ and expose only the required controls and events to Blueprints.
+- Do not modify `.uasset` or `.umap` files directly.
+- Prefer event-driven updates and delegates over `Tick` polling.
+- Use explicit includes instead of broad project umbrella headers.
+- Keep comments in English only.
+- Favor strongly typed enums, structs, and return values.
+- Make minimal, focused changes that preserve the current architecture.
+- Treat `1 gameplay block = 1 ten-foot cube = 300 Unreal units` unless a file explicitly states otherwise.
