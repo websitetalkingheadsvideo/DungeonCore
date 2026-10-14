@@ -21,19 +21,14 @@ public:
 
     void AdjustZoom(const float ZoomDelta);
 
+    void AddPanFromScreenDelta(const float ScreenDeltaX, const float ScreenDeltaY);
+
+    void AddOrbitFromScreenDelta(const float ScreenDeltaX, const float ScreenDeltaY);
+
     UFUNCTION(BlueprintCallable, Category = "Dungeon")
     void RecenterOnDungeonCore();
 
-protected:
-    virtual void Tick(float DeltaSeconds) override;
-
 private:
-    void ApplyKeyboardPan(const float DeltaSeconds);
-
-    void ApplyEdgePan(const float DeltaSeconds);
-
-    void ApplyScrollZoom();
-
     FVector GetCameraPlanarForward() const;
 
     FVector GetCameraPlanarRight() const;

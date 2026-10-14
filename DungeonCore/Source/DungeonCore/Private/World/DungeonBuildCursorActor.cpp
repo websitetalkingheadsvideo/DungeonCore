@@ -2,6 +2,7 @@
 
 #include "Components/SceneComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Sim/DungeonTypes.h"
 #include "UObject/ConstructorHelpers.h"
 
 ADungeonBuildCursorActor::ADungeonBuildCursorActor()
@@ -14,6 +15,7 @@ ADungeonBuildCursorActor::ADungeonBuildCursorActor()
     PreviewMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PreviewMesh"));
     PreviewMeshComponent->SetupAttachment(SceneRoot);
     PreviewMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    PreviewMeshComponent->SetMobility(EComponentMobility::Movable);
 
     static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeMesh(TEXT("/Engine/BasicShapes/Cube.Cube"));
     if (CubeMesh.Succeeded())
@@ -38,6 +40,12 @@ void ADungeonBuildCursorActor::SetPreviewOriginBlock(const FBlockCoord& InOrigin
     SetActorLocation(GetPreviewWorldLocation(OriginBlock));
 }
 
+void ADungeonBuildCursorActor::SetHoveredTileState(const ETileState InTileState)
+{
+    HoveredTileState = InTileState;
+    SetPreviewOriginBlock(OriginBlock);
+}
+
 void ADungeonBuildCursorActor::SetPreviewValidity(const bool bIsValid)
 {
     bPreviewValid = bIsValid;
@@ -48,23 +56,37 @@ void ADungeonBuildCursorActor::SetPreviewValidity(const bool bIsValid)
 FVector ADungeonBuildCursorActor::GetPreviewWorldLocation(const FBlockCoord& InOriginBlock) const
 {
     const FRoomFootprint Footprint = GetFootprintForMode(BuildMode);
-    const FVector BaseLocation = DungeonCore::BlockToWorld(InOriginBlock);
+    const double FloorScaleZ = DungeonCore::CarvedFloorThicknessUnits / DungeonCore::DefaultEngineCubeSizeUnits;
+    const double RockScaleZ = static_cast<double>(DungeonCore::BlockSizeUnits) / DungeonCore::DefaultEngineCubeSizeUnits;
 
-    return BaseLocation + FVector(
-        static_cast<double>((Footprint.Width - 1) * DungeonCore::HalfBlockSizeUnits),
-        static_cast<double>((Footprint.Height - 1) * DungeonCore::HalfBlockSizeUnits),
-        BuildMode == EDungeonBuildMode::Dig
-            ? static_cast<double>(DungeonCore::HalfBlockSizeUnits - (bPreviewValid ? 0 : 30))
-            : (bPreviewValid ? 10.0 : -10.0)
+    if (BuildMode == EDungeonBuildMode::Dig)
+    {
+        if (HoveredTileState == ETileState::SolidRock || HoveredTileState == ETileState::Wall)
+        {
+            return DungeonCore::GetRockVisualWorldCenter(InOriginBlock, RockScaleZ);
+        }
+
+        return DungeonCore::GetCarvedFloorVisualWorldCenter(InOriginBlock, FloorScaleZ);
+    }
+
+    return DungeonCore::GetCarvedFloorVisualWorldCenterForFootprint(
+        InOriginBlock,
+        Footprint.Width,
+        Footprint.Height,
+        FloorScaleZ
     );
 }
 
 FVector ADungeonBuildCursorActor::GetPreviewScaleForMode(const EDungeonBuildMode InBuildMode) const
 {
     const FRoomFootprint Footprint = GetFootprintForMode(InBuildMode);
-    const double XScale = static_cast<double>(Footprint.Width * DungeonCore::BlockSizeUnits) / 100.0;
-    const double YScale = static_cast<double>(Footprint.Height * DungeonCore::BlockSizeUnits) / 100.0;
-    const double ZScale = InBuildMode == EDungeonBuildMode::Dig ? 3.0 : 0.2;
+    const double XScale = static_cast<double>(Footprint.Width * DungeonCore::BlockSizeUnits) / DungeonCore::DefaultEngineCubeSizeUnits;
+    const double YScale = static_cast<double>(Footprint.Height * DungeonCore::BlockSizeUnits) / DungeonCore::DefaultEngineCubeSizeUnits;
+    const bool bDigSolidRock = InBuildMode == EDungeonBuildMode::Dig
+        && (HoveredTileState == ETileState::SolidRock || HoveredTileState == ETileState::Wall);
+    const double ZScale = bDigSolidRock
+        ? (static_cast<double>(DungeonCore::BlockSizeUnits) / DungeonCore::DefaultEngineCubeSizeUnits)
+        : (DungeonCore::CarvedFloorThicknessUnits / DungeonCore::DefaultEngineCubeSizeUnits);
 
     return FVector(XScale, YScale, ZScale);
 }

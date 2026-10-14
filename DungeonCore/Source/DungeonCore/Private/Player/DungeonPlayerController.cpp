@@ -75,7 +75,7 @@ void ADungeonPlayerController::BeginPlay()
             15.0f,
             FColor::Green,
             FString::Printf(
-                TEXT("Dungeon Core | %s | click THIS game view first. WASD pan, F = center chamber (Play only, not editor F)"),
+                TEXT("Dungeon Core | %s | LMB drag = pan map, RMB drag = rotate camera, short LMB click = build/dig, F = recenter"),
                 *PawnName
             )
         );
@@ -94,6 +94,7 @@ void ADungeonPlayerController::BeginPlay()
 void ADungeonPlayerController::PlayerTick(const float DeltaSeconds)
 {
     Super::PlayerTick(DeltaSeconds);
+    ApplyClickDragCameraInput();
     UpdateCursorFromMouse();
 }
 
@@ -103,7 +104,8 @@ void ADungeonPlayerController::SetupInputComponent()
 
     check(InputComponent != nullptr);
 
-    InputComponent->BindKey(EKeys::LeftMouseButton, IE_Pressed, this, &ADungeonPlayerController::HandlePrimaryAction);
+    InputComponent->BindKey(EKeys::LeftMouseButton, IE_Pressed, this, &ADungeonPlayerController::HandleLeftMousePressed);
+    InputComponent->BindKey(EKeys::LeftMouseButton, IE_Released, this, &ADungeonPlayerController::HandleLeftMouseReleased);
     InputComponent->BindKey(EKeys::One, IE_Pressed, this, &ADungeonPlayerController::SetDigMode);
     InputComponent->BindKey(EKeys::Two, IE_Pressed, this, &ADungeonPlayerController::SetManaWellMode);
     InputComponent->BindKey(EKeys::Three, IE_Pressed, this, &ADungeonPlayerController::SetStarterSpawnerMode);
@@ -192,6 +194,63 @@ void ADungeonPlayerController::HandleBreachStateChanged(const EBreachState Breac
 void ADungeonPlayerController::HandleAdventurersChanged()
 {
     RefreshChunkVisuals();
+}
+
+void ADungeonPlayerController::HandleLeftMousePressed()
+{
+    LeftMouseDragDistancePixels = 0.0f;
+}
+
+void ADungeonPlayerController::HandleLeftMouseReleased()
+{
+    if (LeftMouseDragDistancePixels <= ClickDragThresholdPixels)
+    {
+        HandlePrimaryAction();
+    }
+}
+
+void ADungeonPlayerController::ApplyClickDragCameraInput()
+{
+    ADungeonCameraPawn* CameraPawn = GetDungeonCameraPawn();
+    if (CameraPawn == nullptr)
+    {
+        bHasPreviousMousePosition = false;
+        return;
+    }
+
+    float MouseX = 0.0f;
+    float MouseY = 0.0f;
+    if (!GetMousePosition(MouseX, MouseY))
+    {
+        bHasPreviousMousePosition = false;
+        return;
+    }
+
+    if (!bHasPreviousMousePosition)
+    {
+        PreviousMouseX = MouseX;
+        PreviousMouseY = MouseY;
+        bHasPreviousMousePosition = true;
+        return;
+    }
+
+    const float DeltaX = MouseX - PreviousMouseX;
+    const float DeltaY = MouseY - PreviousMouseY;
+    PreviousMouseX = MouseX;
+    PreviousMouseY = MouseY;
+
+    const bool bRightMouseDown = IsInputKeyDown(EKeys::RightMouseButton);
+    const bool bLeftMouseDown = IsInputKeyDown(EKeys::LeftMouseButton);
+
+    if (bRightMouseDown && (!FMath::IsNearlyZero(DeltaX) || !FMath::IsNearlyZero(DeltaY)))
+    {
+        CameraPawn->AddOrbitFromScreenDelta(DeltaX, DeltaY);
+    }
+    else if (bLeftMouseDown && (!FMath::IsNearlyZero(DeltaX) || !FMath::IsNearlyZero(DeltaY)))
+    {
+        CameraPawn->AddPanFromScreenDelta(DeltaX, DeltaY);
+        LeftMouseDragDistancePixels += FVector2D(DeltaX, DeltaY).Size();
+    }
 }
 
 void ADungeonPlayerController::HandlePrimaryAction()
@@ -286,6 +345,31 @@ void ADungeonPlayerController::SetBuildMode(const EDungeonBuildMode InBuildMode)
     UpdatePlacementPreview();
 }
 
+bool ADungeonPlayerController::ProjectMouseToDungeonSurface(FVector& OutWorldPoint) const
+{
+    FVector WorldOrigin = FVector::ZeroVector;
+    FVector WorldDirection = FVector::ZeroVector;
+    if (!DeprojectMousePositionToWorld(WorldOrigin, WorldDirection))
+    {
+        return false;
+    }
+
+    if (FMath::IsNearlyZero(WorldDirection.Z))
+    {
+        return false;
+    }
+
+    const double SurfaceZ = DungeonCore::GetBlockTopWorldZ(FBlockCoord(0, 0, 0));
+    const double TraceDistance = (SurfaceZ - WorldOrigin.Z) / WorldDirection.Z;
+    if (TraceDistance < 0.0)
+    {
+        return false;
+    }
+
+    OutWorldPoint = WorldOrigin + (WorldDirection * TraceDistance);
+    return true;
+}
+
 void ADungeonPlayerController::UpdateCursorFromMouse()
 {
     if (BuildCursorActor == nullptr || !bRunActive)
@@ -297,9 +381,8 @@ void ADungeonPlayerController::UpdateCursorFromMouse()
         return;
     }
 
-    FHitResult HitResult;
-    const bool bHit = GetHitResultUnderCursor(ECC_Visibility, false, HitResult);
-    if (!bHit)
+    FVector SurfacePoint = FVector::ZeroVector;
+    if (!ProjectMouseToDungeonSurface(SurfacePoint))
     {
         bHasHoveredBlock = false;
         BuildCursorActor->SetActorHiddenInGame(true);
@@ -307,11 +390,24 @@ void ADungeonPlayerController::UpdateCursorFromMouse()
         return;
     }
 
-    HoveredBlockCoord = DungeonCore::WorldToBlock(HitResult.ImpactPoint);
+    HoveredBlockCoord = DungeonCore::WorldToBlock(SurfacePoint);
     HoveredBlockCoord.Z = 0;
     bHasHoveredBlock = true;
 
+    ETileState HoveredTileState = ETileState::SolidRock;
+    if (UDungeonSimSubsystem* DungeonSimSubsystem = GetDungeonSimSubsystem())
+    {
+        if (UDungeonGridState* GridState = DungeonSimSubsystem->GetGridState())
+        {
+            if (const FTileData* TileData = GridState->FindTileData(HoveredBlockCoord))
+            {
+                HoveredTileState = TileData->TileState;
+            }
+        }
+    }
+
     BuildCursorActor->SetActorHiddenInGame(false);
+    BuildCursorActor->SetHoveredTileState(HoveredTileState);
     BuildCursorActor->SetPreviewOriginBlock(HoveredBlockCoord);
     UpdatePlacementPreview();
 }
@@ -378,7 +474,7 @@ void ADungeonPlayerController::ZoomIn()
 {
     if (ADungeonCameraPawn* CameraPawn = GetDungeonCameraPawn())
     {
-        CameraPawn->AdjustZoom(-150.0f);
+        CameraPawn->AdjustZoom(-350.0f);
     }
 }
 
@@ -386,7 +482,7 @@ void ADungeonPlayerController::ZoomOut()
 {
     if (ADungeonCameraPawn* CameraPawn = GetDungeonCameraPawn())
     {
-        CameraPawn->AdjustZoom(150.0f);
+        CameraPawn->AdjustZoom(350.0f);
     }
 }
 

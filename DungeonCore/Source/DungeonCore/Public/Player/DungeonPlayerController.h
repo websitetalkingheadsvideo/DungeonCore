@@ -62,6 +62,12 @@ private:
 
     void HandlePrimaryAction();
 
+    void HandleLeftMousePressed();
+
+    void HandleLeftMouseReleased();
+
+    void ApplyClickDragCameraInput();
+
     void SetDigMode();
 
     void SetManaWellMode();
@@ -73,6 +79,8 @@ private:
     void SetBuildMode(const EDungeonBuildMode InBuildMode);
 
     void UpdateCursorFromMouse();
+
+    bool ProjectMouseToDungeonSurface(FVector& OutWorldPoint) const;
 
     void UpdatePlacementPreview();
 
@@ -120,4 +128,14 @@ private:
     bool bHasHoveredBlock = false;
 
     bool bRunActive = false;
+
+    bool bHasPreviousMousePosition = false;
+
+    float PreviousMouseX = 0.0f;
+
+    float PreviousMouseY = 0.0f;
+
+    float LeftMouseDragDistancePixels = 0.0f;
+
+    static constexpr float ClickDragThresholdPixels = 8.0f;
 };

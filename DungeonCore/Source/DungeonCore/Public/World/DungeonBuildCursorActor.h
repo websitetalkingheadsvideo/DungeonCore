@@ -21,6 +21,8 @@ public:
 
     void SetPreviewOriginBlock(const FBlockCoord& InOriginBlock);
 
+    void SetHoveredTileState(const ETileState InTileState);
+
     void SetPreviewValidity(const bool bIsValid);
 
 private:
@@ -41,6 +43,9 @@ private:
 
     UPROPERTY()
     FBlockCoord OriginBlock;
+
+    UPROPERTY()
+    ETileState HoveredTileState = ETileState::SolidRock;
 
     bool bPreviewValid = false;
 };

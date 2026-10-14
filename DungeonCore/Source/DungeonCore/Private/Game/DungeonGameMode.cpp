@@ -89,12 +89,33 @@ namespace DungeonCoreWorld
         return ActorsToDestroy.Num();
     }
 
+    void HideEditorHelperActors(UWorld* World)
+    {
+        if (World == nullptr)
+        {
+            return;
+        }
+
+        for (TActorIterator<AActor> ActorIt(World); ActorIt; ++ActorIt)
+        {
+            const FString ActorLabel = ActorIt->GetActorLabel();
+            if (ActorLabel.Contains(TEXT("CameraPlane"), ESearchCase::IgnoreCase)
+                || ActorLabel.Contains(TEXT("BuildCamera"), ESearchCase::IgnoreCase))
+            {
+                ActorIt->SetActorHiddenInGame(true);
+                ActorIt->SetActorEnableCollision(false);
+            }
+        }
+    }
+
     void HideTemplateWorldActors(UWorld* World)
     {
         if (World == nullptr)
         {
             return;
         }
+
+        HideEditorHelperActors(World);
 
         for (TActorIterator<ALandscape> LandscapeIt(World); LandscapeIt; ++LandscapeIt)
         {
@@ -223,7 +244,7 @@ namespace DungeonCoreWorld
         UE_LOG(
             LogDungeonCore,
             Log,
-            TEXT("Dungeon grid built: %d tiles, 20x20 core chamber, 300uu blocks (flush instanced meshes)."),
+            TEXT("Dungeon grid built: %d tiles, 20x20 CoreChamber room, core block at center, 300uu blocks."),
             TileCount
         );
 
@@ -234,7 +255,7 @@ namespace DungeonCoreWorld
                 12.0f,
                 FColor::Cyan,
                 FString::Printf(
-                    TEXT("Dungeon grid: %d tiles | 20x20 chamber | purple core + rock shell (one ChunkActor, not scattered cubes)."),
+                    TEXT("Dungeon grid: %d tiles | 20x20 purple CoreChamber + rock shell | tall core block at center."),
                     TileCount
                 )
             );

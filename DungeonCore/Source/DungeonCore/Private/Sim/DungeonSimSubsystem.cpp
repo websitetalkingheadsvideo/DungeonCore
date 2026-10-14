@@ -45,10 +45,10 @@ void UDungeonSimSubsystem::StartNewRun(const FRunSetup& InRunSetup)
     FloorState.FloorIndex = RunSetup.StartingFloorIndex;
     FloorState.OutsideEdgeDirection = EDungeonEdgeDirection::East;
     FloorState.BreachState = EBreachState::Sealed;
-    FloorState.CoreBlock = FBlockCoord(0, 0, 0);
+    FloorState.CoreBlock = DungeonCore::GetStartingCoreBlockCoord();
     FloorState.SurfaceEntryBlock = FBlockCoord(
         DungeonCore::StartingCoreChamberWidthBlocks - 1,
-        DungeonCore::StartingCoreChamberHeightBlocks / 2,
+        FloorState.CoreBlock.Y,
         0
     );
 
@@ -518,7 +518,7 @@ void UDungeonSimSubsystem::SeedFirstFloor()
     const int32 ChamberWidth = DungeonCore::StartingCoreChamberWidthBlocks;
     const int32 ChamberHeight = DungeonCore::StartingCoreChamberHeightBlocks;
     const int32 ZLevel = 0;
-    const int32 RockMargin = 4;
+    const int32 RockMargin = DungeonCore::StartingRockMarginBlocks;
     const int32 MinX = -RockMargin;
     const int32 MaxX = ChamberWidth + RockMargin - 1;
     const int32 MinY = -RockMargin;
@@ -532,21 +532,21 @@ void UDungeonSimSubsystem::SeedFirstFloor()
         }
     }
 
-    FRoomFootprint CoreFootprint;
-    CoreFootprint.Width = ChamberWidth;
-    CoreFootprint.Height = ChamberHeight;
-    CoreFootprint.Depth = 1;
-    const TArray<FBlockCoord> CoreBlocks = GridState->GetBlocksForFootprint(FloorState.CoreBlock, CoreFootprint);
-    for (const FBlockCoord& BlockCoord : CoreBlocks)
-    {
-        GridState->SetTileData(MakeTileData(BlockCoord, ETileState::Cleared, true, false));
-    }
+    FRoomFootprint CoreChamberFootprint;
+    CoreChamberFootprint.Width = ChamberWidth;
+    CoreChamberFootprint.Height = ChamberHeight;
+    CoreChamberFootprint.Depth = 1;
+    const FBlockCoord CoreChamberOrigin(0, 0, ZLevel);
+    const TArray<FBlockCoord> CoreChamberBlocks = GridState->GetBlocksForFootprint(
+        CoreChamberOrigin,
+        CoreChamberFootprint
+    );
 
     FRoomInstanceData CoreRoom;
     CoreRoom.RoomInstanceId = FGuid::NewGuid();
     CoreRoom.RoomTypeId = ERoomTypeId::CoreChamber;
-    CoreRoom.OriginBlock = FloorState.CoreBlock;
-    CoreRoom.Footprint = CoreFootprint;
+    CoreRoom.OriginBlock = CoreChamberOrigin;
+    CoreRoom.Footprint = CoreChamberFootprint;
     CoreRoom.OwningFamily = RunSetup.CreatureFamilyId;
     CoreRoom.HitPoints = 500;
 
@@ -558,7 +558,15 @@ void UDungeonSimSubsystem::SeedFirstFloor()
 
     RoomInstances.Add(CoreRoom.RoomInstanceId, CoreRoom);
 
-    for (const FBlockCoord& BlockCoord : CoreBlocks)
+    if (FTileData* SurfaceEntryTile = GridState->FindMutableTileData(FloorState.SurfaceEntryBlock))
+    {
+        SurfaceEntryTile->TileState = ETileState::SurfaceEntry;
+        SurfaceEntryTile->TrapTypeId = ETrapTypeId::None;
+        SurfaceEntryTile->bWalkable = true;
+        SurfaceEntryTile->bDiggable = false;
+    }
+
+    for (const FBlockCoord& BlockCoord : CoreChamberBlocks)
     {
         BroadcastTileAt(BlockCoord);
     }

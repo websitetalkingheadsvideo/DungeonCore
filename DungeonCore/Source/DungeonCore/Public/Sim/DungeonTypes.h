@@ -416,8 +416,29 @@ namespace DungeonCore
     inline constexpr int32 BlockSizeUnits = 300;
     inline constexpr int32 HalfBlockSizeUnits = BlockSizeUnits / 2;
     inline constexpr int32 DefaultChunkSizeInBlocks = 32;
+    /** Sealed starting core chamber (CoreChamber room); gameplay core block is at the center tile. */
     inline constexpr int32 StartingCoreChamberWidthBlocks = 20;
     inline constexpr int32 StartingCoreChamberHeightBlocks = 20;
+    inline constexpr int32 StartingRockMarginBlocks = 4;
+    inline constexpr double GridLineThicknessUnits = 8.0;
+    inline constexpr double GridLineHeightUnits = 12.0;
+    inline constexpr double GridSurfaceOffsetUnits = 3.0;
+
+    /** Drafting / architect blue for surface grid lines (visible on the light build pad). */
+    inline FLinearColor GetGridLineColor()
+    {
+        return FLinearColor(0.0f, 0.20f, 0.45f, 1.0f);
+    }
+    inline constexpr double CoreChamberFloorThicknessUnits = 80.0;
+    inline constexpr double CoreChamberWallThicknessUnits = 35.0;
+
+    inline void GetStartingBuildAreaBlockBounds(int32& OutMinX, int32& OutMaxX, int32& OutMinY, int32& OutMaxY)
+    {
+        OutMinX = -StartingRockMarginBlocks;
+        OutMaxX = StartingCoreChamberWidthBlocks + StartingRockMarginBlocks - 1;
+        OutMinY = -StartingRockMarginBlocks;
+        OutMaxY = StartingCoreChamberHeightBlocks + StartingRockMarginBlocks - 1;
+    }
     inline constexpr int32 StartingMana = 120;
     inline constexpr int32 DigManaCost = 10;
     inline constexpr int32 ManaWellCost = 30;
@@ -443,6 +464,131 @@ namespace DungeonCore
             );
     }
 
+    inline constexpr double CarvedFloorThicknessUnits = 40.0;
+    inline constexpr double CarvedChamberDepthUnits = 255.0;
+    inline constexpr double DefaultEngineCubeSizeUnits = 100.0;
+
+    /** Mountain surface for this block column (floor 1 lives at world Z=0, deeper Z blocks go down). */
+    inline double GetBlockTopWorldZ(const FBlockCoord& BlockCoord)
+    {
+        return -static_cast<double>(BlockCoord.Z) * static_cast<double>(BlockSizeUnits);
+    }
+
+    inline double GetBlockBottomWorldZ(const FBlockCoord& BlockCoord)
+    {
+        return GetBlockTopWorldZ(BlockCoord) - static_cast<double>(BlockSizeUnits);
+    }
+
+    inline FVector GetFootprintWorldCenter(
+        const FBlockCoord& OriginBlock,
+        const int32 WidthBlocks,
+        const int32 HeightBlocks
+    )
+    {
+        const FVector OriginCorner = BlockToWorld(OriginBlock);
+        return FVector(
+            OriginCorner.X + (static_cast<double>(WidthBlocks) * static_cast<double>(BlockSizeUnits) * 0.5),
+            OriginCorner.Y + (static_cast<double>(HeightBlocks) * static_cast<double>(BlockSizeUnits) * 0.5),
+            0.0
+        );
+    }
+
+    inline double MeshHalfHeightFromInstanceScaleZ(const double InstanceScaleZ)
+    {
+        return (DefaultEngineCubeSizeUnits * InstanceScaleZ) * 0.5;
+    }
+
+    inline FVector GetBlockColumnWorldXY(const FBlockCoord& BlockCoord)
+    {
+        const FVector BlockCorner = BlockToWorld(BlockCoord);
+        return FVector(
+            BlockCorner.X + static_cast<double>(HalfBlockSizeUnits),
+            BlockCorner.Y + static_cast<double>(HalfBlockSizeUnits),
+            0.0
+        );
+    }
+
+    /** Solid rock column: top face flush with the block surface (nothing sticks above ground). */
+    inline FVector GetRockVisualWorldCenter(const FBlockCoord& BlockCoord, const double InstanceScaleZ)
+    {
+        const FVector ColumnXY = GetBlockColumnWorldXY(BlockCoord);
+        const double SurfaceZ = GetBlockTopWorldZ(BlockCoord);
+        const double HalfHeight = MeshHalfHeightFromInstanceScaleZ(InstanceScaleZ);
+        return FVector(ColumnXY.X, ColumnXY.Y, SurfaceZ - HalfHeight);
+    }
+
+    inline double GetCarvedFloorTopWorldZ(const FBlockCoord& BlockCoord)
+    {
+        const double SurfaceZ = GetBlockTopWorldZ(BlockCoord);
+        const double BottomZ = GetBlockBottomWorldZ(BlockCoord);
+        const double DeepestFloorTop = BottomZ + CarvedFloorThicknessUnits;
+        const double TargetFloorTop = SurfaceZ - CarvedChamberDepthUnits;
+        return FMath::Max(DeepestFloorTop, TargetFloorTop);
+    }
+
+    /** Carved room/tunnel floor slab at the bottom of the dig volume (below world surface). */
+    inline FVector GetCarvedFloorVisualWorldCenter(const FBlockCoord& BlockCoord, const double FloorInstanceScaleZ)
+    {
+        const FVector ColumnXY = GetBlockColumnWorldXY(BlockCoord);
+        const double FloorTopZ = GetCarvedFloorTopWorldZ(BlockCoord);
+        const double FloorHalfHeight = MeshHalfHeightFromInstanceScaleZ(FloorInstanceScaleZ);
+        return FVector(ColumnXY.X, ColumnXY.Y, FloorTopZ - FloorHalfHeight);
+    }
+
+    inline FVector GetCarvedFloorVisualWorldCenterForFootprint(
+        const FBlockCoord& OriginBlock,
+        const int32 WidthBlocks,
+        const int32 HeightBlocks,
+        const double FloorInstanceScaleZ
+    )
+    {
+        const FVector FootprintCenter = GetFootprintWorldCenter(OriginBlock, WidthBlocks, HeightBlocks);
+        const double FloorTopZ = GetCarvedFloorTopWorldZ(OriginBlock);
+        const double FloorHalfHeight = MeshHalfHeightFromInstanceScaleZ(FloorInstanceScaleZ);
+        return FVector(FootprintCenter.X, FootprintCenter.Y, FloorTopZ - FloorHalfHeight);
+    }
+
+    inline double GetCarvedWalkableWorldZ(const FBlockCoord& BlockCoord)
+    {
+        return GetCarvedFloorTopWorldZ(BlockCoord);
+    }
+
+    /** Fills the dug volume between mountain surface and carved floor (reads as a pit, not a raised slab). */
+    inline FVector GetCarvedCavityVisualWorldCenter(const FBlockCoord& BlockCoord, FVector& OutInstanceScale)
+    {
+        const FVector ColumnXY = GetBlockColumnWorldXY(BlockCoord);
+        const double SurfaceZ = GetBlockTopWorldZ(BlockCoord);
+        const double FloorTopZ = GetCarvedFloorTopWorldZ(BlockCoord);
+        const double CavityDepth = FMath::Max(1.0, SurfaceZ - FloorTopZ);
+        const double BlockMeshScale = static_cast<double>(BlockSizeUnits) / DefaultEngineCubeSizeUnits;
+        OutInstanceScale = FVector(BlockMeshScale, BlockMeshScale, CavityDepth / DefaultEngineCubeSizeUnits);
+        return FVector(ColumnXY.X, ColumnXY.Y, FloorTopZ + (CavityDepth * 0.5));
+    }
+
+    inline bool IsCarvedTileState(const ETileState TileState)
+    {
+        return TileState == ETileState::Cleared
+            || TileState == ETileState::Room
+            || TileState == ETileState::Trap
+            || TileState == ETileState::SurfaceEntry;
+    }
+
+    /** Core pillar inside the carved chamber (does not extend above the surface). */
+    inline FVector GetDungeonCorePillarVisual(
+        const FBlockCoord& BlockCoord,
+        const double InstanceScaleXY,
+        FVector& OutInstanceScale
+    )
+    {
+        const FVector ColumnXY = GetBlockColumnWorldXY(BlockCoord);
+        const double FloorTopZ = GetCarvedFloorTopWorldZ(BlockCoord);
+        const double PillarTopZ = GetBlockTopWorldZ(BlockCoord) - 20.0;
+        const double PillarHeight = FMath::Max(40.0, PillarTopZ - FloorTopZ);
+        const double PillarScaleZ = PillarHeight / DefaultEngineCubeSizeUnits;
+        OutInstanceScale = FVector(InstanceScaleXY, InstanceScaleXY, PillarScaleZ);
+        return FVector(ColumnXY.X, ColumnXY.Y, FloorTopZ + (PillarHeight * 0.5));
+    }
+
     inline FVector GetCoreChamberCenterWorldLocation()
     {
         const double CenterBlock = static_cast<double>(StartingCoreChamberWidthBlocks) * 0.5 - 0.5;
@@ -450,23 +596,73 @@ namespace DungeonCore
         return FVector(CenterWorld, CenterWorld, 0.0);
     }
 
-    /** World center of the core block tile (run starts with core at block 0,0,0). */
+    inline float GetCameraPitchDegrees()
+    {
+        return -87.0f;
+    }
+
+    inline float GetCameraYawDegrees()
+    {
+        return 0.0f;
+    }
+
+    inline float GetCameraMinSpringArmLength()
+    {
+        return 2500.0f;
+    }
+
+    inline float GetCameraMaxSpringArmLength()
+    {
+        int32 MinX = 0;
+        int32 MaxX = 0;
+        int32 MinY = 0;
+        int32 MaxY = 0;
+        GetStartingBuildAreaBlockBounds(MinX, MaxX, MinY, MaxY);
+        const double BlocksAcross = static_cast<double>(FMath::Max(MaxX - MinX + 1, MaxY - MinY + 1));
+        const double WorldSpan = BlocksAcross * static_cast<double>(BlockSizeUnits);
+        return static_cast<float>(WorldSpan * 2.25);
+    }
+
+    inline float GetCameraDefaultSpringArmLength()
+    {
+        int32 MinX = 0;
+        int32 MaxX = 0;
+        int32 MinY = 0;
+        int32 MaxY = 0;
+        GetStartingBuildAreaBlockBounds(MinX, MaxX, MinY, MaxY);
+        const double BlocksAcross = static_cast<double>(FMath::Max(MaxX - MinX + 1, MaxY - MinY + 1));
+        const double WorldSpan = BlocksAcross * static_cast<double>(BlockSizeUnits);
+        return static_cast<float>(WorldSpan * 1.08);
+    }
+
+    inline FBlockCoord GetStartingCoreBlockCoord()
+    {
+        return FBlockCoord(
+            (StartingCoreChamberWidthBlocks - 1) / 2,
+            (StartingCoreChamberHeightBlocks - 1) / 2,
+            0
+        );
+    }
+
     inline FVector GetDungeonCoreBlockWorldCenter()
     {
-        return BlockToWorld(FBlockCoord(0, 0, 0))
-            + FVector(
-                static_cast<double>(HalfBlockSizeUnits),
-                static_cast<double>(HalfBlockSizeUnits),
-                0.0
-            );
+        const FBlockCoord CoreBlock = GetStartingCoreBlockCoord();
+        const FVector ColumnXY = GetBlockColumnWorldXY(CoreBlock);
+        return FVector(ColumnXY.X, ColumnXY.Y, GetCarvedWalkableWorldZ(CoreBlock));
+    }
+
+    inline int32 WorldLocationToBlockZ(const double WorldZ)
+    {
+        const int32 BlockZ = FMath::FloorToInt((GetBlockTopWorldZ(FBlockCoord(0, 0, 0)) - WorldZ) / static_cast<double>(BlockSizeUnits));
+        return FMath::Max(0, BlockZ);
     }
 
     inline FBlockCoord WorldToBlock(const FVector& WorldLocation)
     {
         return FBlockCoord(
-            FMath::RoundToInt(WorldLocation.X / static_cast<double>(BlockSizeUnits)),
-            FMath::RoundToInt(WorldLocation.Y / static_cast<double>(BlockSizeUnits)),
-            FMath::RoundToInt(WorldLocation.Z / static_cast<double>(BlockSizeUnits))
+            FMath::FloorToInt(WorldLocation.X / static_cast<double>(BlockSizeUnits)),
+            FMath::FloorToInt(WorldLocation.Y / static_cast<double>(BlockSizeUnits)),
+            WorldLocationToBlockZ(WorldLocation.Z)
         );
     }
 }

@@ -30,11 +30,27 @@ private:
 
     void ConfigureInstanceComponent(UInstancedStaticMeshComponent* InstanceComponent) const;
 
+    void BuildSurfaceGrid();
+
+    void BuildCoreChamberShell(const FBlockCoord& SurfaceEntryBlock);
+
     UPROPERTY(VisibleAnywhere, Category = "Dungeon")
     TObjectPtr<USceneComponent> SceneRoot;
 
     UPROPERTY(VisibleAnywhere, Category = "Dungeon")
+    TObjectPtr<UInstancedStaticMeshComponent> GridLineInstances;
+
+    UPROPERTY(VisibleAnywhere, Category = "Dungeon")
+    TObjectPtr<UInstancedStaticMeshComponent> GridBaseInstances;
+
+    UPROPERTY(VisibleAnywhere, Category = "Dungeon")
+    TObjectPtr<UInstancedStaticMeshComponent> ChamberWallInstances;
+
+    UPROPERTY(VisibleAnywhere, Category = "Dungeon")
     TObjectPtr<UInstancedStaticMeshComponent> RockInstances;
+
+    UPROPERTY(VisibleAnywhere, Category = "Dungeon")
+    TObjectPtr<UInstancedStaticMeshComponent> PitCavityInstances;
 
     UPROPERTY(VisibleAnywhere, Category = "Dungeon")
     TObjectPtr<UInstancedStaticMeshComponent> ClearedInstances;
