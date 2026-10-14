@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Math/UnrealMathUtility.h"
 #include "DungeonTypes.generated.h"
 
 UENUM(BlueprintType)

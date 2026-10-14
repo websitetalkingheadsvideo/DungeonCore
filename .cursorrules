@@ -9,3 +9,4 @@ Unreal Engine C++ Development Rules
 - Favor strongly typed enums, structs, and return values.
 - Make minimal, focused changes that preserve the current architecture.
 - Treat `1 gameplay block = 1 ten-foot cube = 300 Unreal units` unless a file explicitly states otherwise.
+- Do not add or restore UE Third Person / variant template maps, content, or C++ unless the user explicitly asks.

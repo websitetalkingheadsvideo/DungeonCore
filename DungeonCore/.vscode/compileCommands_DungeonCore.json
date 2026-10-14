@@ -1,0 +1,90 @@
+[
+	{
+		"file": "E:\\Dungeon Core\\DungeonCore\\Source\\DungeonCore\\DungeonCore.cpp",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\18\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x64\\cl.exe",
+			"@E:\\Dungeon Core\\DungeonCore\\.vscode\\compileCommands_DungeonCore\\DungeonCore.0.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.8\\Engine\\Source"
+	},
+	{
+		"file": "E:\\Dungeon Core\\DungeonCore\\Source\\DungeonCore\\Private\\Data\\DungeonContentSubsystem.cpp",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\18\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x64\\cl.exe",
+			"@E:\\Dungeon Core\\DungeonCore\\.vscode\\compileCommands_DungeonCore\\DungeonCore.0.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.8\\Engine\\Source"
+	},
+	{
+		"file": "E:\\Dungeon Core\\DungeonCore\\Source\\DungeonCore\\Private\\Game\\DungeonGameMode.cpp",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\18\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x64\\cl.exe",
+			"@E:\\Dungeon Core\\DungeonCore\\.vscode\\compileCommands_DungeonCore\\DungeonCore.0.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.8\\Engine\\Source"
+	},
+	{
+		"file": "E:\\Dungeon Core\\DungeonCore\\Source\\DungeonCore\\Private\\Player\\DungeonCameraPawn.cpp",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\18\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x64\\cl.exe",
+			"@E:\\Dungeon Core\\DungeonCore\\.vscode\\compileCommands_DungeonCore\\DungeonCore.0.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.8\\Engine\\Source"
+	},
+	{
+		"file": "E:\\Dungeon Core\\DungeonCore\\Source\\DungeonCore\\Private\\Player\\DungeonPlayerController.cpp",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\18\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x64\\cl.exe",
+			"@E:\\Dungeon Core\\DungeonCore\\.vscode\\compileCommands_DungeonCore\\DungeonCore.0.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.8\\Engine\\Source"
+	},
+	{
+		"file": "E:\\Dungeon Core\\DungeonCore\\Source\\DungeonCore\\Private\\Sim\\DungeonSimSubsystem.cpp",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\18\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x64\\cl.exe",
+			"@E:\\Dungeon Core\\DungeonCore\\.vscode\\compileCommands_DungeonCore\\DungeonCore.0.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.8\\Engine\\Source"
+	},
+	{
+		"file": "E:\\Dungeon Core\\DungeonCore\\Source\\DungeonCore\\Private\\Sim\\Grid\\DungeonGridState.cpp",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\18\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x64\\cl.exe",
+			"@E:\\Dungeon Core\\DungeonCore\\.vscode\\compileCommands_DungeonCore\\DungeonCore.0.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.8\\Engine\\Source"
+	},
+	{
+		"file": "E:\\Dungeon Core\\DungeonCore\\Source\\DungeonCore\\Private\\UI\\DungeonHudWidget.cpp",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\18\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x64\\cl.exe",
+			"@E:\\Dungeon Core\\DungeonCore\\.vscode\\compileCommands_DungeonCore\\DungeonCore.0.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.8\\Engine\\Source"
+	},
+	{
+		"file": "E:\\Dungeon Core\\DungeonCore\\Source\\DungeonCore\\Private\\UI\\DungeonRunSetupWidget.cpp",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\18\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x64\\cl.exe",
+			"@E:\\Dungeon Core\\DungeonCore\\.vscode\\compileCommands_DungeonCore\\DungeonCore.0.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.8\\Engine\\Source"
+	},
+	{
+		"file": "E:\\Dungeon Core\\DungeonCore\\Source\\DungeonCore\\Private\\World\\DungeonBuildCursorActor.cpp",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\18\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x64\\cl.exe",
+			"@E:\\Dungeon Core\\DungeonCore\\.vscode\\compileCommands_DungeonCore\\DungeonCore.0.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.8\\Engine\\Source"
+	},
+	{
+		"file": "E:\\Dungeon Core\\DungeonCore\\Source\\DungeonCore\\Private\\World\\DungeonChunkActor.cpp",
+		"arguments": [
+			"C:\\Program Files (x86)\\Microsoft Visual Studio\\18\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x64\\cl.exe",
+			"@E:\\Dungeon Core\\DungeonCore\\.vscode\\compileCommands_DungeonCore\\DungeonCore.0.rsp"
+		],
+		"directory": "C:\\Program Files\\Epic Games\\UE_5.8\\Engine\\Source"
+	}
+]

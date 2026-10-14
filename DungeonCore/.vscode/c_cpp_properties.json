@@ -1,0 +1,20 @@
+{
+	"configurations": [
+		{
+			"name": "DungeonCoreEditor Editor Win64 Development (DungeonCore)",
+			"compilerPath": "C:\\Program Files (x86)\\Microsoft Visual Studio\\18\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x64\\cl.exe",
+			"cStandard": "c17",
+			"cppStandard": "c++20",
+			"intelliSenseMode": "msvc-x64",
+			"compileCommands": "E:\\Dungeon Core\\DungeonCore\\.vscode\\compileCommands_DungeonCore.json"
+		},
+		{
+			"name": "Win32",
+			"compilerPath": "C:\\Program Files (x86)\\Microsoft Visual Studio\\18\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\Hostx64\\x64\\cl.exe",
+			"cStandard": "c17",
+			"cppStandard": "c++20",
+			"intelliSenseMode": "msvc-x64",
+			"compileCommands": "E:\\Dungeon Core\\DungeonCore\\.vscode\\compileCommands_Default.json"
+		}
+	]
+}
