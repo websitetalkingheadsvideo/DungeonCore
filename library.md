@@ -170,6 +170,20 @@ Base path: `H:\Unreal Assets\<FolderName>\`
 | Mountain surface / breach approach | `CastleIsland`, `Monastery_Refuge_5.5`, `Waterfall_Environment_5.5` |
 | Invader “town” far exterior | `MedievalVillage_5.0`, `MedievalCastleVillage`, `VikingEnvUnreal` |
 
+## \\AMBER\VideoCopilot\Materials (raw texture maps, network share)
+
+Element 3D material library. `.emf`/`.epack` are Element 3D presets (not usable in UE); the map folders are plain images UE imports directly. Spec maps, not roughness — invert into Roughness in a master material.
+
+| Folder | Contents | Dungeon Core relevance |
+| --- | --- | --- |
+| `Pro_Shaders_2_maps` | 752 `.dds` (2048², DXT1), `<set>_diffuse/_normal/_specular` triplets | `stone_rock_wall_01..03`, `stone_wall_01..11`, `stone_block_01/02`, `stone_granite_block_01`, `ground_dirt_01`, `ground_dirt_cracked_01`, `ground_rocks_02..05`, `ground_stone_02..08`, `ground_cobblestone_01..05`, `brick_old_grunge_01` |
+| `Pro_Shaders_maps` | 567 `.jpg` diffuse-only sets | Low priority; no normals |
+| `Mine` | 533 mixed `.png/.jpg` sets with `_COLOR/_NRM/_DISP/_OCC/_SPEC` | `Ancient Cave`, `RedRock` (+normal), `Aggregate Jumble`, `Algae Covered` |
+| `Environment` | HDRIs (`.hdr`), skies, `.dds` env maps | Cave/sky lighting only |
+| `Dreamworld Grungy Walls` | 20 `.png` grunge walls | Decal / wall variation |
+
+Use when a Fab pack lacks a specific surface; otherwise prefer the pack MI_* instances (already PBR, already tiled).
+
 ---
 
 ## Maintenance

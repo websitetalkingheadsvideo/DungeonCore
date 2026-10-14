@@ -640,10 +640,57 @@ namespace DungeonCore
         return GetCarvedFloorTopWorldZ(FBlockCoord(0, 0, 0));
     }
 
-    /** Dungeon core sphere rests on the chamber floor and stays below the mountain surface. */
-    inline double GetDungeonCoreVisualDiameterUnits()
+    /** Dungeon core crystal: ~6 ft tall, floating above the chamber floor, top tip below the mountain surface. */
+    inline double GetDungeonCoreCrystalHeightUnits()
     {
-        return static_cast<double>(BlockSizeUnits) * 0.6;
+        return 180.0;
+    }
+
+    inline double GetDungeonCoreCrystalHoverUnits()
+    {
+        return 25.0;
+    }
+
+    inline FLinearColor GetDungeonCoreGlowColor()
+    {
+        return FLinearColor(1.0f, 0.62f, 0.25f, 1.0f);
+    }
+
+    inline float GetDungeonCoreGlowIntensityCandelas()
+    {
+        return 40.0f;
+    }
+
+    inline float GetDungeonCoreGlowAttenuationRadiusUnits()
+    {
+        return 1200.0f;
+    }
+
+    inline float GetDungeonCoreSpinDegreesPerSecond()
+    {
+        return 20.0f;
+    }
+
+    /** SM_Crystal_D_01 is authored as a hanging crystal (point down); roll it so the point faces up. */
+    inline FRotator GetDungeonCoreCrystalMeshRotation()
+    {
+        return FRotator(0.0, 0.0, 180.0);
+    }
+
+    /** MI_GlowCrystalls parameters: pale translucent shell with a warm flame-like interior. */
+    inline FLinearColor GetDungeonCoreCrystalShellColor()
+    {
+        return FLinearColor(0.92f, 0.94f, 1.0f, 1.0f);
+    }
+
+    inline FLinearColor GetDungeonCoreCrystalInnerColor()
+    {
+        return FLinearColor(1.0f, 0.55f, 0.18f, 1.0f);
+    }
+
+    inline float GetDungeonCoreCrystalInnerGlow()
+    {
+        return 6.0f;
     }
 
     /** Dig preview on solid rock: a thin highlight on the rock's top face, never a block above ground. */

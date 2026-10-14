@@ -7,6 +7,8 @@
 #include "DungeonChunkActor.generated.h"
 
 class UInstancedStaticMeshComponent;
+class UPointLightComponent;
+class URotatingMovementComponent;
 class UStaticMesh;
 class UStaticMeshComponent;
 class UDungeonGridState;
@@ -48,14 +50,27 @@ private:
 
     void UpdateSurfaceDungeonVisuals();
 
+    /** Scales the crystal mesh to the target height and seats its lowest point on DungeonCorePivot. */
+    void LayoutDungeonCoreCrystal();
+
     UPROPERTY(VisibleAnywhere, Category = "Dungeon")
     TObjectPtr<USceneComponent> SceneRoot;
 
     UPROPERTY(VisibleAnywhere, Category = "Dungeon")
     TObjectPtr<UStaticMeshComponent> CoreChamberFloorVisual;
 
+    /** Floating dungeon core crystal (Crystal_Cave SM_Crystal_D_01 + glow material) with a warm light inside. */
     UPROPERTY(VisibleAnywhere, Category = "Dungeon")
-    TObjectPtr<UStaticMeshComponent> DungeonCoreVisual;
+    TObjectPtr<USceneComponent> DungeonCorePivot;
+
+    UPROPERTY(VisibleAnywhere, Category = "Dungeon")
+    TObjectPtr<UStaticMeshComponent> DungeonCoreCrystalMesh;
+
+    UPROPERTY(VisibleAnywhere, Category = "Dungeon")
+    TObjectPtr<UPointLightComponent> DungeonCoreGlowLight;
+
+    UPROPERTY(VisibleAnywhere, Category = "Dungeon")
+    TObjectPtr<URotatingMovementComponent> DungeonCoreSpin;
 
     UPROPERTY(VisibleAnywhere, Category = "Dungeon")
     TObjectPtr<UInstancedStaticMeshComponent> GridLineInstances;

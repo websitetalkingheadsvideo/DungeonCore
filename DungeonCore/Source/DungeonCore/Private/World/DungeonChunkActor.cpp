@@ -1,8 +1,12 @@
 #include "World/DungeonChunkActor.h"
 
 #include "Components/InstancedStaticMeshComponent.h"
+#include "Components/PointLightComponent.h"
 #include "Components/SceneComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Engine/StaticMesh.h"
+#include "GameFramework/RotatingMovementComponent.h"
+#include "Materials/MaterialInterface.h"
 #include "Sim/DungeonTypes.h"
 #include "Sim/Grid/DungeonGridState.h"
 #include "Materials/MaterialInstanceDynamic.h"
@@ -56,6 +60,55 @@ namespace DungeonChunkVisuals
         MeshComponent->SetMaterial(0, DynamicMaterial);
     }
 
+    /** Library assets are required content; a missing one is a migration error, not something to paper over. */
+    void AssignLibraryMesh(
+        UStaticMeshComponent* MeshComponent,
+        const ConstructorHelpers::FObjectFinder<UStaticMesh>& Finder,
+        const TCHAR* Purpose
+    )
+    {
+        if (!Finder.Succeeded())
+        {
+            UE_LOG(LogTemp, Error, TEXT("Dungeon library mesh missing for %s (see library.md migration)."), Purpose);
+            return;
+        }
+        MeshComponent->SetStaticMesh(Finder.Object);
+    }
+
+    void AssignLibraryMaterial(
+        UMeshComponent* MeshComponent,
+        const ConstructorHelpers::FObjectFinder<UMaterialInterface>& Finder,
+        const TCHAR* Purpose
+    )
+    {
+        if (!Finder.Succeeded())
+        {
+            UE_LOG(LogTemp, Error, TEXT("Dungeon library material missing for %s (see library.md migration)."), Purpose);
+            return;
+        }
+        MeshComponent->SetMaterial(0, Finder.Object);
+    }
+
+    /** Retint Crystal_Cave's MI_GlowCrystalls (Out_Color / Inner_Color / Deep_Paralax_Color / Inner_Glow) for the core. */
+    void ApplyCoreCrystalLook(
+        UStaticMeshComponent* MeshComponent,
+        const ConstructorHelpers::FObjectFinder<UMaterialInterface>& Finder,
+        UObject* Outer
+    )
+    {
+        if (!Finder.Succeeded())
+        {
+            UE_LOG(LogTemp, Error, TEXT("Dungeon library material missing for core crystal glow (see library.md migration)."));
+            return;
+        }
+        UMaterialInstanceDynamic* CrystalMaterial = UMaterialInstanceDynamic::Create(Finder.Object, Outer);
+        CrystalMaterial->SetVectorParameterValue(TEXT("Out_Color"), DungeonCore::GetDungeonCoreCrystalShellColor());
+        CrystalMaterial->SetVectorParameterValue(TEXT("Inner_Color"), DungeonCore::GetDungeonCoreCrystalInnerColor());
+        CrystalMaterial->SetVectorParameterValue(TEXT("Deep_Paralax_Color"), DungeonCore::GetDungeonCoreCrystalInnerColor());
+        CrystalMaterial->SetScalarParameterValue(TEXT("Inner_Glow"), DungeonCore::GetDungeonCoreCrystalInnerGlow());
+        MeshComponent->SetMaterial(0, CrystalMaterial);
+    }
+
     inline double BlockMeshScaleAxis()
     {
         return static_cast<double>(DungeonCore::BlockSizeUnits) / DungeonCore::DefaultEngineCubeSizeUnits;
@@ -97,10 +150,29 @@ ADungeonChunkActor::ADungeonChunkActor()
     CoreChamberFloorVisual->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     CoreChamberFloorVisual->SetMobility(EComponentMobility::Movable);
 
-    DungeonCoreVisual = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("DungeonCoreVisual"));
-    DungeonCoreVisual->SetupAttachment(SceneRoot);
-    DungeonCoreVisual->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-    DungeonCoreVisual->SetMobility(EComponentMobility::Movable);
+    DungeonCorePivot = CreateDefaultSubobject<USceneComponent>(TEXT("DungeonCorePivot"));
+    DungeonCorePivot->SetupAttachment(SceneRoot);
+    DungeonCorePivot->SetMobility(EComponentMobility::Movable);
+
+    DungeonCoreCrystalMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("DungeonCoreCrystalMesh"));
+    DungeonCoreCrystalMesh->SetupAttachment(DungeonCorePivot);
+    DungeonCoreCrystalMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    DungeonCoreCrystalMesh->SetMobility(EComponentMobility::Movable);
+    // The glow light sits inside the crystal; the crystal must not shadow its own light.
+    DungeonCoreCrystalMesh->SetCastShadow(false);
+
+    DungeonCoreGlowLight = CreateDefaultSubobject<UPointLightComponent>(TEXT("DungeonCoreGlowLight"));
+    DungeonCoreGlowLight->SetupAttachment(DungeonCorePivot);
+    DungeonCoreGlowLight->SetMobility(EComponentMobility::Movable);
+    DungeonCoreGlowLight->SetIntensityUnits(ELightUnits::Candelas);
+    DungeonCoreGlowLight->SetIntensity(DungeonCore::GetDungeonCoreGlowIntensityCandelas());
+    DungeonCoreGlowLight->SetLightColor(DungeonCore::GetDungeonCoreGlowColor());
+    DungeonCoreGlowLight->SetAttenuationRadius(DungeonCore::GetDungeonCoreGlowAttenuationRadiusUnits());
+    DungeonCoreGlowLight->SetCastShadows(true);
+
+    DungeonCoreSpin = CreateDefaultSubobject<URotatingMovementComponent>(TEXT("DungeonCoreSpin"));
+    DungeonCoreSpin->RotationRate = FRotator(0.0f, DungeonCore::GetDungeonCoreSpinDegreesPerSecond(), 0.0f);
+    DungeonCoreSpin->SetUpdatedComponent(DungeonCorePivot);
 
     RockInstances = CreateDefaultSubobject<UInstancedStaticMeshComponent>(TEXT("RockInstances"));
     RockInstances->SetupAttachment(SceneRoot);
@@ -127,7 +199,6 @@ ADungeonChunkActor::ADungeonChunkActor()
     DefenderInstances->SetupAttachment(SceneRoot);
 
     static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeMesh(TEXT("/Engine/BasicShapes/Cube.Cube"));
-    static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereMesh(TEXT("/Engine/BasicShapes/Sphere.Sphere"));
     if (CubeMesh.Succeeded())
     {
         CoreChamberFloorVisual->SetStaticMesh(CubeMesh.Object);
@@ -143,10 +214,33 @@ ADungeonChunkActor::ADungeonChunkActor()
         AdventurerInstances->SetStaticMesh(CubeMesh.Object);
         DefenderInstances->SetStaticMesh(CubeMesh.Object);
     }
-    if (SphereMesh.Succeeded())
-    {
-        DungeonCoreVisual->SetStaticMesh(SphereMesh.Object);
-    }
+
+    // Migrated library assets (see library.md): Crystal_Cave for the core + rock, Leartes Fantasy Dungeon for stone.
+    static ConstructorHelpers::FObjectFinder<UStaticMesh> CrystalMeshFinder(
+        TEXT("/Game/Crystal_Cave/Meshes/SM_Crystal_D_01.SM_Crystal_D_01")
+    );
+    static ConstructorHelpers::FObjectFinder<UMaterialInterface> CrystalGlowMaterialFinder(
+        TEXT("/Game/Crystal_Cave/Materials/MI_GlowCrystalls.MI_GlowCrystalls")
+    );
+    static ConstructorHelpers::FObjectFinder<UMaterialInterface> RockMaterialFinder(
+        TEXT("/Game/Crystal_Cave/Materials/MI_Rock_A.MI_Rock_A")
+    );
+    static ConstructorHelpers::FObjectFinder<UMaterialInterface> StoneFloorMaterialFinder(
+        TEXT("/Game/FantasyDungeon/Materials/MI_FloorTiles_Clean_V01.MI_FloorTiles_Clean_V01")
+    );
+    static ConstructorHelpers::FObjectFinder<UMaterialInterface> StoneWallMaterialFinder(
+        TEXT("/Game/FantasyDungeon/Materials/MI_StoneWall_V03.MI_StoneWall_V03")
+    );
+    static ConstructorHelpers::FObjectFinder<UMaterialInterface> DirtFloorMaterialFinder(
+        TEXT("/Game/FantasyDungeon/Materials/MI_Dirt_Floor_v01.MI_Dirt_Floor_v01")
+    );
+    DungeonChunkVisuals::AssignLibraryMesh(DungeonCoreCrystalMesh, CrystalMeshFinder, TEXT("core crystal mesh"));
+    DungeonChunkVisuals::ApplyCoreCrystalLook(DungeonCoreCrystalMesh, CrystalGlowMaterialFinder, this);
+    DungeonChunkVisuals::AssignLibraryMaterial(RockInstances, RockMaterialFinder, TEXT("rock blocks"));
+    DungeonChunkVisuals::AssignLibraryMaterial(GridBaseInstances, RockMaterialFinder, TEXT("rock surface caps"));
+    DungeonChunkVisuals::AssignLibraryMaterial(CoreChamberFloorVisual, StoneFloorMaterialFinder, TEXT("chamber stone floor"));
+    DungeonChunkVisuals::AssignLibraryMaterial(ChamberWallInstances, StoneWallMaterialFinder, TEXT("chamber stone walls"));
+    DungeonChunkVisuals::AssignLibraryMaterial(ClearedInstances, DirtFloorMaterialFinder, TEXT("dug dirt floor"));
 
     static ConstructorHelpers::FObjectFinder<UMaterial> BaseMaterialFinder(
         TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial")
@@ -162,7 +256,6 @@ ADungeonChunkActor::ADungeonChunkActor()
 
     if (TintParentMaterial != nullptr)
     {
-        DungeonChunkVisuals::ApplyTintedMaterial(GridBaseInstances, TintParentMaterial, this, FLinearColor(0.18f, 0.17f, 0.20f), 0.0f);
         DungeonChunkVisuals::ApplyTintedMaterial(
             GridLineInstances,
             TintParentMaterial,
@@ -170,8 +263,6 @@ ADungeonChunkActor::ADungeonChunkActor()
             DungeonCore::GetGridLineColor(),
             2.0f
         );
-        DungeonChunkVisuals::ApplyTintedMaterial(ChamberWallInstances, TintParentMaterial, this, FLinearColor(0.20f, 0.18f, 0.22f), 0.0f);
-        DungeonChunkVisuals::ApplyTintedMaterial(RockInstances, TintParentMaterial, this, FLinearColor(0.12f, 0.11f, 0.14f), 0.0f);
         DungeonChunkVisuals::ApplyTintedMaterial(
             RoomInstances,
             TintParentMaterial,
@@ -180,7 +271,6 @@ ADungeonChunkActor::ADungeonChunkActor()
             6.0f
         );
         DungeonChunkVisuals::ApplyTintedMaterial(PitCavityInstances, TintParentMaterial, this, FLinearColor(0.02f, 0.02f, 0.03f), 0.0f);
-        DungeonChunkVisuals::ApplyTintedMaterial(ClearedInstances, TintParentMaterial, this, FLinearColor(0.22f, 0.20f, 0.18f), 0.0f);
         DungeonChunkVisuals::ApplyTintedMaterial(
             SurfaceEntryInstances,
             TintParentMaterial,
@@ -188,21 +278,9 @@ ADungeonChunkActor::ADungeonChunkActor()
             FLinearColor(0.85f, 0.72f, 0.35f),
             1.5f
         );
-        DungeonChunkVisuals::ApplyTintedMaterialToMesh(
-            CoreChamberFloorVisual,
-            TintParentMaterial,
-            this,
-            FLinearColor(0.55f, 0.12f, 0.82f),
-            3.0f
-        );
-        DungeonChunkVisuals::ApplyTintedMaterialToMesh(
-            DungeonCoreVisual,
-            TintParentMaterial,
-            this,
-            FLinearColor(1.0f, 0.72f, 0.08f),
-            8.0f
-        );
     }
+
+    LayoutDungeonCoreCrystal();
 
     ConfigureInstanceComponent(GridBaseInstances);
     ConfigureInstanceComponent(GridLineInstances);
@@ -325,15 +403,42 @@ void ADungeonChunkActor::UpdateSurfaceDungeonVisuals()
     ));
     CoreChamberFloorVisual->SetVisibility(true);
 
-    const double CoreDiameter = DungeonCore::GetDungeonCoreVisualDiameterUnits();
-    const float CoreScale = static_cast<float>(CoreDiameter / DungeonCore::DefaultEngineCubeSizeUnits);
-    DungeonCoreVisual->SetRelativeLocation(FVector(
+    DungeonCorePivot->SetRelativeLocation(FVector(
         ChamberCenter.X,
         ChamberCenter.Y,
-        FloorTopZ + (CoreDiameter * 0.5)
+        FloorTopZ + DungeonCore::GetDungeonCoreCrystalHoverUnits()
     ));
-    DungeonCoreVisual->SetRelativeScale3D(FVector(CoreScale, CoreScale, CoreScale));
-    DungeonCoreVisual->SetVisibility(true);
+}
+
+void ADungeonChunkActor::LayoutDungeonCoreCrystal()
+{
+    const UStaticMesh* CrystalMesh = DungeonCoreCrystalMesh->GetStaticMesh();
+    if (CrystalMesh == nullptr)
+    {
+        UE_LOG(LogTemp, Error, TEXT("Core crystal mesh not assigned; cannot lay out the dungeon core."));
+        return;
+    }
+
+    const double TotalHeight = DungeonCore::GetDungeonCoreCrystalHeightUnits();
+    const FBoxSphereBounds MeshBounds = CrystalMesh->GetBounds();
+    const double MeshHeight = MeshBounds.BoxExtent.Z * 2.0;
+    if (MeshHeight <= KINDA_SMALL_NUMBER)
+    {
+        UE_LOG(LogTemp, Error, TEXT("Core crystal mesh has no vertical extent."));
+        return;
+    }
+
+    // Uniform scale to the target height, roll so the point faces up, then seat the lowest point of the
+    // rotated bounds on the pivot. The rotation is applied in local space, so the bounds centre is rotated too.
+    const double Scale = TotalHeight / MeshHeight;
+    const FRotator MeshRotation = DungeonCore::GetDungeonCoreCrystalMeshRotation();
+    const FVector RotatedOrigin = MeshRotation.RotateVector(MeshBounds.Origin) * Scale;
+    const double RotatedBottomZ = RotatedOrigin.Z - MeshBounds.BoxExtent.Z * Scale;
+    DungeonCoreCrystalMesh->SetRelativeScale3D(FVector(Scale, Scale, Scale));
+    DungeonCoreCrystalMesh->SetRelativeRotation(MeshRotation);
+    DungeonCoreCrystalMesh->SetRelativeLocation(FVector(-RotatedOrigin.X, -RotatedOrigin.Y, -RotatedBottomZ));
+
+    DungeonCoreGlowLight->SetRelativeLocation(FVector(0.0, 0.0, TotalHeight * 0.45));
 }
 
 void ADungeonChunkActor::BuildCoreChamberShell(const FBlockCoord& SurfaceEntryBlock)
