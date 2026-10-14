@@ -304,45 +304,94 @@ FTransform ADungeonChunkActor::MakeTileInstanceTransform(const FVector& WorldCen
     return InstanceTransform;
 }
 
-void ADungeonChunkActor::BuildSurfaceGrid()
+TSet<FIntPoint> ADungeonChunkActor::CollectRockColumns(const TArray<FTileData>& Tiles)
+{
+    TSet<FIntPoint> RockColumns;
+    for (const FTileData& TileData : Tiles)
+    {
+        if (TileData.BlockCoord.Z == 0
+            && (TileData.TileState == ETileState::SolidRock || TileData.TileState == ETileState::Wall))
+        {
+            RockColumns.Add(FIntPoint(TileData.BlockCoord.X, TileData.BlockCoord.Y));
+        }
+    }
+    return RockColumns;
+}
+
+void ADungeonChunkActor::BuildSurfaceGrid(const TSet<FIntPoint>& RockColumns)
 {
     GridLineInstances->ClearInstances();
-    GridBaseInstances->ClearInstances();
 
+    // Grid lines live on the mountain surface, so an edge is only drawn where at least one of the two
+    // tiles it separates still has rock on top. Edges between two carved tiles (open pit) get nothing.
     int32 MinBlockX = 0;
     int32 MaxBlockX = 0;
     int32 MinBlockY = 0;
     int32 MaxBlockY = 0;
     DungeonCore::GetStartingBuildAreaBlockBounds(MinBlockX, MaxBlockX, MinBlockY, MaxBlockY);
 
-    const double MinWorldX = static_cast<double>(MinBlockX * DungeonCore::BlockSizeUnits);
-    const double MinWorldY = static_cast<double>(MinBlockY * DungeonCore::BlockSizeUnits);
-    const double SpanX = static_cast<double>((MaxBlockX - MinBlockX + 1) * DungeonCore::BlockSizeUnits);
-    const double SpanY = static_cast<double>((MaxBlockY - MinBlockY + 1) * DungeonCore::BlockSizeUnits);
-    const double CenterX = MinWorldX + (SpanX * 0.5);
-    const double CenterY = MinWorldY + (SpanY * 0.5);
     const double GridZ = DungeonCore::GetMountainSurfaceWorldZ() + (DungeonCore::GridLineHeightUnits * 0.5);
-
-    const double LineScaleX = DungeonCore::GridLineThicknessUnits / DungeonCore::DefaultEngineCubeSizeUnits;
-    const double LineScaleY = DungeonCore::GridLineThicknessUnits / DungeonCore::DefaultEngineCubeSizeUnits;
+    const double BlockSize = static_cast<double>(DungeonCore::BlockSizeUnits);
+    const double LineScaleThin = DungeonCore::GridLineThicknessUnits / DungeonCore::DefaultEngineCubeSizeUnits;
     const double LineScaleZ = DungeonCore::GridLineHeightUnits / DungeonCore::DefaultEngineCubeSizeUnits;
 
+    const auto IsRockColumn = [&RockColumns](const int32 BlockX, const int32 BlockY) -> bool
+    {
+        return RockColumns.Contains(FIntPoint(BlockX, BlockY));
+    };
+
+    // Lines of constant X: edge between column (GridX - 1) and column GridX, merged along Y.
     for (int32 GridX = MinBlockX; GridX <= MaxBlockX + 1; ++GridX)
     {
-        const double WorldX = static_cast<double>(GridX * DungeonCore::BlockSizeUnits);
-        GridLineInstances->AddInstance(MakeTileInstanceTransform(
-            FVector(WorldX, CenterY, GridZ),
-            FVector(LineScaleX, SpanY / DungeonCore::DefaultEngineCubeSizeUnits, LineScaleZ)
-        ));
+        const double WorldX = static_cast<double>(GridX) * BlockSize;
+        int32 RunStart = MinBlockY;
+        bool bInRun = false;
+        for (int32 GridY = MinBlockY; GridY <= MaxBlockY + 1; ++GridY)
+        {
+            const bool bDraw = GridY <= MaxBlockY && (IsRockColumn(GridX - 1, GridY) || IsRockColumn(GridX, GridY));
+            if (bDraw && !bInRun)
+            {
+                RunStart = GridY;
+                bInRun = true;
+            }
+            else if (!bDraw && bInRun)
+            {
+                const double FromY = static_cast<double>(RunStart) * BlockSize;
+                const double ToY = static_cast<double>(GridY) * BlockSize;
+                GridLineInstances->AddInstance(MakeTileInstanceTransform(
+                    FVector(WorldX, (FromY + ToY) * 0.5, GridZ),
+                    FVector(LineScaleThin, (ToY - FromY) / DungeonCore::DefaultEngineCubeSizeUnits, LineScaleZ)
+                ));
+                bInRun = false;
+            }
+        }
     }
 
+    // Lines of constant Y: edge between row (GridY - 1) and row GridY, merged along X.
     for (int32 GridY = MinBlockY; GridY <= MaxBlockY + 1; ++GridY)
     {
-        const double WorldY = static_cast<double>(GridY * DungeonCore::BlockSizeUnits);
-        GridLineInstances->AddInstance(MakeTileInstanceTransform(
-            FVector(CenterX, WorldY, GridZ),
-            FVector(SpanX / DungeonCore::DefaultEngineCubeSizeUnits, LineScaleY, LineScaleZ)
-        ));
+        const double WorldY = static_cast<double>(GridY) * BlockSize;
+        int32 RunStart = MinBlockX;
+        bool bInRun = false;
+        for (int32 GridX = MinBlockX; GridX <= MaxBlockX + 1; ++GridX)
+        {
+            const bool bDraw = GridX <= MaxBlockX && (IsRockColumn(GridX, GridY - 1) || IsRockColumn(GridX, GridY));
+            if (bDraw && !bInRun)
+            {
+                RunStart = GridX;
+                bInRun = true;
+            }
+            else if (!bDraw && bInRun)
+            {
+                const double FromX = static_cast<double>(RunStart) * BlockSize;
+                const double ToX = static_cast<double>(GridX) * BlockSize;
+                GridLineInstances->AddInstance(MakeTileInstanceTransform(
+                    FVector((FromX + ToX) * 0.5, WorldY, GridZ),
+                    FVector((ToX - FromX) / DungeonCore::DefaultEngineCubeSizeUnits, LineScaleThin, LineScaleZ)
+                ));
+                bInRun = false;
+            }
+        }
     }
 }
 
@@ -441,7 +490,7 @@ void ADungeonChunkActor::LayoutDungeonCoreCrystal()
     DungeonCoreGlowLight->SetRelativeLocation(FVector(0.0, 0.0, TotalHeight * 0.45));
 }
 
-void ADungeonChunkActor::BuildCoreChamberShell(const FBlockCoord& SurfaceEntryBlock)
+void ADungeonChunkActor::BuildCoreChamberShell(const TSet<FIntPoint>& RockColumns)
 {
     UpdateSurfaceDungeonVisuals();
 
@@ -451,19 +500,6 @@ void ADungeonChunkActor::BuildCoreChamberShell(const FBlockCoord& SurfaceEntryBl
     int32 ChamberMaxY = 0;
     DungeonCore::GetCoreChamberBlockBounds(ChamberMinX, ChamberMaxX, ChamberMinY, ChamberMaxY);
 
-    const FVector ChamberSize = DungeonCore::GetInclusiveBlockBoundsWorldSize(
-        ChamberMinX,
-        ChamberMinY,
-        ChamberMaxX,
-        ChamberMaxY
-    );
-    const FVector ChamberCenter = DungeonCore::GetInclusiveBlockBoundsWorldCenter(
-        ChamberMinX,
-        ChamberMinY,
-        ChamberMaxX,
-        ChamberMaxY
-    );
-
     const double FloorTopZ = DungeonCore::GetCoreChamberSurfaceVisualFloorZ();
     const double SurfaceZ = DungeonCore::GetMountainSurfaceWorldZ();
     const double WallHeight = FMath::Max(40.0, SurfaceZ - FloorTopZ);
@@ -471,65 +507,74 @@ void ADungeonChunkActor::BuildCoreChamberShell(const FBlockCoord& SurfaceEntryBl
     const double WallThickness = DungeonCore::CoreChamberWallThicknessUnits;
     const double WallScaleZ = WallHeight / DungeonCore::DefaultEngineCubeSizeUnits;
     const double WallScaleThin = WallThickness / DungeonCore::DefaultEngineCubeSizeUnits;
-    const double WallScaleLongX = ChamberSize.X / DungeonCore::DefaultEngineCubeSizeUnits;
-    const double WallScaleLongY = ChamberSize.Y / DungeonCore::DefaultEngineCubeSizeUnits;
 
     const double WestX = static_cast<double>(ChamberMinX * DungeonCore::BlockSizeUnits) + (WallThickness * 0.5);
     const double EastX = static_cast<double>((ChamberMaxX + 1) * DungeonCore::BlockSizeUnits) - (WallThickness * 0.5);
     const double SouthY = static_cast<double>(ChamberMinY * DungeonCore::BlockSizeUnits) + (WallThickness * 0.5);
     const double NorthY = static_cast<double>((ChamberMaxY + 1) * DungeonCore::BlockSizeUnits) - (WallThickness * 0.5);
 
-    ChamberWallInstances->AddInstance(MakeTileInstanceTransform(
-        FVector(WestX, ChamberCenter.Y, WallCenterZ),
-        FVector(WallScaleThin, WallScaleLongY, WallScaleZ)
-    ));
-    ChamberWallInstances->AddInstance(MakeTileInstanceTransform(
-        FVector(ChamberCenter.X, SouthY, WallCenterZ),
-        FVector(WallScaleLongX, WallScaleThin, WallScaleZ)
-    ));
-    ChamberWallInstances->AddInstance(MakeTileInstanceTransform(
-        FVector(ChamberCenter.X, NorthY, WallCenterZ),
-        FVector(WallScaleLongX, WallScaleThin, WallScaleZ)
-    ));
-
-    const bool bEntryOnEast = SurfaceEntryBlock.X == ChamberMaxX;
-    if (!bEntryOnEast)
+    const auto IsRock = [&RockColumns](const int32 BlockX, const int32 BlockY) -> bool
     {
-        ChamberWallInstances->AddInstance(MakeTileInstanceTransform(
-            FVector(EastX, ChamberCenter.Y, WallCenterZ),
-            FVector(WallScaleThin, WallScaleLongY, WallScaleZ)
-        ));
-        return;
-    }
+        return RockColumns.Contains(FIntPoint(BlockX, BlockY));
+    };
 
-    // East wall with an exact one-tile gap at the surface entry: segments south and north of the entry tile.
-    const double ChamberSouthWorldY = static_cast<double>(ChamberMinY * DungeonCore::BlockSizeUnits);
-    const double ChamberNorthWorldY = static_cast<double>((ChamberMaxY + 1) * DungeonCore::BlockSizeUnits);
-    const double EntrySouthWorldY = static_cast<double>(SurfaceEntryBlock.Y * DungeonCore::BlockSizeUnits);
-    const double EntryNorthWorldY = EntrySouthWorldY + static_cast<double>(DungeonCore::BlockSizeUnits);
-    AddEastWallSegment(EastX, ChamberSouthWorldY, EntrySouthWorldY, WallCenterZ, WallScaleThin, WallScaleZ);
-    AddEastWallSegment(EastX, EntryNorthWorldY, ChamberNorthWorldY, WallCenterZ, WallScaleThin, WallScaleZ);
+    // A wall tile stays closed while the rock directly outside it is intact; digging that rock opens the gap.
+    AddChamberWallSide(true, WestX, ChamberMinY, ChamberMaxY,
+        [&IsRock, ChamberMinX](const int32 BlockY) { return IsRock(ChamberMinX - 1, BlockY); },
+        WallCenterZ, WallScaleThin, WallScaleZ);
+    AddChamberWallSide(true, EastX, ChamberMinY, ChamberMaxY,
+        [&IsRock, ChamberMaxX](const int32 BlockY) { return IsRock(ChamberMaxX + 1, BlockY); },
+        WallCenterZ, WallScaleThin, WallScaleZ);
+    AddChamberWallSide(false, SouthY, ChamberMinX, ChamberMaxX,
+        [&IsRock, ChamberMinY](const int32 BlockX) { return IsRock(BlockX, ChamberMinY - 1); },
+        WallCenterZ, WallScaleThin, WallScaleZ);
+    AddChamberWallSide(false, NorthY, ChamberMinX, ChamberMaxX,
+        [&IsRock, ChamberMaxY](const int32 BlockX) { return IsRock(BlockX, ChamberMaxY + 1); },
+        WallCenterZ, WallScaleThin, WallScaleZ);
 }
 
-void ADungeonChunkActor::AddEastWallSegment(
-    const double WallX,
-    const double FromWorldY,
-    const double ToWorldY,
+void ADungeonChunkActor::AddChamberWallSide(
+    const bool bWallRunsAlongY,
+    const double FixedWorldCoord,
+    const int32 MinIndex,
+    const int32 MaxIndex,
+    const TFunctionRef<bool(int32)>& IsClosedAt,
     const double WallCenterZ,
     const double WallScaleThin,
     const double WallScaleZ
 )
 {
-    const double SegmentLength = ToWorldY - FromWorldY;
-    if (SegmentLength <= 0.0)
-    {
-        return;
-    }
+    const double BlockSize = static_cast<double>(DungeonCore::BlockSizeUnits);
+    int32 RunStart = MinIndex;
+    bool bInRun = false;
 
-    ChamberWallInstances->AddInstance(MakeTileInstanceTransform(
-        FVector(WallX, FromWorldY + (SegmentLength * 0.5), WallCenterZ),
-        FVector(WallScaleThin, SegmentLength / DungeonCore::DefaultEngineCubeSizeUnits, WallScaleZ)
-    ));
+    for (int32 Index = MinIndex; Index <= MaxIndex + 1; ++Index)
+    {
+        const bool bClosed = Index <= MaxIndex && IsClosedAt(Index);
+        if (bClosed && !bInRun)
+        {
+            RunStart = Index;
+            bInRun = true;
+            continue;
+        }
+        if (bClosed || !bInRun)
+        {
+            continue;
+        }
+
+        const double From = static_cast<double>(RunStart) * BlockSize;
+        const double To = static_cast<double>(Index) * BlockSize;
+        const double Along = (From + To) * 0.5;
+        const double LongScale = (To - From) / DungeonCore::DefaultEngineCubeSizeUnits;
+        const FVector Center = bWallRunsAlongY
+            ? FVector(FixedWorldCoord, Along, WallCenterZ)
+            : FVector(Along, FixedWorldCoord, WallCenterZ);
+        const FVector Scale = bWallRunsAlongY
+            ? FVector(WallScaleThin, LongScale, WallScaleZ)
+            : FVector(LongScale, WallScaleThin, WallScaleZ);
+        ChamberWallInstances->AddInstance(MakeTileInstanceTransform(Center, Scale));
+        bInRun = false;
+    }
 }
 
 void ADungeonChunkActor::RefreshFromSimulation(
@@ -556,23 +601,13 @@ void ADungeonChunkActor::RefreshFromSimulation(
     const FVector RockScale = DungeonChunkVisuals::BlockMeshScaleRock();
     const FVector CarvedFloorScale = DungeonChunkVisuals::BlockMeshScaleCarvedFloor();
 
-    FBlockCoord SurfaceEntryBlock(
-        DungeonCore::StartingCoreChamberWidthBlocks - 1,
-        DungeonCore::GetStartingCoreBlockCoord().Y,
-        0
-    );
-
     const TArray<FTileData> Tiles = GridState->GetAllTiles();
-    BuildSurfaceGrid();
+    const TSet<FIntPoint> RockColumns = CollectRockColumns(Tiles);
+    BuildSurfaceGrid(RockColumns);
     BuildRockSurfaceCaps(Tiles);
 
     for (const FTileData& TileData : Tiles)
     {
-        if (TileData.TileState == ETileState::SurfaceEntry)
-        {
-            SurfaceEntryBlock = TileData.BlockCoord;
-        }
-
         switch (TileData.TileState)
         {
         case ETileState::SolidRock:
@@ -654,7 +689,7 @@ void ADungeonChunkActor::RefreshFromSimulation(
         ));
     }
 
-    BuildCoreChamberShell(SurfaceEntryBlock);
+    BuildCoreChamberShell(RockColumns);
 
     UE_LOG(
         LogTemp,

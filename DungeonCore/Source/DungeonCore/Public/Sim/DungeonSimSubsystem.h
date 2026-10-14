@@ -48,6 +48,10 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Dungeon")
     FPlacementResult PlaceTrap(const FBlockCoord& OriginBlock, const ETrapTypeId TrapTypeId, const int32 ManaCost);
 
+    /** Buys a non-placed catalog upgrade (e.g. Core Attunement). Spends mana and recomputes income on success. */
+    UFUNCTION(BlueprintCallable, Category = "Dungeon")
+    FPlacementResult PurchaseUpgrade(const FName BuildableId);
+
     UFUNCTION(BlueprintCallable, Category = "Dungeon")
     bool SaveCurrentRun(const FString& SlotName);
 
@@ -71,6 +75,16 @@ public:
     FPlacementResult PreviewTrapPlacement(const FBlockCoord& OriginBlock, const int32 ManaCost) const;
 
     UFUNCTION(BlueprintPure, Category = "Dungeon")
+    FPlacementResult PreviewUpgradePurchase(const FName BuildableId) const;
+
+    UFUNCTION(BlueprintPure, Category = "Dungeon")
+    bool IsUpgradeOwned(const FName BuildableId) const;
+
+    /** False for catalog items locked to a creature family other than this run's. */
+    UFUNCTION(BlueprintPure, Category = "Dungeon")
+    bool IsBuildableAvailableForRun(const FName BuildableId) const;
+
+    UFUNCTION(BlueprintPure, Category = "Dungeon")
     FResourceState GetResourceState() const;
 
     UFUNCTION(BlueprintPure, Category = "Dungeon")
@@ -81,12 +95,6 @@ public:
 
     UFUNCTION(BlueprintPure, Category = "Dungeon")
     UDungeonGridState* GetGridState() const;
-
-    UFUNCTION(BlueprintPure, Category = "Dungeon")
-    ERoomTypeId GetActiveStarterSpawnerRoomType() const;
-
-    UFUNCTION(BlueprintPure, Category = "Dungeon")
-    ETrapTypeId GetActiveStarterTrapType() const;
 
     UFUNCTION(BlueprintPure, Category = "Dungeon")
     int32 GetCurrentWaveNumber() const;
@@ -102,15 +110,6 @@ public:
 
     UFUNCTION(BlueprintPure, Category = "Dungeon")
     int32 GetDigManaCost() const;
-
-    UFUNCTION(BlueprintPure, Category = "Dungeon")
-    int32 GetManaWellCost() const;
-
-    UFUNCTION(BlueprintPure, Category = "Dungeon")
-    int32 GetStarterSpawnerCost() const;
-
-    UFUNCTION(BlueprintPure, Category = "Dungeon")
-    int32 GetStarterTrapCost() const;
 
     UPROPERTY(BlueprintAssignable, Category = "Dungeon")
     FDungeonResourceChangedSignature OnResourceChanged;
@@ -145,6 +144,21 @@ private:
 
     void RestoreSimulationTimers();
 
+    /** Starts the invasion timers (waves, adventurer movement, defender spawns). Call once the breach is Open. */
+    void StartInvasionTimers();
+
+    void StartManaTickTimer();
+
+    void TickManaIncome();
+
+    /** Base trickle + every placed room's catalog income + every owned upgrade's catalog income. */
+    float ComputeManaIncomePerSecond() const;
+
+    /** Validation shared by preview and purchase; does not spend anything. */
+    FPlacementResult ValidateUpgradePurchase(const FName BuildableId) const;
+
+    FBlockCoord FindNearestSurfaceEntry(const FBlockCoord& FromBlock) const;
+
     void ScheduleNextWave(const float DelaySeconds);
 
     void StartNextWave();
@@ -153,7 +167,14 @@ private:
 
     void SpawnDefenders();
 
-    TArray<FBlockCoord> BuildPathToCore(const FBlockCoord& StartBlock) const;
+    /** Adds the adventurer's block and every walkable tile visible down the four straight corridors to KnownBlocks. */
+    void RevealSurroundings(FUnitInstanceData& AdventurerData) const;
+
+    /**
+     * Fog-of-war pathing. Traverses only tiles the adventurer knows. Goal is a known Core Chamber tile if one
+     * has been seen, otherwise the nearest unknown walkable tile. Empty when nothing is reachable.
+     */
+    TArray<FBlockCoord> BuildAdventurerPath(const FUnitInstanceData& AdventurerData) const;
 
     TArray<FBlockCoord> BuildPathToBlock(const FBlockCoord& StartBlock, const FBlockCoord& GoalBlock) const;
 
@@ -195,6 +216,10 @@ private:
     UPROPERTY()
     TArray<FUnitInstanceData> ActiveDefenders;
 
+    /** Catalog ids of non-placed upgrades bought this run. */
+    UPROPERTY()
+    TArray<FName> PurchasedUpgradeIds;
+
     int32 CurrentWaveNumber = 0;
 
     int32 CurrentCoreHealth = 0;
@@ -204,4 +229,12 @@ private:
     FTimerHandle AdventurerAdvanceTimerHandle;
 
     FTimerHandle DefenderSpawnTimerHandle;
+
+    FTimerHandle ManaTickTimerHandle;
+
+    /** Sub-integer mana carried between ticks so fractional income is not lost. */
+    float ManaFractionCarry = 0.0f;
+
+    /** Seeded from FRunSetup::Seed; drives adventurer tie-breaks so runs are reproducible. */
+    FRandomStream AdventurerDecisionStream;
 };

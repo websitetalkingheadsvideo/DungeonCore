@@ -37,6 +37,9 @@ public:
     TArray<FUnitInstanceData> ActiveDefenders;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dungeon")
+    TArray<FName> PurchasedUpgradeIds;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dungeon")
     int32 CurrentWaveNumber = 0;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dungeon")

@@ -1,5 +1,6 @@
 #include "Player/DungeonPlayerController.h"
 
+#include "Data/DungeonContentSubsystem.h"
 #include "Engine/Engine.h"
 #include "Engine/World.h"
 #include "EngineUtils.h"
@@ -67,27 +68,15 @@ void ADungeonPlayerController::BeginPlay()
     // Bootstrap the sim immediately so Play shows the dungeon grid (setup UI comes back later).
     StartRunFromSetup(EDungeonThemeId::Gothic, ECreatureFamilyId::Undead);
 
-    if (GEngine != nullptr)
+    // Controls live in the HUD now; only the misconfiguration diagnostic stays on screen.
+    if (GEngine != nullptr && GetDungeonCameraPawn() == nullptr)
     {
-        const FString PawnName = GetPawn() != nullptr ? GetPawn()->GetClass()->GetName() : TEXT("NONE");
         GEngine->AddOnScreenDebugMessage(
-            1,
+            2,
             15.0f,
-            FColor::Green,
-            FString::Printf(
-                TEXT("Dungeon Core | %s | LMB drag = pan map, RMB drag = rotate camera, short LMB click = build/dig, F = recenter"),
-                *PawnName
-            )
+            FColor::Red,
+            TEXT("No DungeonCameraPawn — Game Mode is not DungeonGameMode (rebuild C++ or check Maps & Modes).")
         );
-        if (GetDungeonCameraPawn() == nullptr)
-        {
-            GEngine->AddOnScreenDebugMessage(
-                2,
-                15.0f,
-                FColor::Red,
-                TEXT("No DungeonCameraPawn — Game Mode is not DungeonGameMode (rebuild C++ or check Maps & Modes).")
-            );
-        }
     }
 }
 
@@ -106,10 +95,24 @@ void ADungeonPlayerController::SetupInputComponent()
 
     InputComponent->BindKey(EKeys::LeftMouseButton, IE_Pressed, this, &ADungeonPlayerController::HandleLeftMousePressed);
     InputComponent->BindKey(EKeys::LeftMouseButton, IE_Released, this, &ADungeonPlayerController::HandleLeftMouseReleased);
-    InputComponent->BindKey(EKeys::One, IE_Pressed, this, &ADungeonPlayerController::SetDigMode);
-    InputComponent->BindKey(EKeys::Two, IE_Pressed, this, &ADungeonPlayerController::SetManaWellMode);
-    InputComponent->BindKey(EKeys::Three, IE_Pressed, this, &ADungeonPlayerController::SetStarterSpawnerMode);
-    InputComponent->BindKey(EKeys::Four, IE_Pressed, this, &ADungeonPlayerController::SetStarterTrapMode);
+
+    // Number row selects the Nth placeable shop item (see GetShopHotkeyBuildableIds).
+    const TArray<FKey> HotkeyKeys = {
+        EKeys::One, EKeys::Two, EKeys::Three, EKeys::Four, EKeys::Five,
+        EKeys::Six, EKeys::Seven, EKeys::Eight, EKeys::Nine
+    };
+    check(HotkeyKeys.Num() == DungeonCore::MaxShopHotkeys);
+    for (int32 HotkeyIndex = 0; HotkeyIndex < HotkeyKeys.Num(); ++HotkeyIndex)
+    {
+        FInputKeyBinding HotkeyBinding(FInputChord(HotkeyKeys[HotkeyIndex]), IE_Pressed);
+        HotkeyBinding.KeyDelegate.GetDelegateForManualSet().BindUObject(
+            this,
+            &ADungeonPlayerController::SelectShopHotkey,
+            HotkeyIndex
+        );
+        InputComponent->KeyBindings.Add(HotkeyBinding);
+    }
+
     InputComponent->BindKey(EKeys::F, IE_Pressed, this, &ADungeonPlayerController::RecenterCameraOnCore);
     InputComponent->BindKey(EKeys::MouseScrollUp, IE_Pressed, this, &ADungeonPlayerController::ZoomIn);
     InputComponent->BindKey(EKeys::MouseScrollDown, IE_Pressed, this, &ADungeonPlayerController::ZoomOut);
@@ -118,14 +121,116 @@ void ADungeonPlayerController::SetupInputComponent()
     InputComponent->BindKey(EKeys::F9, IE_Pressed, this, &ADungeonPlayerController::QuickLoadRun);
 }
 
-void ADungeonPlayerController::SetBuildModeFromUI(const EDungeonBuildMode InBuildMode)
+void ADungeonPlayerController::ActivateShopItem(const FName BuildableId)
 {
-    SetBuildMode(InBuildMode);
+    const UDungeonContentSubsystem* ContentSubsystem = GetDungeonContentSubsystem();
+    UDungeonSimSubsystem* DungeonSimSubsystem = GetDungeonSimSubsystem();
+    if (ContentSubsystem == nullptr || DungeonSimSubsystem == nullptr)
+    {
+        UE_LOG(LogTemp, Error, TEXT("ActivateShopItem: subsystems unavailable."));
+        return;
+    }
+
+    const FDungeonBuildableRow* Row = ContentSubsystem->FindBuildable(BuildableId);
+    if (Row == nullptr)
+    {
+        UE_LOG(LogTemp, Error, TEXT("ActivateShopItem: unknown buildable '%s'."), *BuildableId.ToString());
+        return;
+    }
+
+    if (Row->Category == EBuildableCategory::Upgrade)
+    {
+        const FPlacementResult Result = DungeonSimSubsystem->PurchaseUpgrade(BuildableId);
+        if (!Result.bSuccess)
+        {
+            UE_LOG(
+                LogTemp,
+                Warning,
+                TEXT("Upgrade '%s' not bought (reason %d)."),
+                *BuildableId.ToString(),
+                static_cast<int32>(Result.FailureReason)
+            );
+        }
+        return;
+    }
+
+    SelectBuildable(BuildableId);
 }
 
-EDungeonBuildMode ADungeonPlayerController::GetBuildMode() const
+void ADungeonPlayerController::SelectBuildable(const FName BuildableId)
 {
-    return BuildMode;
+    const UDungeonContentSubsystem* ContentSubsystem = GetDungeonContentSubsystem();
+    if (ContentSubsystem == nullptr)
+    {
+        UE_LOG(LogTemp, Fatal, TEXT("Dungeon content subsystem is required to select a buildable."));
+        return;
+    }
+
+    const FDungeonBuildableRow* Row = ContentSubsystem->FindBuildable(BuildableId);
+    if (Row == nullptr)
+    {
+        UE_LOG(LogTemp, Error, TEXT("SelectBuildable: unknown buildable '%s'."), *BuildableId.ToString());
+        return;
+    }
+
+    if (Row->Category == EBuildableCategory::Upgrade)
+    {
+        UE_LOG(LogTemp, Error, TEXT("SelectBuildable: '%s' is an upgrade and cannot be placed."), *BuildableId.ToString());
+        return;
+    }
+
+    SelectedBuildableId = BuildableId;
+    OnSelectedBuildableChanged.Broadcast(SelectedBuildableId);
+
+    if (BuildCursorActor != nullptr)
+    {
+        BuildCursorActor->SetPreviewBuildable(Row->Category, Row->Footprint);
+        BuildCursorActor->SetPreviewOriginBlock(HoveredBlockCoord);
+    }
+
+    UpdatePlacementPreview();
+}
+
+FName ADungeonPlayerController::GetSelectedBuildableId() const
+{
+    return SelectedBuildableId;
+}
+
+TArray<FName> ADungeonPlayerController::GetShopHotkeyBuildableIds() const
+{
+    TArray<FName> HotkeyIds;
+
+    const UDungeonContentSubsystem* ContentSubsystem = GetDungeonContentSubsystem();
+    const UDungeonSimSubsystem* DungeonSimSubsystem = GetDungeonSimSubsystem();
+    if (ContentSubsystem == nullptr || DungeonSimSubsystem == nullptr)
+    {
+        return HotkeyIds;
+    }
+
+    for (const FDungeonShopGroup& Group : ContentSubsystem->GetShopGroups())
+    {
+        for (const FName& BuildableId : Group.BuildableIds)
+        {
+            const FDungeonBuildableRow* Row = ContentSubsystem->FindBuildable(BuildableId);
+            if (Row == nullptr || Row->Category == EBuildableCategory::Upgrade)
+            {
+                continue;
+            }
+
+            if (!DungeonSimSubsystem->IsBuildableAvailableForRun(BuildableId))
+            {
+                continue;
+            }
+
+            HotkeyIds.Add(BuildableId);
+            if (HotkeyIds.Num() >= DungeonCore::MaxShopHotkeys)
+            {
+                return HotkeyIds;
+            }
+        }
+    }
+
+    return HotkeyIds;
 }
 
 FPlacementResult ADungeonPlayerController::GetCurrentPlacementPreview() const
@@ -172,13 +277,139 @@ void ADungeonPlayerController::StartRunFromSetup(const EDungeonThemeId ThemeId, 
     bRunActive = true;
     EnsureChunkActorExists();
     RefreshChunkVisuals();
-    SetBuildMode(EDungeonBuildMode::Dig);
-    UpdatePlacementPreview();
+    SelectBuildable(FName(DungeonCore::DigBuildableId));
 }
 
 bool ADungeonPlayerController::IsRunActive() const
 {
     return bRunActive;
+}
+
+void ADungeonPlayerController::DungeonDig(const int32 BlockX, const int32 BlockY)
+{
+    UDungeonSimSubsystem* DungeonSimSubsystem = GetDungeonSimSubsystem();
+    if (DungeonSimSubsystem == nullptr)
+    {
+        UE_LOG(LogTemp, Error, TEXT("DungeonDig: sim subsystem unavailable."));
+        return;
+    }
+
+    const FBlockCoord BlockCoord(BlockX, BlockY, 0);
+    const FPlacementResult Result = DungeonSimSubsystem->DigBlock(BlockCoord);
+    UE_LOG(
+        LogTemp,
+        Log,
+        TEXT("DungeonDig (%d, %d): %s (reason %d)."),
+        BlockX,
+        BlockY,
+        Result.bSuccess ? TEXT("dug") : TEXT("refused"),
+        static_cast<int32>(Result.FailureReason)
+    );
+}
+
+void ADungeonPlayerController::DungeonGrantMana(const int32 Amount)
+{
+    UDungeonSimSubsystem* DungeonSimSubsystem = GetDungeonSimSubsystem();
+    if (DungeonSimSubsystem == nullptr)
+    {
+        UE_LOG(LogTemp, Error, TEXT("DungeonGrantMana: sim subsystem unavailable."));
+        return;
+    }
+    DungeonSimSubsystem->AddMana(Amount);
+}
+
+void ADungeonPlayerController::DungeonBuy(const FString& BuildableId)
+{
+    UDungeonSimSubsystem* DungeonSimSubsystem = GetDungeonSimSubsystem();
+    if (DungeonSimSubsystem == nullptr)
+    {
+        UE_LOG(LogTemp, Error, TEXT("DungeonBuy: sim subsystem unavailable."));
+        return;
+    }
+
+    const FPlacementResult Result = DungeonSimSubsystem->PurchaseUpgrade(FName(*BuildableId));
+    UE_LOG(
+        LogTemp,
+        Log,
+        TEXT("DungeonBuy %s: %s (reason %d, cost %d)."),
+        *BuildableId,
+        Result.bSuccess ? TEXT("bought") : TEXT("refused"),
+        static_cast<int32>(Result.FailureReason),
+        Result.ManaCost
+    );
+}
+
+void ADungeonPlayerController::DungeonPlace(const FString& BuildableId, const int32 BlockX, const int32 BlockY)
+{
+    SelectBuildable(FName(*BuildableId));
+    if (SelectedBuildableId != FName(*BuildableId))
+    {
+        return;
+    }
+
+    const FPlacementResult Result = PlaceSelectedBuildableAt(FBlockCoord(BlockX, BlockY, 0));
+    UE_LOG(
+        LogTemp,
+        Log,
+        TEXT("DungeonPlace %s at (%d, %d): %s (reason %d)."),
+        *BuildableId,
+        BlockX,
+        BlockY,
+        Result.bSuccess ? TEXT("placed") : TEXT("refused"),
+        static_cast<int32>(Result.FailureReason)
+    );
+}
+
+void ADungeonPlayerController::DungeonStatus(const float RepeatSeconds)
+{
+    UDungeonSimSubsystem* DungeonSimSubsystem = GetDungeonSimSubsystem();
+    if (DungeonSimSubsystem == nullptr)
+    {
+        UE_LOG(LogTemp, Error, TEXT("DungeonStatus: sim subsystem unavailable."));
+        return;
+    }
+
+    if (RepeatSeconds > 0.0f)
+    {
+        FTimerDelegate RepeatDelegate;
+        RepeatDelegate.BindUObject(this, &ADungeonPlayerController::DungeonStatus, 0.0f);
+        GetWorldTimerManager().SetTimer(StatusLogTimerHandle, RepeatDelegate, RepeatSeconds, true);
+    }
+
+    const FResourceState Resources = DungeonSimSubsystem->GetResourceState();
+    const FFloorState Floor = DungeonSimSubsystem->GetFloorState();
+    FString Entries;
+    for (const FBlockCoord& Entry : Floor.SurfaceEntryBlocks)
+    {
+        Entries += FString::Printf(TEXT("(%d,%d) "), Entry.X, Entry.Y);
+    }
+    const TArray<FUnitInstanceData> Adventurers = DungeonSimSubsystem->GetActiveAdventurers();
+    FString AdventurerPositions;
+    for (const FUnitInstanceData& Adventurer : Adventurers)
+    {
+        AdventurerPositions += FString::Printf(
+            TEXT("(%d,%d k%d) "),
+            Adventurer.CurrentBlock.X,
+            Adventurer.CurrentBlock.Y,
+            Adventurer.KnownBlocks.Num()
+        );
+    }
+    UE_LOG(
+        LogTemp,
+        Log,
+        TEXT("DungeonStatus: mana %d (+%.2f/s, base %.2f) | breach %s | entries %d [%s] | wave %d | adventurers %d [%s] | defenders %d | core %d"),
+        Resources.CurrentMana,
+        Resources.ManaIncomePerSecond,
+        Resources.BaseManaPerSecond,
+        Floor.BreachState == EBreachState::Open ? TEXT("Open") : TEXT("Sealed"),
+        Floor.SurfaceEntryBlocks.Num(),
+        *Entries.TrimEnd(),
+        DungeonSimSubsystem->GetCurrentWaveNumber(),
+        Adventurers.Num(),
+        *AdventurerPositions.TrimEnd(),
+        DungeonSimSubsystem->GetActiveDefenders().Num(),
+        DungeonSimSubsystem->GetCurrentCoreHealth()
+    );
 }
 
 void ADungeonPlayerController::HandleTileChanged(const FTileData TileData)
@@ -260,89 +491,63 @@ void ADungeonPlayerController::HandlePrimaryAction()
         return;
     }
 
-    UDungeonSimSubsystem* DungeonSimSubsystem = GetDungeonSimSubsystem();
-    if (DungeonSimSubsystem == nullptr)
+    PlaceSelectedBuildableAt(HoveredBlockCoord);
+}
+
+void ADungeonPlayerController::SelectShopHotkey(const int32 HotkeyIndex)
+{
+    const TArray<FName> HotkeyIds = GetShopHotkeyBuildableIds();
+    if (!HotkeyIds.IsValidIndex(HotkeyIndex))
     {
         return;
     }
 
-    switch (BuildMode)
-    {
-    case EDungeonBuildMode::Dig:
-        DungeonSimSubsystem->DigBlock(HoveredBlockCoord);
-        break;
+    SelectBuildable(HotkeyIds[HotkeyIndex]);
+}
 
-    case EDungeonBuildMode::ManaWell:
+FPlacementResult ADungeonPlayerController::PlaceSelectedBuildableAt(const FBlockCoord& BlockCoord)
+{
+    FPlacementResult Result;
+
+    UDungeonSimSubsystem* DungeonSimSubsystem = GetDungeonSimSubsystem();
+    const FDungeonBuildableRow* Row = GetSelectedBuildableRow();
+    if (DungeonSimSubsystem == nullptr || Row == nullptr)
     {
-        FRoomFootprint Footprint;
-        Footprint.Width = 1;
-        Footprint.Height = 1;
-        Footprint.Depth = 1;
-        DungeonSimSubsystem->PlaceRoom(HoveredBlockCoord, ERoomTypeId::ManaWell, Footprint, DungeonSimSubsystem->GetManaWellCost());
-        break;
+        Result.FailureReason = EPlacementFailureReason::UnknownBuildable;
+        return Result;
     }
 
-    case EDungeonBuildMode::StarterSpawner:
+    switch (Row->Category)
     {
-        FRoomFootprint Footprint;
-        Footprint.Width = 2;
-        Footprint.Height = 2;
-        Footprint.Depth = 1;
-        DungeonSimSubsystem->PlaceRoom(
-            HoveredBlockCoord,
-            DungeonSimSubsystem->GetActiveStarterSpawnerRoomType(),
-            Footprint,
-            DungeonSimSubsystem->GetStarterSpawnerCost()
-        );
-        break;
-    }
+    case EBuildableCategory::Dig:
+        return DungeonSimSubsystem->DigBlock(BlockCoord);
 
-    case EDungeonBuildMode::StarterTrap:
-        DungeonSimSubsystem->PlaceTrap(
-            HoveredBlockCoord,
-            DungeonSimSubsystem->GetActiveStarterTrapType(),
-            DungeonSimSubsystem->GetStarterTrapCost()
-        );
-        break;
+    case EBuildableCategory::Room:
+        return DungeonSimSubsystem->PlaceRoom(BlockCoord, Row->RoomTypeId, Row->Footprint, Row->ManaCost);
+
+    case EBuildableCategory::Trap:
+        return DungeonSimSubsystem->PlaceTrap(BlockCoord, Row->TrapTypeId, Row->ManaCost);
+
+    case EBuildableCategory::Upgrade:
+        UE_LOG(LogTemp, Error, TEXT("Upgrade '%s' is selected as a placement tool; this should be impossible."), *Row->BuildableId.ToString());
+        Result.FailureReason = EPlacementFailureReason::UnknownBuildable;
+        return Result;
 
     default:
-        UE_LOG(LogTemp, Fatal, TEXT("Unhandled build mode."));
-        break;
+        UE_LOG(LogTemp, Fatal, TEXT("Unhandled buildable category while placing."));
+        return Result;
     }
 }
 
-void ADungeonPlayerController::SetDigMode()
+const FDungeonBuildableRow* ADungeonPlayerController::GetSelectedBuildableRow() const
 {
-    SetBuildMode(EDungeonBuildMode::Dig);
-}
-
-void ADungeonPlayerController::SetManaWellMode()
-{
-    SetBuildMode(EDungeonBuildMode::ManaWell);
-}
-
-void ADungeonPlayerController::SetStarterSpawnerMode()
-{
-    SetBuildMode(EDungeonBuildMode::StarterSpawner);
-}
-
-void ADungeonPlayerController::SetStarterTrapMode()
-{
-    SetBuildMode(EDungeonBuildMode::StarterTrap);
-}
-
-void ADungeonPlayerController::SetBuildMode(const EDungeonBuildMode InBuildMode)
-{
-    BuildMode = InBuildMode;
-    OnBuildModeChanged.Broadcast(BuildMode);
-
-    if (BuildCursorActor != nullptr)
+    const UDungeonContentSubsystem* ContentSubsystem = GetDungeonContentSubsystem();
+    if (ContentSubsystem == nullptr || SelectedBuildableId.IsNone())
     {
-        BuildCursorActor->SetPreviewMode(BuildMode);
-        BuildCursorActor->SetPreviewOriginBlock(HoveredBlockCoord);
+        return nullptr;
     }
 
-    UpdatePlacementPreview();
+    return ContentSubsystem->FindBuildable(SelectedBuildableId);
 }
 
 bool ADungeonPlayerController::ProjectMouseToDungeonSurface(FVector& OutWorldPoint) const
@@ -434,39 +639,37 @@ void ADungeonPlayerController::UpdatePlacementPreview()
         return;
     }
 
-    switch (BuildMode)
+    const FDungeonBuildableRow* Row = GetSelectedBuildableRow();
+    if (Row == nullptr)
     {
-    case EDungeonBuildMode::Dig:
-        CurrentPlacementPreview = DungeonSimSubsystem->PreviewDigAtBlock(HoveredBlockCoord);
-        break;
-
-    case EDungeonBuildMode::ManaWell:
-    {
-        FRoomFootprint Footprint;
-        Footprint.Width = 1;
-        Footprint.Height = 1;
-        Footprint.Depth = 1;
-        CurrentPlacementPreview = DungeonSimSubsystem->PreviewRoomPlacement(HoveredBlockCoord, Footprint, DungeonSimSubsystem->GetManaWellCost());
-        break;
+        CurrentPlacementPreview = FPlacementResult();
+        CurrentPlacementPreview.FailureReason = EPlacementFailureReason::UnknownBuildable;
     }
-
-    case EDungeonBuildMode::StarterSpawner:
+    else
     {
-        FRoomFootprint Footprint;
-        Footprint.Width = 2;
-        Footprint.Height = 2;
-        Footprint.Depth = 1;
-        CurrentPlacementPreview = DungeonSimSubsystem->PreviewRoomPlacement(HoveredBlockCoord, Footprint, DungeonSimSubsystem->GetStarterSpawnerCost());
-        break;
-    }
+        switch (Row->Category)
+        {
+        case EBuildableCategory::Dig:
+            CurrentPlacementPreview = DungeonSimSubsystem->PreviewDigAtBlock(HoveredBlockCoord);
+            break;
 
-    case EDungeonBuildMode::StarterTrap:
-        CurrentPlacementPreview = DungeonSimSubsystem->PreviewTrapPlacement(HoveredBlockCoord, DungeonSimSubsystem->GetStarterTrapCost());
-        break;
+        case EBuildableCategory::Room:
+            CurrentPlacementPreview = DungeonSimSubsystem->PreviewRoomPlacement(HoveredBlockCoord, Row->Footprint, Row->ManaCost);
+            break;
 
-    default:
-        UE_LOG(LogTemp, Fatal, TEXT("Unhandled build mode while updating placement preview."));
-        break;
+        case EBuildableCategory::Trap:
+            CurrentPlacementPreview = DungeonSimSubsystem->PreviewTrapPlacement(HoveredBlockCoord, Row->ManaCost);
+            break;
+
+        case EBuildableCategory::Upgrade:
+            CurrentPlacementPreview = FPlacementResult();
+            CurrentPlacementPreview.FailureReason = EPlacementFailureReason::UnknownBuildable;
+            break;
+
+        default:
+            UE_LOG(LogTemp, Fatal, TEXT("Unhandled buildable category while updating placement preview."));
+            break;
+        }
     }
 
     if (BuildCursorActor != nullptr)
@@ -566,29 +769,23 @@ void ADungeonPlayerController::RefreshChunkVisuals()
         return;
     }
 
-    UDungeonGridState* GridState = DungeonSimSubsystem->GetGridState();
     ChunkActor->RefreshFromSimulation(
-        GridState,
+        DungeonSimSubsystem->GetGridState(),
         DungeonSimSubsystem->GetActiveAdventurers(),
         DungeonSimSubsystem->GetActiveDefenders()
     );
-
-    if (GEngine != nullptr && GridState != nullptr)
-    {
-        const int32 TileCount = GridState->GetAllTiles().Num();
-        GEngine->AddOnScreenDebugMessage(
-            3,
-            8.0f,
-            FColor::Yellow,
-            FString::Printf(TEXT("Dungeon tiles: %d"), TileCount)
-        );
-    }
 }
 
 UDungeonSimSubsystem* ADungeonPlayerController::GetDungeonSimSubsystem() const
 {
     UGameInstance* GameInstance = GetGameInstance();
     return GameInstance != nullptr ? GameInstance->GetSubsystem<UDungeonSimSubsystem>() : nullptr;
+}
+
+UDungeonContentSubsystem* ADungeonPlayerController::GetDungeonContentSubsystem() const
+{
+    UGameInstance* GameInstance = GetGameInstance();
+    return GameInstance != nullptr ? GameInstance->GetSubsystem<UDungeonContentSubsystem>() : nullptr;
 }
 
 ADungeonChunkActor* ADungeonPlayerController::FindChunkActor() const
@@ -641,7 +838,10 @@ void ADungeonPlayerController::EnsureBuildCursor()
     BuildCursorActor = World->SpawnActor<ADungeonBuildCursorActor>(ADungeonBuildCursorActor::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, SpawnParameters);
     if (BuildCursorActor != nullptr)
     {
-        BuildCursorActor->SetPreviewMode(BuildMode);
+        if (const FDungeonBuildableRow* Row = GetSelectedBuildableRow())
+        {
+            BuildCursorActor->SetPreviewBuildable(Row->Category, Row->Footprint);
+        }
     }
 }
 

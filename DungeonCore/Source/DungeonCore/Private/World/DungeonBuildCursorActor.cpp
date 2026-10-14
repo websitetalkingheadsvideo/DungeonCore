@@ -23,15 +23,24 @@ ADungeonBuildCursorActor::ADungeonBuildCursorActor()
         PreviewMeshComponent->SetStaticMesh(CubeMesh.Object);
     }
 
-    SetPreviewMode(EDungeonBuildMode::Dig);
+    Footprint.Width = 1;
+    Footprint.Height = 1;
+    Footprint.Depth = 1;
+    SetPreviewBuildable(EBuildableCategory::Dig, Footprint);
     SetPreviewOriginBlock(FBlockCoord(0, 0, 0));
 }
 
-void ADungeonBuildCursorActor::SetPreviewMode(const EDungeonBuildMode InBuildMode)
+void ADungeonBuildCursorActor::SetPreviewBuildable(const EBuildableCategory InCategory, const FRoomFootprint& InFootprint)
 {
-    BuildMode = InBuildMode;
-    PreviewMeshComponent->SetWorldScale3D(GetPreviewScaleForMode(BuildMode) * (bPreviewValid ? 1.0 : 0.9));
-    SetPreviewOriginBlock(OriginBlock);
+    if (!InFootprint.IsValid())
+    {
+        UE_LOG(LogTemp, Fatal, TEXT("Build cursor received an invalid footprint."));
+        return;
+    }
+
+    Category = InCategory;
+    Footprint = InFootprint;
+    RefreshPreviewTransform();
 }
 
 void ADungeonBuildCursorActor::SetPreviewOriginBlock(const FBlockCoord& InOriginBlock)
@@ -43,24 +52,22 @@ void ADungeonBuildCursorActor::SetPreviewOriginBlock(const FBlockCoord& InOrigin
 void ADungeonBuildCursorActor::SetHoveredTileState(const ETileState InTileState)
 {
     HoveredTileState = InTileState;
-    SetPreviewOriginBlock(OriginBlock);
+    RefreshPreviewTransform();
 }
 
 void ADungeonBuildCursorActor::SetPreviewValidity(const bool bIsValid)
 {
     bPreviewValid = bIsValid;
-    PreviewMeshComponent->SetWorldScale3D(GetPreviewScaleForMode(BuildMode) * (bPreviewValid ? 1.0 : 0.9));
-    SetPreviewOriginBlock(OriginBlock);
+    RefreshPreviewTransform();
 }
 
 FVector ADungeonBuildCursorActor::GetPreviewWorldLocation(const FBlockCoord& InOriginBlock) const
 {
-    const FRoomFootprint Footprint = GetFootprintForMode(BuildMode);
     const double FloorScaleZ = DungeonCore::CarvedFloorThicknessUnits / DungeonCore::DefaultEngineCubeSizeUnits;
 
-    if (BuildMode == EDungeonBuildMode::Dig)
+    if (Category == EBuildableCategory::Dig)
     {
-        if (HoveredTileState == ETileState::SolidRock || HoveredTileState == ETileState::Wall)
+        if (IsDigOnSolidRock())
         {
             return DungeonCore::GetDigSurfaceHighlightWorldCenter(InOriginBlock);
         }
@@ -76,42 +83,25 @@ FVector ADungeonBuildCursorActor::GetPreviewWorldLocation(const FBlockCoord& InO
     );
 }
 
-FVector ADungeonBuildCursorActor::GetPreviewScaleForMode(const EDungeonBuildMode InBuildMode) const
+FVector ADungeonBuildCursorActor::GetPreviewScale() const
 {
-    const FRoomFootprint Footprint = GetFootprintForMode(InBuildMode);
     const double XScale = static_cast<double>(Footprint.Width * DungeonCore::BlockSizeUnits) / DungeonCore::DefaultEngineCubeSizeUnits;
     const double YScale = static_cast<double>(Footprint.Height * DungeonCore::BlockSizeUnits) / DungeonCore::DefaultEngineCubeSizeUnits;
-    const bool bDigSolidRock = InBuildMode == EDungeonBuildMode::Dig
-        && (HoveredTileState == ETileState::SolidRock || HoveredTileState == ETileState::Wall);
-    const double ZScale = bDigSolidRock
+    const double ZScale = IsDigOnSolidRock()
         ? DungeonCore::GetDigSurfaceHighlightScaleZ()
         : (DungeonCore::CarvedFloorThicknessUnits / DungeonCore::DefaultEngineCubeSizeUnits);
 
     return FVector(XScale, YScale, ZScale);
 }
 
-FRoomFootprint ADungeonBuildCursorActor::GetFootprintForMode(const EDungeonBuildMode InBuildMode) const
+bool ADungeonBuildCursorActor::IsDigOnSolidRock() const
 {
-    FRoomFootprint Footprint;
+    return Category == EBuildableCategory::Dig
+        && (HoveredTileState == ETileState::SolidRock || HoveredTileState == ETileState::Wall);
+}
 
-    switch (InBuildMode)
-    {
-    case EDungeonBuildMode::StarterSpawner:
-        Footprint.Width = 2;
-        Footprint.Height = 2;
-        Footprint.Depth = 1;
-        break;
-    case EDungeonBuildMode::Dig:
-    case EDungeonBuildMode::ManaWell:
-    case EDungeonBuildMode::StarterTrap:
-        Footprint.Width = 1;
-        Footprint.Height = 1;
-        Footprint.Depth = 1;
-        break;
-    default:
-        UE_LOG(LogTemp, Fatal, TEXT("Unhandled build mode for cursor footprint."));
-        break;
-    }
-
-    return Footprint;
+void ADungeonBuildCursorActor::RefreshPreviewTransform()
+{
+    PreviewMeshComponent->SetWorldScale3D(GetPreviewScale() * (bPreviewValid ? 1.0 : 0.9));
+    SetPreviewOriginBlock(OriginBlock);
 }

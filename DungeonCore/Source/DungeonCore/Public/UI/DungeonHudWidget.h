@@ -7,9 +7,29 @@
 #include "DungeonHudWidget.generated.h"
 
 class ADungeonPlayerController;
-class UButton;
 class UCanvasPanel;
+class UDungeonContentSubsystem;
+class UDungeonShopItemButton;
+class UDungeonSimSubsystem;
 class UTextBlock;
+class UVerticalBox;
+struct FDungeonBuildableRow;
+
+/** One generated shop row: the button plus the label we rewrite when affordability or ownership changes. */
+USTRUCT()
+struct FDungeonShopButtonEntry
+{
+    GENERATED_BODY()
+
+    UPROPERTY()
+    FName BuildableId;
+
+    UPROPERTY()
+    TObjectPtr<UDungeonShopItemButton> Button;
+
+    UPROPERTY()
+    TObjectPtr<UTextBlock> Label;
+};
 
 UCLASS()
 class DUNGEONCORE_API UDungeonHudWidget : public UUserWidget
@@ -17,6 +37,9 @@ class DUNGEONCORE_API UDungeonHudWidget : public UUserWidget
     GENERATED_BODY()
 
 public:
+    /** Widget tree must exist before Slate builds it on AddToViewport, so the HUD is assembled here, not in NativeConstruct. */
+    virtual void NativeOnInitialized() override;
+
     virtual void NativeConstruct() override;
 
     virtual void NativeDestruct() override;
@@ -29,7 +52,7 @@ private:
     void HandleBreachStateChanged(EBreachState BreachState);
 
     UFUNCTION()
-    void HandleBuildModeChanged(EDungeonBuildMode BuildMode);
+    void HandleSelectedBuildableChanged(FName BuildableId);
 
     UFUNCTION()
     void HandleWaveChanged(int32 CurrentWaveNumber);
@@ -41,18 +64,12 @@ private:
     void HandlePlacementPreviewChanged(FPlacementResult PlacementResult);
 
     UFUNCTION()
-    void HandleDigClicked();
-
-    UFUNCTION()
-    void HandleManaWellClicked();
-
-    UFUNCTION()
-    void HandleStarterSpawnerClicked();
-
-    UFUNCTION()
-    void HandleStarterTrapClicked();
+    void HandleShopItemClicked(FName BuildableId);
 
     void BuildHud();
+
+    /** Generates one heading + button per catalog group/item available to this run. */
+    void BuildShopPanel(UVerticalBox* ShopBox);
 
     void RefreshAllText();
 
@@ -60,7 +77,7 @@ private:
 
     void RefreshBreachText(const EBreachState BreachState);
 
-    void RefreshModeText(const EDungeonBuildMode BuildMode);
+    void RefreshSelectedText(const FName BuildableId);
 
     void RefreshWaveText(const int32 CurrentWaveNumber);
 
@@ -68,9 +85,18 @@ private:
 
     void RefreshPlacementPreviewText(const FPlacementResult& PlacementResult);
 
+    /** Rewrites labels/enabled state: hotkey, cost, owned/locked suffix, selected highlight. */
+    void RefreshShopButtons();
+
+    FText MakeShopButtonLabel(const FDungeonBuildableRow& Row, const int32 HotkeyIndex) const;
+
+    FString DescribePlacementFailure(const EPlacementFailureReason FailureReason) const;
+
     ADungeonPlayerController* GetDungeonPlayerController() const;
 
-    UButton* CreateActionButton(const FText& LabelText, const FName WidgetName);
+    UDungeonSimSubsystem* GetDungeonSimSubsystem() const;
+
+    UDungeonContentSubsystem* GetDungeonContentSubsystem() const;
 
     UTextBlock* CreateInfoTextBlock(const FName WidgetName);
 
@@ -86,7 +112,7 @@ private:
     TObjectPtr<UTextBlock> BreachTextBlock;
 
     UPROPERTY()
-    TObjectPtr<UTextBlock> BuildModeTextBlock;
+    TObjectPtr<UTextBlock> SelectedTextBlock;
 
     UPROPERTY()
     TObjectPtr<UTextBlock> ControlsTextBlock;
@@ -101,14 +127,5 @@ private:
     TObjectPtr<UTextBlock> PlacementPreviewTextBlock;
 
     UPROPERTY()
-    TObjectPtr<UButton> DigButton;
-
-    UPROPERTY()
-    TObjectPtr<UButton> ManaWellButton;
-
-    UPROPERTY()
-    TObjectPtr<UButton> StarterSpawnerButton;
-
-    UPROPERTY()
-    TObjectPtr<UButton> StarterTrapButton;
+    TArray<FDungeonShopButtonEntry> ShopButtons;
 };

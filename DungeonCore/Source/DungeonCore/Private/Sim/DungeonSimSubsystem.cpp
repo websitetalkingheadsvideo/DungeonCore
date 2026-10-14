@@ -22,6 +22,7 @@ void UDungeonSimSubsystem::Deinitialize()
         World->GetTimerManager().ClearTimer(WaveStartTimerHandle);
         World->GetTimerManager().ClearTimer(AdventurerAdvanceTimerHandle);
         World->GetTimerManager().ClearTimer(DefenderSpawnTimerHandle);
+        World->GetTimerManager().ClearTimer(ManaTickTimerHandle);
     }
 
     RoomInstances.Reset();
@@ -40,22 +41,22 @@ void UDungeonSimSubsystem::StartNewRun(const FRunSetup& InRunSetup)
     RunSetup = InRunSetup;
     ResourceState.CurrentMana = DungeonCore::StartingMana;
     ResourceState.CurrentDungeonPoints = 0;
-    ResourceState.BaseManaPerSecond = 0.4f;
+    ResourceState.BaseManaPerSecond = DungeonCore::SealedManaPerSecond;
+    ManaFractionCarry = 0.0f;
+    AdventurerDecisionStream.Initialize(RunSetup.Seed);
 
     FloorState.FloorIndex = RunSetup.StartingFloorIndex;
-    FloorState.OutsideEdgeDirection = EDungeonEdgeDirection::East;
     FloorState.BreachState = EBreachState::Sealed;
     FloorState.CoreBlock = DungeonCore::GetStartingCoreBlockCoord();
-    FloorState.SurfaceEntryBlock = FBlockCoord(
-        DungeonCore::StartingCoreChamberWidthBlocks - 1,
-        FloorState.CoreBlock.Y,
-        0
-    );
+    // No predetermined entrance: the chamber starts sealed and the dungeon opens only when the player's
+    // tunnels reach the edge of the mountain, on whichever side(s) they choose.
+    FloorState.SurfaceEntryBlocks.Reset();
 
     RoomInstances.Reset();
     TrapInstances.Reset();
     ActiveAdventurers.Reset();
     ActiveDefenders.Reset();
+    PurchasedUpgradeIds.Reset();
     CurrentWaveNumber = 0;
     CurrentCoreHealth = 100;
 
@@ -67,6 +68,8 @@ void UDungeonSimSubsystem::StartNewRun(const FRunSetup& InRunSetup)
     }
 
     SeedFirstFloor();
+    StartManaTickTimer();
+    ResourceState.ManaIncomePerSecond = ComputeManaIncomePerSecond();
 
     OnResourceChanged.Broadcast(ResourceState);
     OnBreachStateChanged.Broadcast(FloorState.BreachState);
@@ -126,8 +129,10 @@ FPlacementResult UDungeonSimSubsystem::DigBlock(const FBlockCoord& BlockCoord)
         return Result;
     }
 
-    const bool bOpensSurface = BlockCoord == FloorState.SurfaceEntryBlock;
-    const bool bApplySucceeded = GridState->ApplyDig(BlockCoord, bOpensSurface);
+    // Tunnels that reach the edge of the mountain become entrances. The first one opens the dungeon to
+    // adventurers; later ones simply add more ways in.
+    const bool bReachesSurface = DungeonCore::IsSurfaceEdgeBlock(BlockCoord);
+    const bool bApplySucceeded = GridState->ApplyDig(BlockCoord, bReachesSurface);
     if (!bApplySucceeded)
     {
         UE_LOG(LogTemp, Error, TEXT("ApplyDig failed for block (%d, %d, %d)."), BlockCoord.X, BlockCoord.Y, BlockCoord.Z);
@@ -136,29 +141,16 @@ FPlacementResult UDungeonSimSubsystem::DigBlock(const FBlockCoord& BlockCoord)
         return Result;
     }
 
-    if (bOpensSurface)
+    if (bReachesSurface)
     {
-        FloorState.BreachState = EBreachState::Open;
-        OnBreachStateChanged.Broadcast(FloorState.BreachState);
-        ScheduleNextWave(45.0f);
+        FloorState.SurfaceEntryBlocks.AddUnique(BlockCoord);
 
-        if (UWorld* World = GetWorld())
+        if (FloorState.BreachState == EBreachState::Sealed)
         {
-            World->GetTimerManager().SetTimer(
-                AdventurerAdvanceTimerHandle,
-                this,
-                &UDungeonSimSubsystem::AdvanceAdventurers,
-                1.0f,
-                true
-            );
-
-            World->GetTimerManager().SetTimer(
-                DefenderSpawnTimerHandle,
-                this,
-                &UDungeonSimSubsystem::SpawnDefenders,
-                5.0f,
-                true
-            );
+            FloorState.BreachState = EBreachState::Open;
+            ResourceState.BaseManaPerSecond = DungeonCore::OpenManaPerSecond;
+            OnBreachStateChanged.Broadcast(FloorState.BreachState);
+            StartInvasionTimers();
         }
     }
 
@@ -212,6 +204,10 @@ FPlacementResult UDungeonSimSubsystem::PlaceRoom(
         BroadcastTileAt(BlockCoord);
     }
 
+    // Income rooms change the rate immediately; the HUD should not wait for the next tick to show it.
+    ResourceState.ManaIncomePerSecond = ComputeManaIncomePerSecond();
+    OnResourceChanged.Broadcast(ResourceState);
+
     return Result;
 }
 
@@ -258,6 +254,37 @@ FPlacementResult UDungeonSimSubsystem::PlaceTrap(
     return Result;
 }
 
+FPlacementResult UDungeonSimSubsystem::PurchaseUpgrade(const FName BuildableId)
+{
+    FPlacementResult Result = ValidateUpgradePurchase(BuildableId);
+    if (!Result.bSuccess)
+    {
+        return Result;
+    }
+
+    const bool bSpendSucceeded = SpendMana(Result.ManaCost);
+    if (!bSpendSucceeded)
+    {
+        Result.bSuccess = false;
+        Result.FailureReason = EPlacementFailureReason::InsufficientMana;
+        return Result;
+    }
+
+    PurchasedUpgradeIds.Add(BuildableId);
+    ResourceState.ManaIncomePerSecond = ComputeManaIncomePerSecond();
+    OnResourceChanged.Broadcast(ResourceState);
+
+    UE_LOG(
+        LogTemp,
+        Log,
+        TEXT("Purchased upgrade '%s' for %d mana; income now %.2f/s."),
+        *BuildableId.ToString(),
+        Result.ManaCost,
+        ResourceState.ManaIncomePerSecond
+    );
+    return Result;
+}
+
 bool UDungeonSimSubsystem::SaveCurrentRun(const FString& SlotName)
 {
     EnsureGridState();
@@ -277,6 +304,7 @@ bool UDungeonSimSubsystem::SaveCurrentRun(const FString& SlotName)
     SaveGame->CurrentCoreHealth = CurrentCoreHealth;
     SaveGame->ActiveAdventurers = ActiveAdventurers;
     SaveGame->ActiveDefenders = ActiveDefenders;
+    SaveGame->PurchasedUpgradeIds = PurchasedUpgradeIds;
 
     SaveGame->Rooms.Reserve(RoomInstances.Num());
     for (const TPair<FGuid, FRoomInstanceData>& RoomEntry : RoomInstances)
@@ -315,10 +343,12 @@ bool UDungeonSimSubsystem::LoadSavedRun(const FString& SlotName)
     RunSetup = SaveGame->RunSetup;
     ResourceState = SaveGame->ResourceState;
     FloorState = SaveGame->FloorState;
+    AdventurerDecisionStream.Initialize(RunSetup.Seed);
     CurrentWaveNumber = SaveGame->CurrentWaveNumber;
     CurrentCoreHealth = SaveGame->CurrentCoreHealth;
     ActiveAdventurers = SaveGame->ActiveAdventurers;
     ActiveDefenders = SaveGame->ActiveDefenders;
+    PurchasedUpgradeIds = SaveGame->PurchasedUpgradeIds;
 
     RoomInstances.Reset();
     for (const FRoomInstanceData& RoomData : SaveGame->Rooms)
@@ -339,6 +369,8 @@ bool UDungeonSimSubsystem::LoadSavedRun(const FString& SlotName)
     }
 
     RestoreSimulationTimers();
+    StartManaTickTimer();
+    ResourceState.ManaIncomePerSecond = ComputeManaIncomePerSecond();
     BroadcastAllTiles();
     OnResourceChanged.Broadcast(ResourceState);
     OnBreachStateChanged.Broadcast(FloorState.BreachState);
@@ -393,6 +425,35 @@ FPlacementResult UDungeonSimSubsystem::PreviewTrapPlacement(const FBlockCoord& O
     return GridState->ValidateTrapPlacement(OriginBlock, ResourceState.CurrentMana, ManaCost);
 }
 
+FPlacementResult UDungeonSimSubsystem::PreviewUpgradePurchase(const FName BuildableId) const
+{
+    return ValidateUpgradePurchase(BuildableId);
+}
+
+bool UDungeonSimSubsystem::IsUpgradeOwned(const FName BuildableId) const
+{
+    return PurchasedUpgradeIds.Contains(BuildableId);
+}
+
+bool UDungeonSimSubsystem::IsBuildableAvailableForRun(const FName BuildableId) const
+{
+    const UDungeonContentSubsystem* ContentSubsystem = GetDungeonContentSubsystem();
+    if (ContentSubsystem == nullptr)
+    {
+        UE_LOG(LogTemp, Fatal, TEXT("Dungeon content subsystem is required to check buildable availability."));
+        return false;
+    }
+
+    const FDungeonBuildableRow* Row = ContentSubsystem->FindBuildable(BuildableId);
+    if (Row == nullptr)
+    {
+        UE_LOG(LogTemp, Error, TEXT("IsBuildableAvailableForRun: unknown buildable '%s'."), *BuildableId.ToString());
+        return false;
+    }
+
+    return Row->AllowedFamilies.Num() == 0 || Row->AllowedFamilies.Contains(RunSetup.CreatureFamilyId);
+}
+
 FResourceState UDungeonSimSubsystem::GetResourceState() const
 {
     return ResourceState;
@@ -411,16 +472,6 @@ FRunSetup UDungeonSimSubsystem::GetRunSetup() const
 UDungeonGridState* UDungeonSimSubsystem::GetGridState() const
 {
     return GridState;
-}
-
-ERoomTypeId UDungeonSimSubsystem::GetActiveStarterSpawnerRoomType() const
-{
-    return GetStarterSpawnerRoomType(RunSetup.CreatureFamilyId);
-}
-
-ETrapTypeId UDungeonSimSubsystem::GetActiveStarterTrapType() const
-{
-    return GetStarterTrapType(RunSetup.CreatureFamilyId);
 }
 
 int32 UDungeonSimSubsystem::GetCurrentWaveNumber() const
@@ -451,54 +502,6 @@ int32 UDungeonSimSubsystem::GetDigManaCost() const
     }
 
     UE_LOG(LogTemp, Fatal, TEXT("Dungeon content subsystem is required for dig cost lookup."));
-    return 0;
-}
-
-int32 UDungeonSimSubsystem::GetManaWellCost() const
-{
-    if (const UDungeonContentSubsystem* ContentSubsystem = GetDungeonContentSubsystem())
-    {
-        if (const FDungeonBuildableRow* Row = ContentSubsystem->FindBuildableByRoomType(ERoomTypeId::ManaWell))
-        {
-            return Row->ManaCost;
-        }
-
-        UE_LOG(LogTemp, Fatal, TEXT("Mana Well buildable row is required."));
-    }
-
-    UE_LOG(LogTemp, Fatal, TEXT("Dungeon content subsystem is required for Mana Well cost lookup."));
-    return 0;
-}
-
-int32 UDungeonSimSubsystem::GetStarterSpawnerCost() const
-{
-    if (const UDungeonContentSubsystem* ContentSubsystem = GetDungeonContentSubsystem())
-    {
-        if (const FDungeonBuildableRow* Row = ContentSubsystem->FindBuildableByRoomType(GetActiveStarterSpawnerRoomType()))
-        {
-            return Row->ManaCost;
-        }
-
-        UE_LOG(LogTemp, Fatal, TEXT("Starter spawner buildable row is required."));
-    }
-
-    UE_LOG(LogTemp, Fatal, TEXT("Dungeon content subsystem is required for starter spawner cost lookup."));
-    return 0;
-}
-
-int32 UDungeonSimSubsystem::GetStarterTrapCost() const
-{
-    if (const UDungeonContentSubsystem* ContentSubsystem = GetDungeonContentSubsystem())
-    {
-        if (const FDungeonBuildableRow* Row = ContentSubsystem->FindBuildableByTrapType(GetActiveStarterTrapType()))
-        {
-            return Row->ManaCost;
-        }
-
-        UE_LOG(LogTemp, Fatal, TEXT("Starter trap buildable row is required."));
-    }
-
-    UE_LOG(LogTemp, Fatal, TEXT("Dungeon content subsystem is required for starter trap cost lookup."));
     return 0;
 }
 
@@ -558,20 +561,10 @@ void UDungeonSimSubsystem::SeedFirstFloor()
 
     RoomInstances.Add(CoreRoom.RoomInstanceId, CoreRoom);
 
-    if (FTileData* SurfaceEntryTile = GridState->FindMutableTileData(FloorState.SurfaceEntryBlock))
-    {
-        SurfaceEntryTile->TileState = ETileState::SurfaceEntry;
-        SurfaceEntryTile->TrapTypeId = ETrapTypeId::None;
-        SurfaceEntryTile->bWalkable = true;
-        SurfaceEntryTile->bDiggable = false;
-    }
-
     for (const FBlockCoord& BlockCoord : CoreChamberBlocks)
     {
         BroadcastTileAt(BlockCoord);
     }
-
-    BroadcastTileAt(FloorState.SurfaceEntryBlock);
 }
 
 FTileData UDungeonSimSubsystem::MakeTileData(
@@ -631,6 +624,11 @@ void UDungeonSimSubsystem::RestoreSimulationTimers()
         return;
     }
 
+    StartInvasionTimers();
+}
+
+void UDungeonSimSubsystem::StartInvasionTimers()
+{
     if (UWorld* World = GetWorld())
     {
         World->GetTimerManager().SetTimer(
@@ -651,6 +649,149 @@ void UDungeonSimSubsystem::RestoreSimulationTimers()
     }
 
     ScheduleNextWave(45.0f);
+}
+
+void UDungeonSimSubsystem::StartManaTickTimer()
+{
+    UWorld* World = GetWorld();
+    if (World == nullptr)
+    {
+        UE_LOG(LogTemp, Error, TEXT("Cannot start the mana tick without a world."));
+        return;
+    }
+
+    World->GetTimerManager().SetTimer(
+        ManaTickTimerHandle,
+        this,
+        &UDungeonSimSubsystem::TickManaIncome,
+        DungeonCore::ManaTickIntervalSeconds,
+        true
+    );
+}
+
+void UDungeonSimSubsystem::TickManaIncome()
+{
+    const float IncomePerSecond = ComputeManaIncomePerSecond();
+    ResourceState.ManaIncomePerSecond = IncomePerSecond;
+
+    ManaFractionCarry += IncomePerSecond * DungeonCore::ManaTickIntervalSeconds;
+    const int32 WholeMana = FMath::FloorToInt32(ManaFractionCarry);
+    ManaFractionCarry -= static_cast<float>(WholeMana);
+
+    if (WholeMana > 0)
+    {
+        ResourceState.CurrentMana += WholeMana;
+    }
+    OnResourceChanged.Broadcast(ResourceState);
+}
+
+float UDungeonSimSubsystem::ComputeManaIncomePerSecond() const
+{
+    const UDungeonContentSubsystem* ContentSubsystem = GetDungeonContentSubsystem();
+    if (ContentSubsystem == nullptr)
+    {
+        UE_LOG(LogTemp, Fatal, TEXT("Dungeon content subsystem is required to compute mana income."));
+        return 0.0f;
+    }
+
+    const int32 AdventurersCounted = FMath::Min(ActiveAdventurers.Num(), DungeonCore::MaxAdventurersCountedForMana);
+    const float AdventurerFactor = static_cast<float>(AdventurersCounted);
+
+    float Income = ResourceState.BaseManaPerSecond + AdventurerFactor * DungeonCore::ManaPerAdventurerInsidePerSecond;
+
+    for (const TPair<FGuid, FRoomInstanceData>& RoomEntry : RoomInstances)
+    {
+        const FDungeonBuildableRow* Row = ContentSubsystem->FindBuildableByRoomType(RoomEntry.Value.RoomTypeId);
+        if (Row == nullptr)
+        {
+            // Core Chamber and corridors are not shop items and contribute nothing.
+            continue;
+        }
+        Income += Row->ManaPerSecond + Row->ManaPerAdventurerPerSecond * AdventurerFactor;
+    }
+
+    for (const FName& UpgradeId : PurchasedUpgradeIds)
+    {
+        const FDungeonBuildableRow* Row = ContentSubsystem->FindBuildable(UpgradeId);
+        if (Row == nullptr)
+        {
+            UE_LOG(LogTemp, Fatal, TEXT("Owned upgrade '%s' is missing from the shop catalog."), *UpgradeId.ToString());
+            return Income;
+        }
+        Income += Row->ManaPerSecond + Row->ManaPerAdventurerPerSecond * AdventurerFactor;
+    }
+
+    return Income;
+}
+
+FPlacementResult UDungeonSimSubsystem::ValidateUpgradePurchase(const FName BuildableId) const
+{
+    FPlacementResult Result;
+
+    const UDungeonContentSubsystem* ContentSubsystem = GetDungeonContentSubsystem();
+    if (ContentSubsystem == nullptr)
+    {
+        UE_LOG(LogTemp, Fatal, TEXT("Dungeon content subsystem is required to validate upgrade purchases."));
+        return Result;
+    }
+
+    const FDungeonBuildableRow* Row = ContentSubsystem->FindBuildable(BuildableId);
+    if (Row == nullptr || Row->Category != EBuildableCategory::Upgrade)
+    {
+        Result.FailureReason = EPlacementFailureReason::UnknownBuildable;
+        return Result;
+    }
+
+    Result.ManaCost = Row->ManaCost;
+
+    if (!IsBuildableAvailableForRun(BuildableId))
+    {
+        Result.FailureReason = EPlacementFailureReason::FamilyLocked;
+        return Result;
+    }
+
+    if (PurchasedUpgradeIds.Contains(BuildableId))
+    {
+        Result.FailureReason = EPlacementFailureReason::AlreadyOwned;
+        return Result;
+    }
+
+    if (!Row->RequiresBuildableId.IsNone() && !PurchasedUpgradeIds.Contains(Row->RequiresBuildableId))
+    {
+        Result.FailureReason = EPlacementFailureReason::MissingPrerequisite;
+        return Result;
+    }
+
+    if (ResourceState.CurrentMana < Row->ManaCost)
+    {
+        Result.FailureReason = EPlacementFailureReason::InsufficientMana;
+        return Result;
+    }
+
+    Result.bSuccess = true;
+    return Result;
+}
+
+FBlockCoord UDungeonSimSubsystem::FindNearestSurfaceEntry(const FBlockCoord& FromBlock) const
+{
+    if (FloorState.SurfaceEntryBlocks.Num() == 0)
+    {
+        UE_LOG(LogTemp, Error, TEXT("FindNearestSurfaceEntry called while the dungeon has no entrances."));
+        return FloorState.CoreBlock;
+    }
+
+    FBlockCoord Nearest = FloorState.SurfaceEntryBlocks[0];
+    int32 NearestDistance = TNumericLimits<int32>::Max();
+    for (const FBlockCoord& Entry : FloorState.SurfaceEntryBlocks)
+    {
+        const int32 Distance = FMath::Abs(Entry.X - FromBlock.X) + FMath::Abs(Entry.Y - FromBlock.Y);
+        if (Distance < NearestDistance)
+        {
+            NearestDistance = Distance;
+            Nearest = Entry;
+        }
+    }
+    return Nearest;
 }
 
 void UDungeonSimSubsystem::ScheduleNextWave(const float DelaySeconds)
@@ -679,21 +820,29 @@ void UDungeonSimSubsystem::StartNextWave()
         return;
     }
 
+    if (FloorState.SurfaceEntryBlocks.Num() == 0)
+    {
+        UE_LOG(LogTemp, Error, TEXT("StartNextWave: breach is Open but there are no surface entries."));
+        return;
+    }
+
     CurrentWaveNumber += 1;
     OnWaveChanged.Broadcast(CurrentWaveNumber);
 
+    // Spread the wave across every entrance the player has opened.
     const int32 WaveSize = 3 + FMath::Max(0, CurrentWaveNumber - 1);
     for (int32 UnitIndex = 0; UnitIndex < WaveSize; ++UnitIndex)
     {
         FUnitInstanceData AdventurerData;
         AdventurerData.UnitInstanceId = FGuid::NewGuid();
         AdventurerData.UnitTypeId = UnitIndex % 3 == 2 ? EUnitTypeId::AdventurerRanged : EUnitTypeId::AdventurerMelee;
-        AdventurerData.CurrentBlock = FloorState.SurfaceEntryBlock;
+        AdventurerData.CurrentBlock = FloorState.SurfaceEntryBlocks[UnitIndex % FloorState.SurfaceEntryBlocks.Num()];
         AdventurerData.CurrentHealth = 10;
         AdventurerData.bIsAdventurer = true;
         AdventurerData.Damage = AdventurerData.UnitTypeId == EUnitTypeId::AdventurerRanged ? 8 : 10;
         AdventurerData.PathStepIndex = 0;
-        AdventurerData.CurrentPath = BuildPathToCore(AdventurerData.CurrentBlock);
+        RevealSurroundings(AdventurerData);
+        AdventurerData.CurrentPath = BuildAdventurerPath(AdventurerData);
 
         ActiveAdventurers.Add(AdventurerData);
     }
@@ -775,7 +924,8 @@ void UDungeonSimSubsystem::AdvanceAdventurers()
             continue;
         }
 
-        AdventurerData.CurrentPath = BuildPathToCore(AdventurerData.CurrentBlock);
+        RevealSurroundings(AdventurerData);
+        AdventurerData.CurrentPath = BuildAdventurerPath(AdventurerData);
 
         if (AdventurerData.CurrentPath.Num() == 0)
         {
@@ -796,6 +946,7 @@ void UDungeonSimSubsystem::AdvanceAdventurers()
 
         AdventurerData.PathStepIndex = 1;
         AdventurerData.CurrentBlock = AdventurerData.CurrentPath[AdventurerData.PathStepIndex];
+        RevealSurroundings(AdventurerData);
         bAnyStateChanged = true;
 
         const bool bRemoveAfterMove = HandleAdventurerTileEffects(AdventurerData);
@@ -864,7 +1015,39 @@ void UDungeonSimSubsystem::SpawnDefenders()
     }
 }
 
-TArray<FBlockCoord> UDungeonSimSubsystem::BuildPathToCore(const FBlockCoord& StartBlock) const
+void UDungeonSimSubsystem::RevealSurroundings(FUnitInstanceData& AdventurerData) const
+{
+    if (GridState == nullptr)
+    {
+        return;
+    }
+
+    AdventurerData.KnownBlocks.AddUnique(AdventurerData.CurrentBlock);
+
+    const TArray<FBlockCoord> Directions = {
+        FBlockCoord(1, 0, 0),
+        FBlockCoord(-1, 0, 0),
+        FBlockCoord(0, 1, 0),
+        FBlockCoord(0, -1, 0)
+    };
+
+    for (const FBlockCoord& Direction : Directions)
+    {
+        FBlockCoord Probe = AdventurerData.CurrentBlock;
+        for (int32 Step = 0; Step < DungeonCore::AdventurerSightBlocks; ++Step)
+        {
+            Probe = Probe + Direction;
+            const FTileData* ProbeTile = GridState->FindTileData(Probe);
+            if (ProbeTile == nullptr || !ProbeTile->bWalkable)
+            {
+                break;
+            }
+            AdventurerData.KnownBlocks.AddUnique(Probe);
+        }
+    }
+}
+
+TArray<FBlockCoord> UDungeonSimSubsystem::BuildAdventurerPath(const FUnitInstanceData& AdventurerData) const
 {
     TArray<FBlockCoord> EmptyPath;
     if (GridState == nullptr)
@@ -872,21 +1055,41 @@ TArray<FBlockCoord> UDungeonSimSubsystem::BuildPathToCore(const FBlockCoord& Sta
         return EmptyPath;
     }
 
+    const FBlockCoord StartBlock = AdventurerData.CurrentBlock;
     const FTileData* StartTile = GridState->FindTileData(StartBlock);
     if (StartTile == nullptr || !StartTile->bWalkable)
     {
         return EmptyPath;
     }
 
+    TSet<FBlockCoord> Known;
+    Known.Append(AdventurerData.KnownBlocks);
+    Known.Add(StartBlock);
+
+    bool bCoreKnown = false;
+    for (const FBlockCoord& KnownBlock : Known)
+    {
+        const FTileData* KnownTile = GridState->FindTileData(KnownBlock);
+        if (KnownTile != nullptr && KnownTile->RoomTypeId == ERoomTypeId::CoreChamber)
+        {
+            bCoreKnown = true;
+            break;
+        }
+    }
+
+    // Breadth-first over known tiles only. Unknown walkable tiles are accepted as goals (the step into
+    // the dark) but never expanded through, so the adventurer cannot "see" beyond what it has explored.
+    // The known graph is small, so the search runs to completion and the goal is chosen afterwards.
     TArray<FBlockCoord> Frontier;
     Frontier.Add(StartBlock);
 
     TMap<FBlockCoord, FBlockCoord> CameFrom;
     CameFrom.Add(StartBlock, StartBlock);
+    TMap<FBlockCoord, int32> Distance;
+    Distance.Add(StartBlock, 0);
 
-    int32 FrontierIndex = 0;
-    FBlockCoord GoalBlock = StartBlock;
-    bool bFoundGoal = false;
+    TArray<FBlockCoord> CoreGoals;
+    TArray<FBlockCoord> UnknownGoals;
 
     const TArray<FBlockCoord> NeighborOffsets = {
         FBlockCoord(1, 0, 0),
@@ -895,6 +1098,7 @@ TArray<FBlockCoord> UDungeonSimSubsystem::BuildPathToCore(const FBlockCoord& Sta
         FBlockCoord(0, -1, 0)
     };
 
+    int32 FrontierIndex = 0;
     while (FrontierIndex < Frontier.Num())
     {
         const FBlockCoord CurrentBlock = Frontier[FrontierIndex];
@@ -903,9 +1107,13 @@ TArray<FBlockCoord> UDungeonSimSubsystem::BuildPathToCore(const FBlockCoord& Sta
         const FTileData* CurrentTile = GridState->FindTileData(CurrentBlock);
         if (CurrentTile != nullptr && CurrentTile->RoomTypeId == ERoomTypeId::CoreChamber)
         {
-            GoalBlock = CurrentBlock;
-            bFoundGoal = true;
-            break;
+            CoreGoals.Add(CurrentBlock);
+        }
+
+        if (!Known.Contains(CurrentBlock))
+        {
+            UnknownGoals.Add(CurrentBlock);
+            continue;
         }
 
         for (const FBlockCoord& Offset : NeighborOffsets)
@@ -922,15 +1130,34 @@ TArray<FBlockCoord> UDungeonSimSubsystem::BuildPathToCore(const FBlockCoord& Sta
                 continue;
             }
 
-            Frontier.Add(NeighborBlock);
             CameFrom.Add(NeighborBlock, CurrentBlock);
+            Distance.Add(NeighborBlock, Distance[CurrentBlock] + 1);
+            Frontier.Add(NeighborBlock);
         }
     }
 
-    if (!bFoundGoal)
+    const TArray<FBlockCoord>& Goals = bCoreKnown ? CoreGoals : UnknownGoals;
+    if (Goals.Num() == 0)
     {
         return EmptyPath;
     }
+
+    // Among the nearest goals pick one at random so a party splits up at junctions instead of marching
+    // in lockstep, and so no compass direction is systematically favoured.
+    int32 NearestDistance = TNumericLimits<int32>::Max();
+    for (const FBlockCoord& Goal : Goals)
+    {
+        NearestDistance = FMath::Min(NearestDistance, Distance[Goal]);
+    }
+    TArray<FBlockCoord> NearestGoals;
+    for (const FBlockCoord& Goal : Goals)
+    {
+        if (Distance[Goal] == NearestDistance)
+        {
+            NearestGoals.Add(Goal);
+        }
+    }
+    const FBlockCoord GoalBlock = NearestGoals[AdventurerDecisionStream.RandRange(0, NearestGoals.Num() - 1)];
 
     TArray<FBlockCoord> ReversePath;
     FBlockCoord CurrentBlock = GoalBlock;
@@ -1086,7 +1313,7 @@ bool UDungeonSimSubsystem::HandleAdventurerTileEffects(FUnitInstanceData& Advent
             return false;
 
         case ETrapTypeId::PixieDustCloud:
-            AdventurerData.CurrentBlock = FloorState.SurfaceEntryBlock;
+            AdventurerData.CurrentBlock = FindNearestSurfaceEntry(AdventurerData.CurrentBlock);
             AdventurerData.CurrentHealth -= 2;
             if (AdventurerData.CurrentHealth <= 0)
             {

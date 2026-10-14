@@ -43,7 +43,10 @@ enum class ERoomTypeId : uint8
     Crypt,
     WarPens,
     NestCluster,
-    GlamourGrove
+    GlamourGrove,
+    LeyLineTap,
+    ManaCrystalCluster,
+    SiphonTotem
 };
 
 UENUM(BlueprintType)
@@ -70,15 +73,6 @@ enum class EUnitTypeId : uint8
 };
 
 UENUM(BlueprintType)
-enum class EDungeonEdgeDirection : uint8
-{
-    North,
-    East,
-    South,
-    West
-};
-
-UENUM(BlueprintType)
 enum class EBreachState : uint8
 {
     Sealed,
@@ -96,24 +90,20 @@ enum class EPlacementFailureReason : uint8
     WouldDisconnectPath,
     InvalidFootprint,
     FamilyLocked,
-    ThemeLocked
+    ThemeLocked,
+    AlreadyOwned,
+    MissingPrerequisite,
+    UnknownBuildable
 };
 
+/** What buying a shop item does: Dig/Room/Trap are placed on the grid, Upgrade applies to the core immediately. */
 UENUM(BlueprintType)
 enum class EBuildableCategory : uint8
 {
+    Dig,
     Room,
     Trap,
-    Utility
-};
-
-UENUM(BlueprintType)
-enum class EDungeonBuildMode : uint8
-{
-    Dig,
-    ManaWell,
-    StarterSpawner,
-    StarterTrap
+    Upgrade
 };
 
 USTRUCT(BlueprintType)
@@ -238,6 +228,10 @@ struct FResourceState
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dungeon")
     float BaseManaPerSecond = 0.0f;
+
+    /** Effective income after Mana Wells and adventurers inside; what the HUD shows as +x/s. */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dungeon")
+    float ManaIncomePerSecond = 0.0f;
 };
 
 USTRUCT(BlueprintType)
@@ -346,6 +340,10 @@ struct FUnitInstanceData
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dungeon")
     TArray<FBlockCoord> CurrentPath;
+
+    /** Fog of war: tiles this unit has seen. Adventurers only path through these and explore toward unknown ones. */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dungeon")
+    TArray<FBlockCoord> KnownBlocks;
 };
 
 USTRUCT(BlueprintType)
@@ -399,13 +397,11 @@ struct FFloorState
     int32 FloorIndex = 1;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dungeon")
-    EDungeonEdgeDirection OutsideEdgeDirection = EDungeonEdgeDirection::East;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dungeon")
     EBreachState BreachState = EBreachState::Sealed;
 
+    /** Every dug tile on the build-area edge; empty while Sealed. Adventurers enter through any of them. */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dungeon")
-    FBlockCoord SurfaceEntryBlock;
+    TArray<FBlockCoord> SurfaceEntryBlocks;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dungeon")
     FBlockCoord CoreBlock;
@@ -416,9 +412,9 @@ namespace DungeonCore
     inline constexpr int32 BlockSizeUnits = 300;
     inline constexpr int32 HalfBlockSizeUnits = BlockSizeUnits / 2;
     inline constexpr int32 DefaultChunkSizeInBlocks = 32;
-    /** Sealed starting core chamber (CoreChamber room): 20 ft x 20 ft = 2 x 2 blocks carved out of solid rock. */
-    inline constexpr int32 StartingCoreChamberWidthBlocks = 2;
-    inline constexpr int32 StartingCoreChamberHeightBlocks = 2;
+    /** Sealed starting core chamber (CoreChamber room): 30 ft x 30 ft = 3 x 3 blocks carved out of solid rock; core on the centre block. */
+    inline constexpr int32 StartingCoreChamberWidthBlocks = 3;
+    inline constexpr int32 StartingCoreChamberHeightBlocks = 3;
     /** Solid rock around the chamber that the player digs into. */
     inline constexpr int32 StartingRockMarginBlocks = 11;
     inline constexpr double GridLineThicknessUnits = 8.0;
@@ -453,6 +449,18 @@ namespace DungeonCore
             && BlockCoord.X <= MaxX
             && BlockCoord.Y >= MinY
             && BlockCoord.Y <= MaxY;
+    }
+
+    /** The outer ring of the build area is the mountain's surface; digging into it opens the dungeon to adventurers. */
+    inline bool IsSurfaceEdgeBlock(const FBlockCoord& BlockCoord)
+    {
+        int32 MinX = 0;
+        int32 MaxX = 0;
+        int32 MinY = 0;
+        int32 MaxY = 0;
+        GetStartingBuildAreaBlockBounds(MinX, MaxX, MinY, MaxY);
+        return IsBlockInStartingBuildArea(BlockCoord)
+            && (BlockCoord.X == MinX || BlockCoord.X == MaxX || BlockCoord.Y == MinY || BlockCoord.Y == MaxY);
     }
 
     inline bool IsDungeonCoreBlockCoord(const FBlockCoord& BlockCoord)
@@ -521,10 +529,22 @@ namespace DungeonCore
         return GridSurfaceOffsetUnits;
     }
     inline constexpr int32 StartingMana = 120;
-    inline constexpr int32 DigManaCost = 10;
-    inline constexpr int32 ManaWellCost = 30;
-    inline constexpr int32 StarterSpawnerCost = 40;
-    inline constexpr int32 StarterTrapCost = 25;
+    /**
+     * Mana economy: the core trickles mana on its own, faster once open, more per adventurer wandering inside.
+     * Per-item income (wells, taps, attunements) comes from the shop catalog rows, not from constants here.
+     */
+    inline constexpr float SealedManaPerSecond = 0.4f;
+    inline constexpr float OpenManaPerSecond = 0.6f;
+    inline constexpr float ManaPerAdventurerInsidePerSecond = 0.5f;
+    inline constexpr int32 MaxAdventurersCountedForMana = 10;
+    inline constexpr float ManaTickIntervalSeconds = 1.0f;
+    /** How far an adventurer sees down a straight corridor (in blocks) before rock blocks the view. */
+    inline constexpr int32 AdventurerSightBlocks = 2;
+    /** Shop catalog JSON, relative to the project Content directory. */
+    inline const TCHAR* ShopCatalogRelativePath = TEXT("Data/shop-catalog.json");
+    /** Catalog item id that the dig tool reads its cost from. */
+    inline const TCHAR* DigBuildableId = TEXT("dig");
+    inline constexpr int32 MaxShopHotkeys = 9;
 
     inline FVector BlockToWorld(const FBlockCoord& BlockCoord)
     {
@@ -743,9 +763,13 @@ namespace DungeonCore
 
     inline FVector GetCoreChamberCenterWorldLocation()
     {
-        const double CenterBlock = static_cast<double>(StartingCoreChamberWidthBlocks) * 0.5 - 0.5;
-        const double CenterWorld = static_cast<double>(BlockSizeUnits) * CenterBlock;
-        return FVector(CenterWorld, CenterWorld, 0.0);
+        int32 MinX = 0;
+        int32 MaxX = 0;
+        int32 MinY = 0;
+        int32 MaxY = 0;
+        GetCoreChamberBlockBounds(MinX, MaxX, MinY, MaxY);
+        const FVector Center = GetInclusiveBlockBoundsWorldCenter(MinX, MinY, MaxX, MaxY);
+        return FVector(Center.X, Center.Y, 0.0);
     }
 
     inline float GetCameraPitchDegrees()

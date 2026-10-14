@@ -8,11 +8,13 @@
 
 class ADungeonBuildCursorActor;
 class ADungeonChunkActor;
+class UDungeonContentSubsystem;
 class UDungeonSimSubsystem;
 class UDungeonHudWidget;
 class UDungeonRunSetupWidget;
+struct FDungeonBuildableRow;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDungeonBuildModeChangedSignature, EDungeonBuildMode, BuildMode);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDungeonSelectedBuildableChangedSignature, FName, BuildableId);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDungeonPlacementPreviewChangedSignature, FPlacementResult, PlacementResult);
 
 UCLASS()
@@ -29,11 +31,19 @@ public:
 
     virtual void SetupInputComponent() override;
 
+    /** Shop click: upgrades are bought immediately, everything else becomes the active placement tool. */
     UFUNCTION(BlueprintCallable, Category = "Dungeon")
-    void SetBuildModeFromUI(const EDungeonBuildMode InBuildMode);
+    void ActivateShopItem(const FName BuildableId);
+
+    UFUNCTION(BlueprintCallable, Category = "Dungeon")
+    void SelectBuildable(const FName BuildableId);
 
     UFUNCTION(BlueprintPure, Category = "Dungeon")
-    EDungeonBuildMode GetBuildMode() const;
+    FName GetSelectedBuildableId() const;
+
+    /** Placeable catalog items available to this run, in catalog order; index N is hotkey N+1 (max 9). */
+    UFUNCTION(BlueprintPure, Category = "Dungeon")
+    TArray<FName> GetShopHotkeyBuildableIds() const;
 
     UFUNCTION(BlueprintPure, Category = "Dungeon")
     FPlacementResult GetCurrentPlacementPreview() const;
@@ -44,8 +54,28 @@ public:
     UFUNCTION(BlueprintPure, Category = "Dungeon")
     bool IsRunActive() const;
 
+    /** Console: dig the floor-1 block at (X, Y) through the normal sim rules. For testing without mouse input. */
+    UFUNCTION(Exec)
+    void DungeonDig(const int32 BlockX, const int32 BlockY);
+
+    /** Console: log mana, income, breach state, entrances and unit counts; RepeatSeconds > 0 keeps logging on that interval. */
+    UFUNCTION(Exec)
+    void DungeonStatus(const float RepeatSeconds);
+
+    /** Console cheat: add mana for testing layouts. */
+    UFUNCTION(Exec)
+    void DungeonGrantMana(const int32 Amount);
+
+    /** Console: buy a catalog upgrade by id (e.g. DungeonBuy core_attunement_1). */
+    UFUNCTION(Exec)
+    void DungeonBuy(const FString& BuildableId);
+
+    /** Console: select a catalog item by id, then place it at floor-1 block (X, Y) through the normal sim rules. */
+    UFUNCTION(Exec)
+    void DungeonPlace(const FString& BuildableId, const int32 BlockX, const int32 BlockY);
+
     UPROPERTY(BlueprintAssignable, Category = "Dungeon")
-    FDungeonBuildModeChangedSignature OnBuildModeChanged;
+    FDungeonSelectedBuildableChangedSignature OnSelectedBuildableChanged;
 
     UPROPERTY(BlueprintAssignable, Category = "Dungeon")
     FDungeonPlacementPreviewChangedSignature OnPlacementPreviewChanged;
@@ -68,15 +98,12 @@ private:
 
     void ApplyClickDragCameraInput();
 
-    void SetDigMode();
+    void SelectShopHotkey(const int32 HotkeyIndex);
 
-    void SetManaWellMode();
+    /** Runs the selected item's action (dig / room / trap) at the given block. Upgrades are never placed. */
+    FPlacementResult PlaceSelectedBuildableAt(const FBlockCoord& BlockCoord);
 
-    void SetStarterSpawnerMode();
-
-    void SetStarterTrapMode();
-
-    void SetBuildMode(const EDungeonBuildMode InBuildMode);
+    const FDungeonBuildableRow* GetSelectedBuildableRow() const;
 
     void UpdateCursorFromMouse();
 
@@ -100,6 +127,8 @@ private:
 
     UDungeonSimSubsystem* GetDungeonSimSubsystem() const;
 
+    UDungeonContentSubsystem* GetDungeonContentSubsystem() const;
+
     ADungeonChunkActor* FindChunkActor() const;
 
     void EnsureChunkActorExists();
@@ -117,8 +146,9 @@ private:
     UPROPERTY()
     TObjectPtr<UDungeonRunSetupWidget> SetupWidget;
 
+    /** Catalog id of the active placement tool; always a Dig/Room/Trap item, never an Upgrade. */
     UPROPERTY()
-    EDungeonBuildMode BuildMode = EDungeonBuildMode::Dig;
+    FName SelectedBuildableId;
 
     UPROPERTY()
     FPlacementResult CurrentPlacementPreview;
@@ -136,6 +166,8 @@ private:
     float PreviousMouseY = 0.0f;
 
     float LeftMouseDragDistancePixels = 0.0f;
+
+    FTimerHandle StatusLogTimerHandle;
 
     static constexpr float ClickDragThresholdPixels = 8.0f;
 };

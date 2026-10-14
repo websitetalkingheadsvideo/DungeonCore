@@ -33,16 +33,26 @@ private:
 
     void ConfigureInstanceComponent(UInstancedStaticMeshComponent* InstanceComponent) const;
 
-    void BuildSurfaceGrid();
+    /** Z=0 columns that still have rock on top (SolidRock / Wall); everything else is open to the sky. */
+    static TSet<FIntPoint> CollectRockColumns(const TArray<FTileData>& Tiles);
+
+    void BuildSurfaceGrid(const TSet<FIntPoint>& RockColumns);
 
     void BuildRockSurfaceCaps(const TArray<FTileData>& Tiles);
 
-    void BuildCoreChamberShell(const FBlockCoord& SurfaceEntryBlock);
+    /** Thin walls on all four chamber sides, with a gap wherever the rock tile directly outside has been dug. */
+    void BuildCoreChamberShell(const TSet<FIntPoint>& RockColumns);
 
-    void AddEastWallSegment(
-        const double WallX,
-        const double FromWorldY,
-        const double ToWorldY,
+    /**
+     * One chamber side. Walks block indices MinIndex..MaxIndex along the wall, merges consecutive closed
+     * tiles into a single instance, and skips tiles whose outside neighbour is no longer rock.
+     */
+    void AddChamberWallSide(
+        const bool bWallRunsAlongY,
+        const double FixedWorldCoord,
+        const int32 MinIndex,
+        const int32 MaxIndex,
+        const TFunctionRef<bool(int32)>& IsClosedAt,
         const double WallCenterZ,
         const double WallScaleThin,
         const double WallScaleZ

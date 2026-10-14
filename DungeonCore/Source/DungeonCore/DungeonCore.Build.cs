@@ -19,7 +19,8 @@ public class DungeonCore : ModuleRules
 
 		PrivateDependencyModuleNames.AddRange(new string[] {
 			"SlateCore",
-			"Landscape"
+			"Landscape",
+			"Json"
 		});
 	}
 }

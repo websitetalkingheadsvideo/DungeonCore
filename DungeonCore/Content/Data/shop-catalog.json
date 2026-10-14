@@ -1,0 +1,280 @@
+{
+  "currency": "mana",
+  "schema": {
+    "item.kind": "dig | room | trap | upgrade",
+    "item.roomType": "ERoomTypeId name, required when kind=room",
+    "item.trapType": "ETrapTypeId name, required when kind=trap",
+    "item.footprint": "{width,height,depth} in blocks, required when kind=room",
+    "item.family": "ECreatureFamilyId name; omit when every family can buy it",
+    "item.manaPerSecond": "flat income while placed (room) or owned (upgrade)",
+    "item.manaPerAdventurerPerSecond": "income per adventurer inside the dungeon",
+    "item.requires": "item id that must be owned first (upgrades)",
+    "group.implementationStatus": "design_only groups are documented but not loaded into the shop"
+  },
+  "shopGroups": [
+    {
+      "id": "infrastructure",
+      "displayName": "Infrastructure",
+      "items": [
+        {
+          "id": "dig",
+          "name": "Dig",
+          "kind": "dig",
+          "cost": 10,
+          "role": "Clear solid rock to carved walkable tile; required before placing rooms and traps.",
+          "visualDescription": "No placed prop—terrain change only. Cleared blocks read as chiseled stone floor with pick marks; invalid dig preview shows shrunken red-tinted ghost cube on rock."
+        },
+        {
+          "id": "mana_well",
+          "name": "Mana Well",
+          "kind": "room",
+          "roomType": "ManaWell",
+          "footprint": { "width": 1, "height": 1, "depth": 1 },
+          "cost": 30,
+          "manaPerSecond": 0.5,
+          "role": "Permanent +0.5 mana per second per well; stacks with core trickle and intruder presence income.",
+          "visualDescription": "Single-block shaft or basin in the floor with slow upward-drifting particles (blue-purple). Theme variants: Gothic—iron grate over glowing fluid; Goblin—leaky pipe and green runoff; Fungal—bioluminescent pool; Sunken—flooded niche with refracted light."
+        }
+      ]
+    },
+    {
+      "id": "mana_flow",
+      "displayName": "Mana Flow",
+      "items": [
+        {
+          "id": "ley_line_tap",
+          "name": "Ley Line Tap",
+          "kind": "room",
+          "roomType": "LeyLineTap",
+          "footprint": { "width": 1, "height": 1, "depth": 1 },
+          "cost": 70,
+          "manaPerSecond": 1.2,
+          "role": "Permanent +1.2 mana per second; denser than a Mana Well for the same floor space.",
+          "visualDescription": "Floor tile split by a hairline crack of raw mana; a copper or bone spike driven into it with a slow pulse travelling up the shaft."
+        },
+        {
+          "id": "mana_crystal_cluster",
+          "name": "Mana Crystal Cluster",
+          "kind": "room",
+          "roomType": "ManaCrystalCluster",
+          "footprint": { "width": 2, "height": 2, "depth": 1 },
+          "cost": 160,
+          "manaPerSecond": 3.0,
+          "role": "2×2 room: permanent +3.0 mana per second. Best income per mana spent, but needs a cleared 2×2 footprint.",
+          "visualDescription": "Cluster of waist-high crystals matching the core's colour, growing from a cracked floor; soft volumetric glow and occasional spark arcing between tips."
+        },
+        {
+          "id": "siphon_totem",
+          "name": "Siphon Totem",
+          "kind": "room",
+          "roomType": "SiphonTotem",
+          "footprint": { "width": 1, "height": 1, "depth": 1 },
+          "cost": 50,
+          "manaPerAdventurerPerSecond": 0.25,
+          "role": "+0.25 mana per second for every adventurer inside the dungeon (stacks per totem). Pays off when mazes keep parties wandering.",
+          "visualDescription": "Carved totem pole with an open mouth at the top; faint threads of light drift toward it from any adventurer in the dungeon."
+        },
+        {
+          "id": "core_attunement_1",
+          "name": "Core Attunement I",
+          "kind": "upgrade",
+          "cost": 60,
+          "manaPerSecond": 0.4,
+          "role": "Permanent +0.4 mana per second to the core's own trickle. No placement needed.",
+          "visualDescription": "Core crystal gains a second inner band of light; pulse rate increases slightly."
+        },
+        {
+          "id": "core_attunement_2",
+          "name": "Core Attunement II",
+          "kind": "upgrade",
+          "cost": 120,
+          "manaPerSecond": 0.6,
+          "requires": "core_attunement_1",
+          "role": "Permanent +0.6 mana per second to the core's own trickle. Requires Core Attunement I.",
+          "visualDescription": "Thin mana cables from the core spread along the chamber floor seams and glow in time with the pulse."
+        },
+        {
+          "id": "core_attunement_3",
+          "name": "Core Attunement III",
+          "kind": "upgrade",
+          "cost": 240,
+          "manaPerSecond": 1.0,
+          "requires": "core_attunement_2",
+          "role": "Permanent +1.0 mana per second to the core's own trickle. Requires Core Attunement II.",
+          "visualDescription": "Core hovers higher with orbiting shards; the whole chamber picks up a faint ambient glow."
+        }
+      ]
+    },
+    {
+      "id": "spawners",
+      "displayName": "Spawners",
+      "items": [
+        {
+          "id": "crypt",
+          "name": "Crypt",
+          "kind": "room",
+          "roomType": "Crypt",
+          "footprint": { "width": 2, "height": 2, "depth": 1 },
+          "cost": 40,
+          "family": "Undead",
+          "role": "Monster spawn room for Undead; sources Skeleton and Ghoul defenders.",
+          "visualDescription": "2×2×1 footprint (starter spawner). Stone sarcophagi, wall niches with skulls, cold mist at floor; faint green glow from slab seams."
+        },
+        {
+          "id": "war_pens",
+          "name": "War Pens",
+          "kind": "room",
+          "roomType": "WarPens",
+          "footprint": { "width": 2, "height": 2, "depth": 1 },
+          "cost": 40,
+          "family": "Orcs",
+          "role": "Monster spawn room for Orcs; sources Orc Grunt defenders.",
+          "visualDescription": "2×2×1 wooden stake pens, bone totems, weapon racks, mud and straw floor; torch or brazier smoke."
+        },
+        {
+          "id": "nest_cluster",
+          "name": "Nest Cluster",
+          "kind": "room",
+          "roomType": "NestCluster",
+          "footprint": { "width": 2, "height": 2, "depth": 1 },
+          "cost": 40,
+          "family": "Spiders",
+          "role": "Monster spawn room for Spiders; sources Skitterling defenders.",
+          "visualDescription": "2×2×1 webbed alcoves, egg sacs on ceiling corners, glossy web strands catching point light; occasional skitter shadow in depth."
+        },
+        {
+          "id": "glamour_grove",
+          "name": "Glamour Grove",
+          "kind": "room",
+          "roomType": "GlamourGrove",
+          "footprint": { "width": 2, "height": 2, "depth": 1 },
+          "cost": 40,
+          "family": "EvilFairies",
+          "role": "Monster spawn room for Evil Fairies; sources Mischief Sprite defenders.",
+          "visualDescription": "2×2×1 twisted miniature trees or mushroom rings, glitter dust motes, oversaturated fairy lights; pretty surface hiding thorns and teeth in bark."
+        }
+      ]
+    },
+    {
+      "id": "traps",
+      "displayName": "Traps",
+      "items": [
+        {
+          "id": "grave_grasp",
+          "name": "Grave Grasp",
+          "kind": "trap",
+          "trapType": "GraveGrasp",
+          "cost": 25,
+          "family": "Undead",
+          "role": "Single-block trap: on trigger, grants +10 mana (Undead economy trap).",
+          "visualDescription": "Floor tile with cracked grave slab; on arm, skeletal hands breach upward with dirt clods and short-lived green soul wisps."
+        },
+        {
+          "id": "spike_barricade",
+          "name": "Spike Barricade",
+          "kind": "trap",
+          "trapType": "SpikeBarricade",
+          "cost": 25,
+          "family": "Orcs",
+          "role": "Single-block trap: 12 damage to adventurer; +8 mana if kill.",
+          "visualDescription": "Retractable floor spikes or hinged log barricade with iron spikes; blood-friendly rust, Orc clan paint on wood."
+        },
+        {
+          "id": "web_snare",
+          "name": "Web Snare",
+          "kind": "trap",
+          "trapType": "WebSnare",
+          "cost": 25,
+          "family": "Spiders",
+          "role": "Single-block trap: applies Slow, 4 damage; +8 mana if kill.",
+          "visualDescription": "Nearly invisible trip web at ankle height; on trigger, net collapses with sticky strands and a brief spider silhouette on the wall."
+        },
+        {
+          "id": "pixie_dust_cloud",
+          "name": "Pixie Dust Cloud",
+          "kind": "trap",
+          "trapType": "PixieDustCloud",
+          "cost": 25,
+          "family": "EvilFairies",
+          "role": "Single-block trap: warps adventurer to surface entry, 2 damage; +8 mana if kill.",
+          "visualDescription": "Pressure plate disguised with flower petals; puff of pink-gold dust and spiral teleport VFX; disorienting afterimage at destination."
+        }
+      ]
+    },
+    {
+      "id": "treasure",
+      "displayName": "Treasure",
+      "implementationStatus": "design_only",
+      "items": [
+        {
+          "name": "Coin Pile",
+          "cost": 15,
+          "role": "Cheap lure; low dungeon-point value; draws pathing toward corridor bait.",
+          "visualDescription": "Small scatter of gold coins on floor, one glinting coin spinning; no container."
+        },
+        {
+          "name": "Chest (Common)",
+          "cost": 25,
+          "role": "Standard treasure lure; moderate dungeon points when looted or recovered.",
+          "visualDescription": "Wooden chest with iron bands; theme trim (Gothic iron roses, goblin nails, fungal moss, barnacled sunken wood)."
+        },
+        {
+          "name": "Chest (Locked)",
+          "cost": 35,
+          "role": "Strong lure; adventurer spends extra time at tile—pairs with traps.",
+          "visualDescription": "Heavier chest with visible padlock and keyhole; subtle shake animation when targeted."
+        },
+        {
+          "name": "Gem Shrine",
+          "cost": 45,
+          "role": "High-priority lure for AI; strong dungeon points.",
+          "visualDescription": "Pedestal with single large gem under a narrow spotlight cone; faint hum and lens flare."
+        },
+        {
+          "name": "Relic Pedestal",
+          "cost": 55,
+          "role": "Top-tier lure; highest dungeon points; adventurers prefer over common chests.",
+          "visualDescription": "Stone or marble pedestal holding skull, idol, or sword; protective rope of faint magical runes."
+        },
+        {
+          "name": "False Chest",
+          "cost": 30,
+          "role": "Bait that triggers trap logic or surprise damage instead of reward.",
+          "visualDescription": "Chest slightly off-proportions (hinge wrong, tongue teeth on seam); opens to maw or poison puff."
+        },
+        {
+          "name": "Gold Statue",
+          "cost": 50,
+          "role": "Large footprint lure; pulls parties off main path.",
+          "visualDescription": "2-block-tall gilded figure (hero, beast, or core mockery); tarnish in recesses, one eye catching light."
+        },
+        {
+          "name": "Buried Hoard",
+          "cost": 20,
+          "role": "Requires adjacent dig; weaker early bait for side tunnels.",
+          "visualDescription": "Half-buried crate or urn in rock face; coins spilling from crack after placement."
+        },
+        {
+          "name": "Cursed Treasury",
+          "cost": 40,
+          "role": "Lure plus debuff on taker (slow or max HP reduction)—risk/reward for player.",
+          "visualDescription": "Ornate coffer wreathed in dark smoke or fairy glamour; violet or sickly green rim light."
+        },
+        {
+          "name": "Tribute Altar",
+          "cost": 60,
+          "role": "Converts looted treasure into mana over time instead of raw dungeon points.",
+          "visualDescription": "Low altar with offering bowl; coins and trinkets dissolve into upward mana stream when active."
+        }
+      ]
+    }
+  ],
+  "notInShop": [
+    {
+      "name": "Core Chamber",
+      "cost": null,
+      "role": "Run start; lose condition if destroyed—not player purchasable.",
+      "visualDescription": "Central heart of the dungeon: pulsing core crystal or heart-in-cage, cables of mana to surrounding rock."
+    }
+  ]
+}

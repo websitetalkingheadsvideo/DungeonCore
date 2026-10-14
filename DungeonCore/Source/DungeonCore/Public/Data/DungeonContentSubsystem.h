@@ -9,6 +9,10 @@
 
 #include "DungeonContentSubsystem.generated.h"
 
+/**
+ * Static game content. Themes, families and units are seeded in C++; everything the player can buy
+ * (dig, rooms, traps, upgrades) is loaded from Content/Data/shop-catalog.json at startup.
+ */
 UCLASS()
 class DUNGEONCORE_API UDungeonContentSubsystem : public UGameInstanceSubsystem
 {
@@ -16,6 +20,8 @@ class DUNGEONCORE_API UDungeonContentSubsystem : public UGameInstanceSubsystem
 
 public:
     virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+
+    const FDungeonBuildableRow* FindBuildable(const FName BuildableId) const;
 
     const FDungeonBuildableRow* FindBuildableByRoomType(const ERoomTypeId RoomTypeId) const;
 
@@ -27,10 +33,16 @@ public:
 
     const FDungeonUnitRow* FindUnitRow(const EUnitTypeId UnitTypeId) const;
 
+    /** Shop tabs in catalog order; design-only groups are excluded. */
+    const TArray<FDungeonShopGroup>& GetShopGroups() const;
+
     int32 GetDigManaCost() const;
 
 private:
     void SeedDefaultContent();
+
+    /** Parses the shop catalog JSON. Any schema problem is fatal; there is no built-in fallback catalog. */
+    void LoadShopCatalog();
 
     void AddBuildableRow(const FDungeonBuildableRow& RowData);
 
@@ -41,10 +53,10 @@ private:
     void AddUnitRow(const FDungeonUnitRow& RowData);
 
     UPROPERTY()
-    TMap<ERoomTypeId, FDungeonBuildableRow> RoomBuildables;
+    TMap<FName, FDungeonBuildableRow> Buildables;
 
     UPROPERTY()
-    TMap<ETrapTypeId, FDungeonBuildableRow> TrapBuildables;
+    TArray<FDungeonShopGroup> ShopGroups;
 
     UPROPERTY()
     TMap<ECreatureFamilyId, FDungeonCreatureFamilyRow> Families;
@@ -54,6 +66,4 @@ private:
 
     UPROPERTY()
     TMap<EUnitTypeId, FDungeonUnitRow> Units;
-
-    int32 DigManaCost = DungeonCore::DigManaCost;
 };

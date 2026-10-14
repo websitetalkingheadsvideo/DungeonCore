@@ -17,7 +17,8 @@ class DUNGEONCORE_API ADungeonBuildCursorActor : public AActor
 public:
     ADungeonBuildCursorActor();
 
-    void SetPreviewMode(const EDungeonBuildMode InBuildMode);
+    /** Shape the ghost after the selected catalog item: dig is a thin surface highlight, rooms/traps a floor slab. */
+    void SetPreviewBuildable(const EBuildableCategory InCategory, const FRoomFootprint& InFootprint);
 
     void SetPreviewOriginBlock(const FBlockCoord& InOriginBlock);
 
@@ -26,11 +27,13 @@ public:
     void SetPreviewValidity(const bool bIsValid);
 
 private:
-    FVector GetPreviewWorldLocation(const FBlockCoord& OriginBlock) const;
+    FVector GetPreviewWorldLocation(const FBlockCoord& InOriginBlock) const;
 
-    FVector GetPreviewScaleForMode(const EDungeonBuildMode InBuildMode) const;
+    FVector GetPreviewScale() const;
 
-    FRoomFootprint GetFootprintForMode(const EDungeonBuildMode InBuildMode) const;
+    bool IsDigOnSolidRock() const;
+
+    void RefreshPreviewTransform();
 
     UPROPERTY(VisibleAnywhere, Category = "Dungeon")
     TObjectPtr<USceneComponent> SceneRoot;
@@ -39,7 +42,10 @@ private:
     TObjectPtr<UStaticMeshComponent> PreviewMeshComponent;
 
     UPROPERTY()
-    EDungeonBuildMode BuildMode = EDungeonBuildMode::Dig;
+    EBuildableCategory Category = EBuildableCategory::Dig;
+
+    UPROPERTY()
+    FRoomFootprint Footprint;
 
     UPROPERTY()
     FBlockCoord OriginBlock;
