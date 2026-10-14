@@ -1,7 +1,26 @@
 #include "Sim/Grid/DungeonGridState.h"
 
+#include "Sim/DungeonTypes.h"
 #include "Containers/Array.h"
 #include "Math/UnrealMathUtility.h"
+
+namespace DungeonGridRules
+{
+    bool IsInteriorPlaceableTile(const FTileData& TileData)
+    {
+        if (DungeonCore::IsDungeonCoreBlockCoord(TileData.BlockCoord))
+        {
+            return false;
+        }
+
+        if (TileData.TileState == ETileState::Cleared)
+        {
+            return true;
+        }
+
+        return TileData.TileState == ETileState::Room && TileData.RoomTypeId == ERoomTypeId::CoreChamber;
+    }
+}
 
 void UDungeonGridState::InitializeGrid(const int32 InChunkSizeInBlocks)
 {
@@ -48,6 +67,12 @@ FPlacementResult UDungeonGridState::ValidateDig(
     FPlacementResult Result;
     Result.ManaCost = DigManaCost;
     Result.AffectedBlocks = { BlockCoord };
+
+    if (!DungeonCore::IsBlockInStartingBuildArea(BlockCoord))
+    {
+        Result.FailureReason = EPlacementFailureReason::OutOfBounds;
+        return Result;
+    }
 
     const FTileData* ExistingTile = FindTileData(BlockCoord);
     if (ExistingTile == nullptr)
@@ -126,7 +151,7 @@ FPlacementResult UDungeonGridState::ValidateRoomPlacement(
             return Result;
         }
 
-        if (ExistingTile->TileState != ETileState::Cleared)
+        if (!DungeonGridRules::IsInteriorPlaceableTile(*ExistingTile))
         {
             Result.FailureReason = EPlacementFailureReason::RequiresClearedTile;
             return Result;
@@ -181,7 +206,7 @@ FPlacementResult UDungeonGridState::ValidateTrapPlacement(
         return Result;
     }
 
-    if (ExistingTile->TileState != ETileState::Cleared)
+    if (!DungeonGridRules::IsInteriorPlaceableTile(*ExistingTile))
     {
         Result.FailureReason = EPlacementFailureReason::RequiresClearedTile;
         return Result;

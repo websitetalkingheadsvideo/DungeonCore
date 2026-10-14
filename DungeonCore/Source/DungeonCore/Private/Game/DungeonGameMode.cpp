@@ -99,8 +99,10 @@ namespace DungeonCoreWorld
         for (TActorIterator<AActor> ActorIt(World); ActorIt; ++ActorIt)
         {
             const FString ActorLabel = ActorIt->GetActorLabel();
+            const FString ClassName = ActorIt->GetClass()->GetName();
             if (ActorLabel.Contains(TEXT("CameraPlane"), ESearchCase::IgnoreCase)
-                || ActorLabel.Contains(TEXT("BuildCamera"), ESearchCase::IgnoreCase))
+                || ActorLabel.Contains(TEXT("BuildCamera"), ESearchCase::IgnoreCase)
+                || ClassName.Contains(TEXT("CameraPlane"), ESearchCase::IgnoreCase))
             {
                 ActorIt->SetActorHiddenInGame(true);
                 ActorIt->SetActorEnableCollision(false);
@@ -244,8 +246,11 @@ namespace DungeonCoreWorld
         UE_LOG(
             LogDungeonCore,
             Log,
-            TEXT("Dungeon grid built: %d tiles, 20x20 CoreChamber room, core block at center, 300uu blocks."),
-            TileCount
+            TEXT("Dungeon grid built: %d tiles, %dx%d block CoreChamber carved at origin, %duu blocks."),
+            TileCount,
+            DungeonCore::StartingCoreChamberWidthBlocks,
+            DungeonCore::StartingCoreChamberHeightBlocks,
+            DungeonCore::BlockSizeUnits
         );
 
         if (GEngine != nullptr)
@@ -255,8 +260,11 @@ namespace DungeonCoreWorld
                 12.0f,
                 FColor::Cyan,
                 FString::Printf(
-                    TEXT("Dungeon grid: %d tiles | 20x20 purple CoreChamber + rock shell | tall core block at center."),
-                    TileCount
+                    TEXT("Dungeon grid: %d tiles | %dx%d block (%d ft) starting chamber carved into rock."),
+                    TileCount,
+                    DungeonCore::StartingCoreChamberWidthBlocks,
+                    DungeonCore::StartingCoreChamberHeightBlocks,
+                    DungeonCore::StartingCoreChamberWidthBlocks * 10
                 )
             );
         }

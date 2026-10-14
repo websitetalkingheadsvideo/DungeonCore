@@ -57,13 +57,12 @@ FVector ADungeonBuildCursorActor::GetPreviewWorldLocation(const FBlockCoord& InO
 {
     const FRoomFootprint Footprint = GetFootprintForMode(BuildMode);
     const double FloorScaleZ = DungeonCore::CarvedFloorThicknessUnits / DungeonCore::DefaultEngineCubeSizeUnits;
-    const double RockScaleZ = static_cast<double>(DungeonCore::BlockSizeUnits) / DungeonCore::DefaultEngineCubeSizeUnits;
 
     if (BuildMode == EDungeonBuildMode::Dig)
     {
         if (HoveredTileState == ETileState::SolidRock || HoveredTileState == ETileState::Wall)
         {
-            return DungeonCore::GetRockVisualWorldCenter(InOriginBlock, RockScaleZ);
+            return DungeonCore::GetDigSurfaceHighlightWorldCenter(InOriginBlock);
         }
 
         return DungeonCore::GetCarvedFloorVisualWorldCenter(InOriginBlock, FloorScaleZ);
@@ -85,7 +84,7 @@ FVector ADungeonBuildCursorActor::GetPreviewScaleForMode(const EDungeonBuildMode
     const bool bDigSolidRock = InBuildMode == EDungeonBuildMode::Dig
         && (HoveredTileState == ETileState::SolidRock || HoveredTileState == ETileState::Wall);
     const double ZScale = bDigSolidRock
-        ? (static_cast<double>(DungeonCore::BlockSizeUnits) / DungeonCore::DefaultEngineCubeSizeUnits)
+        ? DungeonCore::GetDigSurfaceHighlightScaleZ()
         : (DungeonCore::CarvedFloorThicknessUnits / DungeonCore::DefaultEngineCubeSizeUnits);
 
     return FVector(XScale, YScale, ZScale);

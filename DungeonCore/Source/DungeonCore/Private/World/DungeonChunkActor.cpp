@@ -2,6 +2,7 @@
 
 #include "Components/InstancedStaticMeshComponent.h"
 #include "Components/SceneComponent.h"
+#include "Components/StaticMeshComponent.h"
 #include "Sim/DungeonTypes.h"
 #include "Sim/Grid/DungeonGridState.h"
 #include "Materials/MaterialInstanceDynamic.h"
@@ -30,6 +31,29 @@ namespace DungeonChunkVisuals
         DynamicMaterial->SetVectorParameterValue(TEXT("Emissive"), Emissive);
         DynamicMaterial->SetVectorParameterValue(TEXT("EmissiveColor"), Emissive);
         InstanceComponent->SetMaterial(0, DynamicMaterial);
+    }
+
+    void ApplyTintedMaterialToMesh(
+        UStaticMeshComponent* MeshComponent,
+        UMaterial* ParentMaterial,
+        UObject* Outer,
+        const FLinearColor& Color,
+        const float EmissiveScale
+    )
+    {
+        if (MeshComponent == nullptr || ParentMaterial == nullptr || Outer == nullptr)
+        {
+            return;
+        }
+
+        UMaterialInstanceDynamic* DynamicMaterial = UMaterialInstanceDynamic::Create(ParentMaterial, Outer);
+        DynamicMaterial->SetVectorParameterValue(TEXT("Color"), Color);
+        DynamicMaterial->SetVectorParameterValue(TEXT("BaseColor"), Color);
+        DynamicMaterial->SetVectorParameterValue(TEXT("Base Color"), Color);
+        const FLinearColor Emissive = Color * EmissiveScale;
+        DynamicMaterial->SetVectorParameterValue(TEXT("Emissive"), Emissive);
+        DynamicMaterial->SetVectorParameterValue(TEXT("EmissiveColor"), Emissive);
+        MeshComponent->SetMaterial(0, DynamicMaterial);
     }
 
     inline double BlockMeshScaleAxis()
@@ -68,6 +92,16 @@ ADungeonChunkActor::ADungeonChunkActor()
     ChamberWallInstances = CreateDefaultSubobject<UInstancedStaticMeshComponent>(TEXT("ChamberWallInstances"));
     ChamberWallInstances->SetupAttachment(SceneRoot);
 
+    CoreChamberFloorVisual = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CoreChamberFloorVisual"));
+    CoreChamberFloorVisual->SetupAttachment(SceneRoot);
+    CoreChamberFloorVisual->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    CoreChamberFloorVisual->SetMobility(EComponentMobility::Movable);
+
+    DungeonCoreVisual = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("DungeonCoreVisual"));
+    DungeonCoreVisual->SetupAttachment(SceneRoot);
+    DungeonCoreVisual->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    DungeonCoreVisual->SetMobility(EComponentMobility::Movable);
+
     RockInstances = CreateDefaultSubobject<UInstancedStaticMeshComponent>(TEXT("RockInstances"));
     RockInstances->SetupAttachment(SceneRoot);
 
@@ -93,8 +127,10 @@ ADungeonChunkActor::ADungeonChunkActor()
     DefenderInstances->SetupAttachment(SceneRoot);
 
     static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeMesh(TEXT("/Engine/BasicShapes/Cube.Cube"));
+    static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereMesh(TEXT("/Engine/BasicShapes/Sphere.Sphere"));
     if (CubeMesh.Succeeded())
     {
+        CoreChamberFloorVisual->SetStaticMesh(CubeMesh.Object);
         GridBaseInstances->SetStaticMesh(CubeMesh.Object);
         GridLineInstances->SetStaticMesh(CubeMesh.Object);
         ChamberWallInstances->SetStaticMesh(CubeMesh.Object);
@@ -107,12 +143,16 @@ ADungeonChunkActor::ADungeonChunkActor()
         AdventurerInstances->SetStaticMesh(CubeMesh.Object);
         DefenderInstances->SetStaticMesh(CubeMesh.Object);
     }
+    if (SphereMesh.Succeeded())
+    {
+        DungeonCoreVisual->SetStaticMesh(SphereMesh.Object);
+    }
 
     static ConstructorHelpers::FObjectFinder<UMaterial> BaseMaterialFinder(
         TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial")
     );
     static ConstructorHelpers::FObjectFinder<UMaterial> LitColorMaterialFinder(
-        TEXT("/Engine/EditorMaterials/LevelColorationLitMaterial.LevelColorationLitMaterial")
+        TEXT("/Engine/EngineDebugMaterials/LevelColorationLitMaterial.LevelColorationLitMaterial")
     );
     UMaterial* TintParentMaterial = BaseMaterialFinder.Succeeded() ? BaseMaterialFinder.Object : nullptr;
     if (LitColorMaterialFinder.Succeeded())
@@ -147,6 +187,20 @@ ADungeonChunkActor::ADungeonChunkActor()
             this,
             FLinearColor(0.85f, 0.72f, 0.35f),
             1.5f
+        );
+        DungeonChunkVisuals::ApplyTintedMaterialToMesh(
+            CoreChamberFloorVisual,
+            TintParentMaterial,
+            this,
+            FLinearColor(0.55f, 0.12f, 0.82f),
+            3.0f
+        );
+        DungeonChunkVisuals::ApplyTintedMaterialToMesh(
+            DungeonCoreVisual,
+            TintParentMaterial,
+            this,
+            FLinearColor(1.0f, 0.72f, 0.08f),
+            8.0f
         );
     }
 
@@ -189,13 +243,7 @@ void ADungeonChunkActor::BuildSurfaceGrid()
     const double SpanY = static_cast<double>((MaxBlockY - MinBlockY + 1) * DungeonCore::BlockSizeUnits);
     const double CenterX = MinWorldX + (SpanX * 0.5);
     const double CenterY = MinWorldY + (SpanY * 0.5);
-    const double GridZ = DungeonCore::GridSurfaceOffsetUnits + (DungeonCore::GridLineHeightUnits * 0.5);
-
-    const double BaseScaleZ = 4.0 / DungeonCore::DefaultEngineCubeSizeUnits;
-    GridBaseInstances->AddInstance(MakeTileInstanceTransform(
-        FVector(CenterX, CenterY, DungeonCore::GridSurfaceOffsetUnits - 2.0),
-        FVector(SpanX / DungeonCore::DefaultEngineCubeSizeUnits, SpanY / DungeonCore::DefaultEngineCubeSizeUnits, BaseScaleZ)
-    ));
+    const double GridZ = DungeonCore::GetMountainSurfaceWorldZ() + (DungeonCore::GridLineHeightUnits * 0.5);
 
     const double LineScaleX = DungeonCore::GridLineThicknessUnits / DungeonCore::DefaultEngineCubeSizeUnits;
     const double LineScaleY = DungeonCore::GridLineThicknessUnits / DungeonCore::DefaultEngineCubeSizeUnits;
@@ -220,72 +268,163 @@ void ADungeonChunkActor::BuildSurfaceGrid()
     }
 }
 
+void ADungeonChunkActor::BuildRockSurfaceCaps(const TArray<FTileData>& Tiles)
+{
+    GridBaseInstances->ClearInstances();
+
+    const double CapThickness = 22.0;
+    const double CapScaleZ = CapThickness / DungeonCore::DefaultEngineCubeSizeUnits;
+    const double CapScaleXY = static_cast<double>(DungeonCore::BlockSizeUnits) / DungeonCore::DefaultEngineCubeSizeUnits;
+    const double CapCenterZ = DungeonCore::GetMountainSurfaceWorldZ() - (CapThickness * 0.5);
+
+    for (const FTileData& TileData : Tiles)
+    {
+        if (TileData.TileState != ETileState::SolidRock && TileData.TileState != ETileState::Wall)
+        {
+            continue;
+        }
+
+        const FVector ColumnXY = DungeonCore::GetBlockColumnWorldXY(TileData.BlockCoord);
+        GridBaseInstances->AddInstance(MakeTileInstanceTransform(
+            FVector(ColumnXY.X, ColumnXY.Y, CapCenterZ),
+            FVector(CapScaleXY, CapScaleXY, CapScaleZ)
+        ));
+    }
+}
+
+void ADungeonChunkActor::UpdateSurfaceDungeonVisuals()
+{
+    int32 ChamberMinX = 0;
+    int32 ChamberMaxX = 0;
+    int32 ChamberMinY = 0;
+    int32 ChamberMaxY = 0;
+    DungeonCore::GetCoreChamberBlockBounds(ChamberMinX, ChamberMaxX, ChamberMinY, ChamberMaxY);
+
+    const FVector ChamberSize = DungeonCore::GetInclusiveBlockBoundsWorldSize(
+        ChamberMinX,
+        ChamberMinY,
+        ChamberMaxX,
+        ChamberMaxY
+    );
+    const FVector ChamberCenter = DungeonCore::GetInclusiveBlockBoundsWorldCenter(
+        ChamberMinX,
+        ChamberMinY,
+        ChamberMaxX,
+        ChamberMaxY
+    );
+
+    const double FloorTopZ = DungeonCore::GetCoreChamberSurfaceVisualFloorZ();
+    const double FloorThickness = DungeonCore::CoreChamberFloorThicknessUnits;
+    const double FloorCenterZ = FloorTopZ - (FloorThickness * 0.5);
+
+    CoreChamberFloorVisual->SetRelativeLocation(FVector(ChamberCenter.X, ChamberCenter.Y, FloorCenterZ));
+    CoreChamberFloorVisual->SetRelativeScale3D(FVector(
+        static_cast<float>(ChamberSize.X / DungeonCore::DefaultEngineCubeSizeUnits),
+        static_cast<float>(ChamberSize.Y / DungeonCore::DefaultEngineCubeSizeUnits),
+        static_cast<float>(FloorThickness / DungeonCore::DefaultEngineCubeSizeUnits)
+    ));
+    CoreChamberFloorVisual->SetVisibility(true);
+
+    const double CoreDiameter = DungeonCore::GetDungeonCoreVisualDiameterUnits();
+    const float CoreScale = static_cast<float>(CoreDiameter / DungeonCore::DefaultEngineCubeSizeUnits);
+    DungeonCoreVisual->SetRelativeLocation(FVector(
+        ChamberCenter.X,
+        ChamberCenter.Y,
+        FloorTopZ + (CoreDiameter * 0.5)
+    ));
+    DungeonCoreVisual->SetRelativeScale3D(FVector(CoreScale, CoreScale, CoreScale));
+    DungeonCoreVisual->SetVisibility(true);
+}
+
 void ADungeonChunkActor::BuildCoreChamberShell(const FBlockCoord& SurfaceEntryBlock)
 {
-    const FBlockCoord ChamberOrigin(0, 0, 0);
-    const int32 ChamberWidth = DungeonCore::StartingCoreChamberWidthBlocks;
-    const int32 ChamberHeight = DungeonCore::StartingCoreChamberHeightBlocks;
-    const FVector RockScale = DungeonChunkVisuals::BlockMeshScaleRock();
+    UpdateSurfaceDungeonVisuals();
 
-    const double FloorTopZ = DungeonCore::GetCarvedFloorTopWorldZ(ChamberOrigin);
-    const double SurfaceZ = DungeonCore::GetBlockTopWorldZ(ChamberOrigin);
+    int32 ChamberMinX = 0;
+    int32 ChamberMaxX = 0;
+    int32 ChamberMinY = 0;
+    int32 ChamberMaxY = 0;
+    DungeonCore::GetCoreChamberBlockBounds(ChamberMinX, ChamberMaxX, ChamberMinY, ChamberMaxY);
+
+    const FVector ChamberSize = DungeonCore::GetInclusiveBlockBoundsWorldSize(
+        ChamberMinX,
+        ChamberMinY,
+        ChamberMaxX,
+        ChamberMaxY
+    );
+    const FVector ChamberCenter = DungeonCore::GetInclusiveBlockBoundsWorldCenter(
+        ChamberMinX,
+        ChamberMinY,
+        ChamberMaxX,
+        ChamberMaxY
+    );
+
+    const double FloorTopZ = DungeonCore::GetCoreChamberSurfaceVisualFloorZ();
+    const double SurfaceZ = DungeonCore::GetMountainSurfaceWorldZ();
     const double WallHeight = FMath::Max(40.0, SurfaceZ - FloorTopZ);
+    const double WallCenterZ = FloorTopZ + (WallHeight * 0.5);
+    const double WallThickness = DungeonCore::CoreChamberWallThicknessUnits;
     const double WallScaleZ = WallHeight / DungeonCore::DefaultEngineCubeSizeUnits;
-    const double FloorScaleZ = DungeonCore::CoreChamberFloorThicknessUnits / DungeonCore::DefaultEngineCubeSizeUnits;
+    const double WallScaleThin = WallThickness / DungeonCore::DefaultEngineCubeSizeUnits;
+    const double WallScaleLongX = ChamberSize.X / DungeonCore::DefaultEngineCubeSizeUnits;
+    const double WallScaleLongY = ChamberSize.Y / DungeonCore::DefaultEngineCubeSizeUnits;
 
-    RoomInstances->AddInstance(MakeTileInstanceTransform(
-        DungeonCore::GetCarvedFloorVisualWorldCenterForFootprint(
-            ChamberOrigin,
-            ChamberWidth,
-            ChamberHeight,
-            FloorScaleZ
-        ),
-        FVector(
-            static_cast<double>(ChamberWidth * DungeonCore::BlockSizeUnits) / DungeonCore::DefaultEngineCubeSizeUnits,
-            static_cast<double>(ChamberHeight * DungeonCore::BlockSizeUnits) / DungeonCore::DefaultEngineCubeSizeUnits,
-            FloorScaleZ
-        )
+    const double WestX = static_cast<double>(ChamberMinX * DungeonCore::BlockSizeUnits) + (WallThickness * 0.5);
+    const double EastX = static_cast<double>((ChamberMaxX + 1) * DungeonCore::BlockSizeUnits) - (WallThickness * 0.5);
+    const double SouthY = static_cast<double>(ChamberMinY * DungeonCore::BlockSizeUnits) + (WallThickness * 0.5);
+    const double NorthY = static_cast<double>((ChamberMaxY + 1) * DungeonCore::BlockSizeUnits) - (WallThickness * 0.5);
+
+    ChamberWallInstances->AddInstance(MakeTileInstanceTransform(
+        FVector(WestX, ChamberCenter.Y, WallCenterZ),
+        FVector(WallScaleThin, WallScaleLongY, WallScaleZ)
+    ));
+    ChamberWallInstances->AddInstance(MakeTileInstanceTransform(
+        FVector(ChamberCenter.X, SouthY, WallCenterZ),
+        FVector(WallScaleLongX, WallScaleThin, WallScaleZ)
+    ));
+    ChamberWallInstances->AddInstance(MakeTileInstanceTransform(
+        FVector(ChamberCenter.X, NorthY, WallCenterZ),
+        FVector(WallScaleLongX, WallScaleThin, WallScaleZ)
     ));
 
-    const FBlockCoord CoreBlock = DungeonCore::GetStartingCoreBlockCoord();
-    FVector PillarScale(1.0, 1.0, 1.0);
-    const FVector CorePillarCenter = DungeonCore::GetDungeonCorePillarVisual(CoreBlock, RockScale.X, PillarScale);
-    RoomInstances->AddInstance(MakeTileInstanceTransform(CorePillarCenter, PillarScale));
-
-    for (int32 ChamberX = 0; ChamberX < ChamberWidth; ++ChamberX)
+    const bool bEntryOnEast = SurfaceEntryBlock.X == ChamberMaxX;
+    if (!bEntryOnEast)
     {
-        for (int32 ChamberY = 0; ChamberY < ChamberHeight; ++ChamberY)
-        {
-            const bool bPerimeter = ChamberX == 0
-                || ChamberY == 0
-                || ChamberX == ChamberWidth - 1
-                || ChamberY == ChamberHeight - 1;
-            if (!bPerimeter)
-            {
-                continue;
-            }
-
-            const FBlockCoord BlockCoord(ChamberX, ChamberY, 0);
-            if (BlockCoord.X == SurfaceEntryBlock.X
-                && BlockCoord.Y == SurfaceEntryBlock.Y
-                && BlockCoord.Z == SurfaceEntryBlock.Z)
-            {
-                const FVector EntryScale = FVector(RockScale.X * 0.7, RockScale.Y * 0.35, WallScaleZ * 0.65);
-                const FVector ColumnXY = DungeonCore::GetBlockColumnWorldXY(BlockCoord);
-                ChamberWallInstances->AddInstance(MakeTileInstanceTransform(
-                    FVector(ColumnXY.X, ColumnXY.Y, FloorTopZ + (WallHeight * 0.5)),
-                    EntryScale
-                ));
-                continue;
-            }
-
-            const FVector ColumnXY = DungeonCore::GetBlockColumnWorldXY(BlockCoord);
-            ChamberWallInstances->AddInstance(MakeTileInstanceTransform(
-                FVector(ColumnXY.X, ColumnXY.Y, FloorTopZ + (WallHeight * 0.5)),
-                FVector(RockScale.X, RockScale.Y, WallScaleZ)
-            ));
-        }
+        ChamberWallInstances->AddInstance(MakeTileInstanceTransform(
+            FVector(EastX, ChamberCenter.Y, WallCenterZ),
+            FVector(WallScaleThin, WallScaleLongY, WallScaleZ)
+        ));
+        return;
     }
+
+    // East wall with an exact one-tile gap at the surface entry: segments south and north of the entry tile.
+    const double ChamberSouthWorldY = static_cast<double>(ChamberMinY * DungeonCore::BlockSizeUnits);
+    const double ChamberNorthWorldY = static_cast<double>((ChamberMaxY + 1) * DungeonCore::BlockSizeUnits);
+    const double EntrySouthWorldY = static_cast<double>(SurfaceEntryBlock.Y * DungeonCore::BlockSizeUnits);
+    const double EntryNorthWorldY = EntrySouthWorldY + static_cast<double>(DungeonCore::BlockSizeUnits);
+    AddEastWallSegment(EastX, ChamberSouthWorldY, EntrySouthWorldY, WallCenterZ, WallScaleThin, WallScaleZ);
+    AddEastWallSegment(EastX, EntryNorthWorldY, ChamberNorthWorldY, WallCenterZ, WallScaleThin, WallScaleZ);
+}
+
+void ADungeonChunkActor::AddEastWallSegment(
+    const double WallX,
+    const double FromWorldY,
+    const double ToWorldY,
+    const double WallCenterZ,
+    const double WallScaleThin,
+    const double WallScaleZ
+)
+{
+    const double SegmentLength = ToWorldY - FromWorldY;
+    if (SegmentLength <= 0.0)
+    {
+        return;
+    }
+
+    ChamberWallInstances->AddInstance(MakeTileInstanceTransform(
+        FVector(WallX, FromWorldY + (SegmentLength * 0.5), WallCenterZ),
+        FVector(WallScaleThin, SegmentLength / DungeonCore::DefaultEngineCubeSizeUnits, WallScaleZ)
+    ));
 }
 
 void ADungeonChunkActor::RefreshFromSimulation(
@@ -294,8 +433,6 @@ void ADungeonChunkActor::RefreshFromSimulation(
     const TArray<FUnitInstanceData>& ActiveDefenders
 )
 {
-    BuildSurfaceGrid();
-
     RockInstances->ClearInstances();
     ChamberWallInstances->ClearInstances();
     PitCavityInstances->ClearInstances();
@@ -321,6 +458,9 @@ void ADungeonChunkActor::RefreshFromSimulation(
     );
 
     const TArray<FTileData> Tiles = GridState->GetAllTiles();
+    BuildSurfaceGrid();
+    BuildRockSurfaceCaps(Tiles);
+
     for (const FTileData& TileData : Tiles)
     {
         if (TileData.TileState == ETileState::SurfaceEntry)

@@ -416,10 +416,11 @@ namespace DungeonCore
     inline constexpr int32 BlockSizeUnits = 300;
     inline constexpr int32 HalfBlockSizeUnits = BlockSizeUnits / 2;
     inline constexpr int32 DefaultChunkSizeInBlocks = 32;
-    /** Sealed starting core chamber (CoreChamber room); gameplay core block is at the center tile. */
-    inline constexpr int32 StartingCoreChamberWidthBlocks = 20;
-    inline constexpr int32 StartingCoreChamberHeightBlocks = 20;
-    inline constexpr int32 StartingRockMarginBlocks = 4;
+    /** Sealed starting core chamber (CoreChamber room): 20 ft x 20 ft = 2 x 2 blocks carved out of solid rock. */
+    inline constexpr int32 StartingCoreChamberWidthBlocks = 2;
+    inline constexpr int32 StartingCoreChamberHeightBlocks = 2;
+    /** Solid rock around the chamber that the player digs into. */
+    inline constexpr int32 StartingRockMarginBlocks = 11;
     inline constexpr double GridLineThicknessUnits = 8.0;
     inline constexpr double GridLineHeightUnits = 12.0;
     inline constexpr double GridSurfaceOffsetUnits = 3.0;
@@ -438,6 +439,86 @@ namespace DungeonCore
         OutMaxX = StartingCoreChamberWidthBlocks + StartingRockMarginBlocks - 1;
         OutMinY = -StartingRockMarginBlocks;
         OutMaxY = StartingCoreChamberHeightBlocks + StartingRockMarginBlocks - 1;
+    }
+
+    inline bool IsBlockInStartingBuildArea(const FBlockCoord& BlockCoord)
+    {
+        int32 MinX = 0;
+        int32 MaxX = 0;
+        int32 MinY = 0;
+        int32 MaxY = 0;
+        GetStartingBuildAreaBlockBounds(MinX, MaxX, MinY, MaxY);
+        return BlockCoord.Z == 0
+            && BlockCoord.X >= MinX
+            && BlockCoord.X <= MaxX
+            && BlockCoord.Y >= MinY
+            && BlockCoord.Y <= MaxY;
+    }
+
+    inline bool IsDungeonCoreBlockCoord(const FBlockCoord& BlockCoord)
+    {
+        const int32 CoreX = (StartingCoreChamberWidthBlocks - 1) / 2;
+        const int32 CoreY = (StartingCoreChamberHeightBlocks - 1) / 2;
+        return BlockCoord.X == CoreX && BlockCoord.Y == CoreY && BlockCoord.Z == 0;
+    }
+
+    inline void GetCoreChamberBlockBounds(int32& OutMinX, int32& OutMaxX, int32& OutMinY, int32& OutMaxY)
+    {
+        OutMinX = 0;
+        OutMinY = 0;
+        OutMaxX = StartingCoreChamberWidthBlocks - 1;
+        OutMaxY = StartingCoreChamberHeightBlocks - 1;
+    }
+
+    inline bool IsBlockInsideCoreChamberFootprint(const FBlockCoord& BlockCoord)
+    {
+        int32 MinX = 0;
+        int32 MaxX = 0;
+        int32 MinY = 0;
+        int32 MaxY = 0;
+        GetCoreChamberBlockBounds(MinX, MaxX, MinY, MaxY);
+        return BlockCoord.Z == 0
+            && BlockCoord.X >= MinX
+            && BlockCoord.X <= MaxX
+            && BlockCoord.Y >= MinY
+            && BlockCoord.Y <= MaxY;
+    }
+
+    inline FVector GetInclusiveBlockBoundsWorldCenter(
+        const int32 MinBlockX,
+        const int32 MinBlockY,
+        const int32 MaxBlockX,
+        const int32 MaxBlockY
+    )
+    {
+        const double MinWorldX = static_cast<double>(MinBlockX * BlockSizeUnits);
+        const double MinWorldY = static_cast<double>(MinBlockY * BlockSizeUnits);
+        const double MaxWorldX = static_cast<double>((MaxBlockX + 1) * BlockSizeUnits);
+        const double MaxWorldY = static_cast<double>((MaxBlockY + 1) * BlockSizeUnits);
+        return FVector(
+            (MinWorldX + MaxWorldX) * 0.5,
+            (MinWorldY + MaxWorldY) * 0.5,
+            0.0
+        );
+    }
+
+    inline FVector GetInclusiveBlockBoundsWorldSize(
+        const int32 MinBlockX,
+        const int32 MinBlockY,
+        const int32 MaxBlockX,
+        const int32 MaxBlockY
+    )
+    {
+        return FVector(
+            static_cast<double>((MaxBlockX - MinBlockX + 1) * BlockSizeUnits),
+            static_cast<double>((MaxBlockY - MinBlockY + 1) * BlockSizeUnits),
+            0.0
+        );
+    }
+
+    inline double GetMountainSurfaceWorldZ()
+    {
+        return GridSurfaceOffsetUnits;
     }
     inline constexpr int32 StartingMana = 120;
     inline constexpr int32 DigManaCost = 10;
@@ -553,6 +634,30 @@ namespace DungeonCore
         return GetCarvedFloorTopWorldZ(BlockCoord);
     }
 
+    /** Starting chamber floor is the same carved floor plane as any dug tile on floor 1. */
+    inline double GetCoreChamberSurfaceVisualFloorZ()
+    {
+        return GetCarvedFloorTopWorldZ(FBlockCoord(0, 0, 0));
+    }
+
+    /** Dungeon core sphere rests on the chamber floor and stays below the mountain surface. */
+    inline double GetDungeonCoreVisualDiameterUnits()
+    {
+        return static_cast<double>(BlockSizeUnits) * 0.6;
+    }
+
+    /** Dig preview on solid rock: a thin highlight on the rock's top face, never a block above ground. */
+    inline FVector GetDigSurfaceHighlightWorldCenter(const FBlockCoord& BlockCoord)
+    {
+        const FVector ColumnXY = GetBlockColumnWorldXY(BlockCoord);
+        return FVector(ColumnXY.X, ColumnXY.Y, GetMountainSurfaceWorldZ() + GridLineHeightUnits);
+    }
+
+    inline double GetDigSurfaceHighlightScaleZ()
+    {
+        return GridLineHeightUnits / DefaultEngineCubeSizeUnits;
+    }
+
     /** Fills the dug volume between mountain surface and carved floor (reads as a pit, not a raised slab). */
     inline FVector GetCarvedCavityVisualWorldCenter(const FBlockCoord& BlockCoord, FVector& OutInstanceScale)
     {
@@ -606,9 +711,16 @@ namespace DungeonCore
         return 0.0f;
     }
 
+    /** Fixed exposure for the build camera; auto-exposure keys on the dark rock and washes everything out. */
+    inline float GetCameraManualExposureBiasEV()
+    {
+        return 9.0f;
+    }
+
+    /** Close enough to inspect a single 2 x 2 block room. */
     inline float GetCameraMinSpringArmLength()
     {
-        return 2500.0f;
+        return 1200.0f;
     }
 
     inline float GetCameraMaxSpringArmLength()

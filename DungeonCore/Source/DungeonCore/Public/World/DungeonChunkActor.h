@@ -8,6 +8,7 @@
 
 class UInstancedStaticMeshComponent;
 class UStaticMesh;
+class UStaticMeshComponent;
 class UDungeonGridState;
 class USceneComponent;
 
@@ -32,10 +33,29 @@ private:
 
     void BuildSurfaceGrid();
 
+    void BuildRockSurfaceCaps(const TArray<FTileData>& Tiles);
+
     void BuildCoreChamberShell(const FBlockCoord& SurfaceEntryBlock);
+
+    void AddEastWallSegment(
+        const double WallX,
+        const double FromWorldY,
+        const double ToWorldY,
+        const double WallCenterZ,
+        const double WallScaleThin,
+        const double WallScaleZ
+    );
+
+    void UpdateSurfaceDungeonVisuals();
 
     UPROPERTY(VisibleAnywhere, Category = "Dungeon")
     TObjectPtr<USceneComponent> SceneRoot;
+
+    UPROPERTY(VisibleAnywhere, Category = "Dungeon")
+    TObjectPtr<UStaticMeshComponent> CoreChamberFloorVisual;
+
+    UPROPERTY(VisibleAnywhere, Category = "Dungeon")
+    TObjectPtr<UStaticMeshComponent> DungeonCoreVisual;
 
     UPROPERTY(VisibleAnywhere, Category = "Dungeon")
     TObjectPtr<UInstancedStaticMeshComponent> GridLineInstances;

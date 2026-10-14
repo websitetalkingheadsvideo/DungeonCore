@@ -392,18 +392,25 @@ void ADungeonPlayerController::UpdateCursorFromMouse()
 
     HoveredBlockCoord = DungeonCore::WorldToBlock(SurfacePoint);
     HoveredBlockCoord.Z = 0;
+
+    UDungeonSimSubsystem* DungeonSimSubsystem = GetDungeonSimSubsystem();
+    UDungeonGridState* GridState = DungeonSimSubsystem != nullptr ? DungeonSimSubsystem->GetGridState() : nullptr;
+    if (GridState == nullptr
+        || !DungeonCore::IsBlockInStartingBuildArea(HoveredBlockCoord)
+        || !GridState->HasTileData(HoveredBlockCoord))
+    {
+        bHasHoveredBlock = false;
+        BuildCursorActor->SetActorHiddenInGame(true);
+        UpdatePlacementPreview();
+        return;
+    }
+
     bHasHoveredBlock = true;
 
     ETileState HoveredTileState = ETileState::SolidRock;
-    if (UDungeonSimSubsystem* DungeonSimSubsystem = GetDungeonSimSubsystem())
+    if (const FTileData* TileData = GridState->FindTileData(HoveredBlockCoord))
     {
-        if (UDungeonGridState* GridState = DungeonSimSubsystem->GetGridState())
-        {
-            if (const FTileData* TileData = GridState->FindTileData(HoveredBlockCoord))
-            {
-                HoveredTileState = TileData->TileState;
-            }
-        }
+        HoveredTileState = TileData->TileState;
     }
 
     BuildCursorActor->SetActorHiddenInGame(false);
@@ -573,7 +580,7 @@ void ADungeonPlayerController::RefreshChunkVisuals()
             3,
             8.0f,
             FColor::Yellow,
-            FString::Printf(TEXT("Dungeon tiles: %d (purple = core room, dark blocks = rock)"), TileCount)
+            FString::Printf(TEXT("Dungeon tiles: %d"), TileCount)
         );
     }
 }

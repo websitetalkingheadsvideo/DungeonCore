@@ -24,6 +24,10 @@ ADungeonCameraPawn::ADungeonCameraPawn()
     CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
     CameraComponent->SetupAttachment(SpringArmComponent, USpringArmComponent::SocketName);
     CameraComponent->bUsePawnControlRotation = false;
+    CameraComponent->PostProcessSettings.bOverride_AutoExposureMethod = true;
+    CameraComponent->PostProcessSettings.AutoExposureMethod = EAutoExposureMethod::AEM_Manual;
+    CameraComponent->PostProcessSettings.bOverride_AutoExposureBias = true;
+    CameraComponent->PostProcessSettings.AutoExposureBias = DungeonCore::GetCameraManualExposureBiasEV();
 
     SetActorLocation(DungeonCore::GetCoreChamberCenterWorldLocation());
 }
