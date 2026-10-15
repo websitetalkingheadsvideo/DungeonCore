@@ -1,0 +1,209 @@
+# Source of truth for the local pack table in library.md (short summaries only).
+# Deep metadata: H:\Unreal Assets\asset-pack-inventory.md
+# Paths / mounts: pack-roots.json (Sync-PackRoots.ps1)
+#
+# Regenerate table: python tools/asset-library/update_library_table.py
+
+meta:
+  inventory_doc: "H:\\Unreal Assets\\asset-pack-inventory.md"
+
+packs:
+  - id: Abandoned Mansion
+    type: Environment
+    summary: Derelict mansion interior/exterior; horror, decay, nostalgic.
+
+  - id: AfricanVillage_5.0
+    type: Environment
+    summary: African village huts and settlement exterior.
+
+  - id: AmusementPark
+    type: Environment
+    summary: Carnival / amusement park rides and fairground.
+
+  - id: Ashes_of_Bazaar_5.5
+    type: Environment
+    summary: Burned / ruined middle-eastern bazaar market.
+
+  - id: Attic_Environment_5.5
+    type: Environment
+    summary: Residential attic interior (cozy or horror).
+
+  - id: CastleIsland
+    type: Environment
+    summary: Castle on island / cliff fortress exterior.
+
+  - id: CavernMahal
+    type: Environment
+    summary: Fantasy cave palace (Indian / mythological vibe).
+
+  - id: City_Street_Decal_PACK_GDTV
+    type: Decals
+    summary: GameDev.tv — urban street decals (bulbs, grime, pavement wear).
+
+  - id: ComplexLab_5.5
+    type: Environment
+    summary: Underground near-future research lab.
+
+  - id: ConvenienceStore_5.2
+    type: Environment
+    summary: Modern convenience store interior.
+
+  - id: Crystal_Cave
+    type: Environment
+    summary: Glowing crystal cave underground.
+
+  - id: FantasyGothicCastle
+    type: Environment
+    summary: AAA fantasy gothic castle (Leartes Fantasycastle).
+
+  - id: Fishing_Dock_5.1
+    type: Environment
+    summary: Asian fishing village waterfront (Leartes).
+
+  - id: FoggyJapaneseStreet_5.6
+    type: Environment
+    summary: Foggy Japanese urban street.
+
+  - id: FPS Music Pack
+    type: Audio
+    summary: GameDev.tv — 15 loop-friendly WAV tracks (military / FPS combat mood); import to UE as Sound Waves.
+
+  - id: FuyohRestaurantEnv_5.5
+    type: Environment
+    summary: Japanese restaurant interior.
+
+  - id: General_SciFi_Decal_Pack_GDTV
+    type: Decals
+    summary: GameDev.tv — sci-fi panel / hull decals (normals + opacity).
+
+  - id: Gothic_Cathedral_5.4
+    type: Environment
+    summary: Ancient cathedral modular environment (Leartes).
+
+  - id: HauntedVillage
+    type: Environment
+    summary: European haunted / decayed village.
+
+  - id: JungleRuins_5.1
+    type: Environment
+    summary: Overgrown jungle ruins (Mayan / adventure).
+
+  - id: Lakeside_Village_Environment_5.1
+    type: Environment
+    summary: Chinese lakeside town (Leartes).
+
+  - id: Lakeside_Village_House_5.4
+    type: Environment
+    summary: Modular house slice of lakeside town set.
+
+  - id: LightingTool_5.7
+    type: Tool
+    summary: Lighting workflow / editor tool pack.
+
+  - id: Lost_Cave
+    type: Environment
+    summary: Dark exploration cave.
+
+  - id: MayanCave
+    type: Environment
+    summary: Mayan temple cave ruins.
+
+  - id: Medieval_Church_5.5
+    type: Environment
+    summary: Dark fantasy church (Leartes).
+
+  - id: Medieval_French_Town_5.3
+    type: Environment
+    summary: French quarter street (Leartes).
+
+  - id: MedievalCastleVillage
+    type: Environment
+    summary: Medieval castle and walled town.
+
+  - id: MedievalFantasyDungeon_5.4
+    type: Environment
+    summary: "**Dungeon Core** — fantasy dungeon interiors (Leartes Fantasy Dungeon). Mount `/Game/FantasyDungeon/...`."
+
+  - id: MedievalVillage_5.0
+    type: Environment
+    summary: European medieval village (Leartes).
+
+  - id: MetroEntrance01
+    type: Environment
+    summary: Metro / subway entrance underground.
+
+  - id: Monastery_Refuge_5.5
+    type: Environment
+    summary: Mountain monastery refuge.
+
+  - id: Parisian_Street_5.0
+    type: Environment
+    summary: Stylized Paris street (Leartes).
+
+  - id: Reactor_Hall
+    type: Environment
+    summary: Sci-fi reactor / industrial hall.
+
+  - id: Restaurant01
+    type: Environment
+    summary: Generic restaurant interior.
+
+  - id: Sands_of_Odin_5.5
+    type: Environment
+    summary: Norse / mythological desert sands.
+
+  - id: SciFiRobotFactory_5.5
+    type: Environment
+    summary: Robot assembly factory interior.
+
+  - id: Signage_Decals_Pack_GDTV
+    type: Decals
+    summary: GameDev.tv — warning / notice / shape signage decals with dirt masks.
+
+  - id: StackedSlum
+    type: Environment
+    summary: Dense stacked urban slum (cyberpunk / gritty).
+
+  - id: StylizedCountrysideLife
+    type: Environment
+    summary: Stylized rural farm countryside.
+
+  - id: StylizedVillage
+    type: Environment
+    summary: Stylized European fantasy village.
+
+  - id: TEESVESSEL
+    type: Environment
+    summary: Ship / vessel industrial coastal.
+
+  - id: Temple_5.5
+    type: Environment
+    summary: Asian / fantasy temple shrine.
+
+  - id: Tuscana_02
+    type: Environment
+    summary: Tuscany / Italian rural villa landscape.
+
+  - id: Unreal Material Pack - GameDev.tv Asset Pack
+    type: Material
+    summary: GameDev.tv — seamless 4K PBR set (stone, brick, wood, metal, rust, cobble); master MIs under MaterialsBundle.
+
+  - id: VikingEnvUnreal
+    type: Environment
+    summary: Viking village and Norse exterior.
+
+  - id: Waterfall_Environment_5.5
+    type: Environment
+    summary: Jungle waterfall nature scene.
+
+  - id: WeddingDressShop_4.27
+    type: Environment
+    summary: Modern bridal shop interior.
+
+  - id: Wizard'sRoom_V1.01
+    type: Environment
+    summary: Stylized wizard study interior (Stylarts).
+
+  - id: Wrecked_Ship_5.5
+    type: Environment
+    summary: Shipwreck coastal adventure / horror.

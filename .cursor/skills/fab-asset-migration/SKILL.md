@@ -5,9 +5,12 @@ description: Migrate meshes, materials and textures from the locally installed F
 
 # Fab Asset Migration (Dungeon Core)
 
-Packs live as full UE projects under `H:\Unreal Assets\<Pack>\Content\...`. `library.md` (repo root) and
-`H:\Unreal Assets\asset-pack-inventory.md` list what each pack contains. Project content is git-tracked,
-so only migrate what is actually used.
+Packs live under `H:\Unreal Assets\<PackId>\` but the `.uproject` is often **nested** and its name
+**does not match** `<PackId>` (inventory zip names are a fourth alias). Use `tools/asset-library/pack-roots.json`
+(`contentPath`, `contentMounts`) — refresh with `Sync-PackRoots.ps1` after new installs.
+
+`library.md` (repo root) and `H:\Unreal Assets\asset-pack-inventory.md` describe packs by **catalog id**
+(top-level folder). Project content is git-tracked, so only migrate what is actually used.
 
 ## Why copy instead of reference
 
@@ -18,7 +21,7 @@ or fix-ups. Packs are UE 5.2–5.5 and load forward into 5.8.
 ## Workflow
 
 ```
-- [ ] 1. Pick assets from library.md / inventory (prefer MI_* instances and SM_* meshes, never maps)
+- [ ] 1. Pick assets via `asset-library-lookup` (`search_library.py`) or library.md picks (prefer MI_* and SM_*; never maps)
 - [ ] 2. Dry-run the dependency crawl and check size + unresolved refs
 - [ ] 3. Copy
 - [ ] 4. Wire in C++ with ConstructorHelpers::FObjectFinder (editor closed, then Build.bat)
@@ -30,6 +33,12 @@ the `-Seeds` array). Pipe to `Out-Null` or a file if you want to suppress the li
 `Select-Object -First 1` aborts the pipeline before the copy happens.
 
 ```powershell
+# Resolve contentPath + print migrate line (or run it):
+& "tools/asset-library/Get-MigratePackCommand.ps1" -PackId Crystal_Cave `
+    -Seeds @("/Game/Crystal_Cave/Meshes/SM_Crystal_D_01", "/Game/Crystal_Cave/Materials/MI_GlowCrystalls") `
+    -Execute -DryRun
+
+# Manual (contentPath from pack-roots.json, not always <PackId>\Content):
 & ".cursor/skills/fab-asset-migration/scripts/migrate-pack-assets.ps1" `
     -PackContentRoot "H:\Unreal Assets\Crystal_Cave\Content" `
     -Seeds @("/Game/Crystal_Cave/Meshes/SM_Crystal_D_01", "/Game/Crystal_Cave/Materials/MI_GlowCrystalls") `

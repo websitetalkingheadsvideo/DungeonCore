@@ -1,0 +1,490 @@
+{
+  "generatedAt": "2026-10-15T01:08:33.8645133-06:00",
+  "assetsRoot": "H:\\Unreal Assets",
+  "excludeDirs": [
+    ".cursor",
+    "reference",
+    "Licenses",
+    "Unreal Assets"
+  ],
+  "packs": [
+    {
+      "id": "Abandoned Mansion",
+      "hasUproject": true,
+      "projectRel": "Abandoned Mansion",
+      "uproject": "AbandonedMansion.uproject",
+      "contentPath": "H:\\Unreal Assets\\Abandoned Mansion\\Content",
+      "contentMounts": "AbandonedMansion",
+      "uprojectCount": 1
+    },
+    {
+      "id": "AfricanVillage_5.0",
+      "hasUproject": true,
+      "projectRel": "AfricanVillage_5.0",
+      "uproject": "AfricanVillage.uproject",
+      "contentPath": "H:\\Unreal Assets\\AfricanVillage_5.0\\Content",
+      "contentMounts": "AfricanVillagePack",
+      "uprojectCount": 1
+    },
+    {
+      "id": "AmusementPark",
+      "hasUproject": true,
+      "projectRel": "AmusementPark",
+      "uproject": "AmusementPark.uproject",
+      "contentPath": "H:\\Unreal Assets\\AmusementPark\\Content",
+      "contentMounts": "AmusementPark",
+      "uprojectCount": 1
+    },
+    {
+      "id": "Ashes_of_Bazaar_5.5",
+      "hasUproject": true,
+      "projectRel": "Ashes_of_Bazaar_5.5",
+      "uproject": "Ashes_of_Bazaar.uproject",
+      "contentPath": "H:\\Unreal Assets\\Ashes_of_Bazaar_5.5\\Content",
+      "contentMounts": "AshesOfBazaar",
+      "uprojectCount": 1
+    },
+    {
+      "id": "Attic_Environment_5.5",
+      "hasUproject": true,
+      "projectRel": "Attic_Environment_5.5",
+      "uproject": "Attic_Env.uproject",
+      "contentPath": "H:\\Unreal Assets\\Attic_Environment_5.5\\Content",
+      "contentMounts": "AtticStudio",
+      "uprojectCount": 1
+    },
+    {
+      "id": "CastleIsland",
+      "hasUproject": true,
+      "projectRel": "CastleIsland",
+      "uproject": "Castle_StylArt5.uproject",
+      "contentPath": "H:\\Unreal Assets\\CastleIsland\\Content",
+      "contentMounts": "Castle",
+      "uprojectCount": 1
+    },
+    {
+      "id": "CavernMahal",
+      "hasUproject": true,
+      "projectRel": "CavernMahal",
+      "uproject": "Project_CavernMahal.uproject",
+      "contentPath": "H:\\Unreal Assets\\CavernMahal\\Content",
+      "contentMounts": "CavernMahal",
+      "uprojectCount": 1
+    },
+    {
+      "id": "City_Street_Decal_PACK_GDTV",
+      "hasUproject": true,
+      "projectRel": "City_Street_Decal_PACK_GDTV",
+      "uproject": "City_Street_Decal.uproject",
+      "contentPath": "H:\\Unreal Assets\\City_Street_Decal_PACK_GDTV\\Content",
+      "contentMounts": [
+        "City_Street_Decals",
+        "Map"
+      ],
+      "uprojectCount": 1
+    },
+    {
+      "id": "ComplexLab_5.5",
+      "hasUproject": true,
+      "projectRel": "ComplexLab_5.5",
+      "uproject": "ComplexLab.uproject",
+      "contentPath": "H:\\Unreal Assets\\ComplexLab_5.5\\Content",
+      "contentMounts": "LeartesStudios",
+      "uprojectCount": 1
+    },
+    {
+      "id": "ConvenienceStore_5.2",
+      "hasUproject": true,
+      "projectRel": "ConvenienceStore_5.2",
+      "uproject": "ConvenienceStore.uproject",
+      "contentPath": "H:\\Unreal Assets\\ConvenienceStore_5.2\\Content",
+      "contentMounts": "ConvenienceStore",
+      "uprojectCount": 1
+    },
+    {
+      "id": "Crystal_Cave",
+      "hasUproject": true,
+      "projectRel": "Crystal_Cave",
+      "uproject": "Crystal_Cave.uproject",
+      "contentPath": "H:\\Unreal Assets\\Crystal_Cave\\Content",
+      "contentMounts": [
+        "Crystal_Cave",
+        "StarterContent"
+      ],
+      "uprojectCount": 1
+    },
+    {
+      "id": "FantasyGothicCastle",
+      "hasUproject": true,
+      "projectRel": "FantasyGothicCastle",
+      "uproject": "FantasyGothicCastle.uproject",
+      "contentPath": "H:\\Unreal Assets\\FantasyGothicCastle\\Content",
+      "contentMounts": "FantasyGothicCastle",
+      "uprojectCount": 1
+    },
+    {
+      "id": "Fishing_Dock_5.1",
+      "hasUproject": true,
+      "projectRel": "Fishing_Dock_5.1",
+      "uproject": "Fishing.uproject",
+      "contentPath": "H:\\Unreal Assets\\Fishing_Dock_5.1\\Content",
+      "contentMounts": "FishingPack",
+      "uprojectCount": 1
+    },
+    {
+      "id": "FoggyJapaneseStreet_5.6",
+      "hasUproject": true,
+      "projectRel": "FoggyJapaneseStreet_5.6\\FoggyJapaneseStreet",
+      "uproject": "FoggyJapaneseStreet.uproject",
+      "contentPath": "H:\\Unreal Assets\\FoggyJapaneseStreet_5.6\\FoggyJapaneseStreet\\Content",
+      "contentMounts": "FoggyStreet",
+      "uprojectCount": 1
+    },
+    {
+      "id": "FPS Music Pack",
+      "hasUproject": false,
+      "projectRel": null,
+      "uproject": null,
+      "contentPath": null,
+      "contentMounts": [],
+      "uprojectCount": 0
+    },
+    {
+      "id": "FuyohRestaurantEnv_5.5",
+      "hasUproject": true,
+      "projectRel": "FuyohRestaurantEnv_5.5\\FuyohRestaurantEnv_5.5",
+      "uproject": "FuyohRestaurantEnv.uproject",
+      "contentPath": "H:\\Unreal Assets\\FuyohRestaurantEnv_5.5\\FuyohRestaurantEnv_5.5\\Content",
+      "contentMounts": "FuyohRestaurant",
+      "uprojectCount": 1
+    },
+    {
+      "id": "General_SciFi_Decal_Pack_GDTV",
+      "hasUproject": true,
+      "projectRel": "General_SciFi_Decal_Pack_GDTV",
+      "uproject": "Scifi_Normal_Decals.uproject",
+      "contentPath": "H:\\Unreal Assets\\General_SciFi_Decal_Pack_GDTV\\Content",
+      "contentMounts": [
+        "Maps",
+        "Material",
+        "Scifi_Decals"
+      ],
+      "uprojectCount": 1
+    },
+    {
+      "id": "Gothic_Cathedral_5.4",
+      "hasUproject": true,
+      "projectRel": "Gothic_Cathedral_5.4",
+      "uproject": "Gothic_Cathedral.uproject",
+      "contentPath": "H:\\Unreal Assets\\Gothic_Cathedral_5.4\\Content",
+      "contentMounts": "GothicCathedral",
+      "uprojectCount": 1
+    },
+    {
+      "id": "HauntedVillage",
+      "hasUproject": true,
+      "projectRel": "HauntedVillage",
+      "uproject": "HauntedVillage.uproject",
+      "contentPath": "H:\\Unreal Assets\\HauntedVillage\\Content",
+      "contentMounts": "HauntedVillage",
+      "uprojectCount": 1
+    },
+    {
+      "id": "JungleRuins_5.1",
+      "hasUproject": true,
+      "projectRel": "JungleRuins_5.1\\JungleRuins_5.1",
+      "uproject": "JungleRuins.uproject",
+      "contentPath": "H:\\Unreal Assets\\JungleRuins_5.1\\JungleRuins_5.1\\Content",
+      "contentMounts": "JungleRuins",
+      "uprojectCount": 1
+    },
+    {
+      "id": "Lakeside_Village_Environment_5.1",
+      "hasUproject": true,
+      "projectRel": "Lakeside_Village_Environment_5.1",
+      "uproject": "Village.uproject",
+      "contentPath": "H:\\Unreal Assets\\Lakeside_Village_Environment_5.1\\Content",
+      "contentMounts": "LakeSide_Village",
+      "uprojectCount": 1
+    },
+    {
+      "id": "Lakeside_Village_House_5.4",
+      "hasUproject": true,
+      "projectRel": "Lakeside_Village_House_5.4",
+      "uproject": "Village.uproject",
+      "contentPath": "H:\\Unreal Assets\\Lakeside_Village_House_5.4\\Content",
+      "contentMounts": "Village",
+      "uprojectCount": 1
+    },
+    {
+      "id": "LightingTool_5.7",
+      "hasUproject": false,
+      "projectRel": null,
+      "uproject": null,
+      "contentPath": null,
+      "contentMounts": [],
+      "uprojectCount": 0
+    },
+    {
+      "id": "Lost_Cave",
+      "hasUproject": true,
+      "projectRel": "Lost_Cave",
+      "uproject": "Lost_Cave.uproject",
+      "contentPath": "H:\\Unreal Assets\\Lost_Cave\\Content",
+      "contentMounts": "GreenCave",
+      "uprojectCount": 1
+    },
+    {
+      "id": "MayanCave",
+      "hasUproject": true,
+      "projectRel": "MayanCave",
+      "uproject": "MayanCave.uproject",
+      "contentPath": "H:\\Unreal Assets\\MayanCave\\Content",
+      "contentMounts": "Mayan_Cave",
+      "uprojectCount": 1
+    },
+    {
+      "id": "Medieval_Church_5.5",
+      "hasUproject": true,
+      "projectRel": "Medieval_Church_5.5",
+      "uproject": "ItalianFront.uproject",
+      "contentPath": "H:\\Unreal Assets\\Medieval_Church_5.5\\Content",
+      "contentMounts": "MedievalChurch",
+      "uprojectCount": 1
+    },
+    {
+      "id": "Medieval_French_Town_5.3",
+      "hasUproject": true,
+      "projectRel": "Medieval_French_Town_5.3",
+      "uproject": "MedievalFrenchTown.uproject",
+      "contentPath": "H:\\Unreal Assets\\Medieval_French_Town_5.3\\Content",
+      "contentMounts": "MedievalFrenchTown",
+      "uprojectCount": 1
+    },
+    {
+      "id": "MedievalCastleVillage",
+      "hasUproject": true,
+      "projectRel": "MedievalCastleVillage",
+      "uproject": "FIXING.uproject",
+      "contentPath": "H:\\Unreal Assets\\MedievalCastleVillage\\Content",
+      "contentMounts": "MedievalVillage",
+      "uprojectCount": 1
+    },
+    {
+      "id": "MedievalFantasyDungeon_5.4",
+      "hasUproject": true,
+      "projectRel": "MedievalFantasyDungeon_5.4\\MedievalFantasyDungeon_Cinematic",
+      "uproject": "FantasyDungeon.uproject",
+      "contentPath": "H:\\Unreal Assets\\MedievalFantasyDungeon_5.4\\MedievalFantasyDungeon_Cinematic\\Content",
+      "contentMounts": "FantasyDungeon",
+      "uprojectCount": 1
+    },
+    {
+      "id": "MedievalVillage_5.0",
+      "hasUproject": true,
+      "projectRel": "MedievalVillage_5.0",
+      "uproject": "MedievalVillage.uproject",
+      "contentPath": "H:\\Unreal Assets\\MedievalVillage_5.0\\Content",
+      "contentMounts": "MedievalVillage",
+      "uprojectCount": 1
+    },
+    {
+      "id": "MetroEntrance01",
+      "hasUproject": true,
+      "projectRel": "MetroEntrance01\\MetroEntrance01",
+      "uproject": "MetroEntrance01.uproject",
+      "contentPath": "H:\\Unreal Assets\\MetroEntrance01\\MetroEntrance01\\Content",
+      "contentMounts": "ModernCityEnvironment01",
+      "uprojectCount": 1
+    },
+    {
+      "id": "Monastery_Refuge_5.5",
+      "hasUproject": true,
+      "projectRel": "Monastery_Refuge_5.5\\Monastery_Refuge_SS",
+      "uproject": "Monastery_Refuge.uproject",
+      "contentPath": "H:\\Unreal Assets\\Monastery_Refuge_5.5\\Monastery_Refuge_SS\\Content",
+      "contentMounts": "Monastery_Refuge",
+      "uprojectCount": 1
+    },
+    {
+      "id": "Parisian_Street_5.0",
+      "hasUproject": true,
+      "projectRel": "Parisian_Street_5.0",
+      "uproject": "ParisianSt.uproject",
+      "contentPath": "H:\\Unreal Assets\\Parisian_Street_5.0\\Content",
+      "contentMounts": "ParisianStreet",
+      "uprojectCount": 1
+    },
+    {
+      "id": "Reactor_Hall",
+      "hasUproject": true,
+      "projectRel": "Reactor_Hall",
+      "uproject": "Reactor_Hall.uproject",
+      "contentPath": "H:\\Unreal Assets\\Reactor_Hall\\Content",
+      "contentMounts": [
+        "Blueprints",
+        "Levels",
+        "Materials",
+        "Meshes",
+        "Sequences",
+        "Textures"
+      ],
+      "uprojectCount": 1
+    },
+    {
+      "id": "Restaurant01",
+      "hasUproject": true,
+      "projectRel": "Restaurant01\\Restaurant01",
+      "uproject": "Restaurant01.uproject",
+      "contentPath": "H:\\Unreal Assets\\Restaurant01\\Restaurant01\\Content",
+      "contentMounts": "Restaurant01",
+      "uprojectCount": 1
+    },
+    {
+      "id": "Sands_of_Odin_5.5",
+      "hasUproject": true,
+      "projectRel": "Sands_of_Odin_5.5\\Sands_of_Odin",
+      "uproject": "Sands_of_Odin.uproject",
+      "contentPath": "H:\\Unreal Assets\\Sands_of_Odin_5.5\\Sands_of_Odin\\Content",
+      "contentMounts": [
+        "Blueprints",
+        "Cinematic",
+        "Levels",
+        "Materials",
+        "Meshes",
+        "Particles",
+        "Textures"
+      ],
+      "uprojectCount": 1
+    },
+    {
+      "id": "SciFiRobotFactory_5.5",
+      "hasUproject": true,
+      "projectRel": "SciFiRobotFactory_5.5",
+      "uproject": "SciFiRobotFactory.uproject",
+      "contentPath": "H:\\Unreal Assets\\SciFiRobotFactory_5.5\\Content",
+      "contentMounts": "SciFiRobotFactory",
+      "uprojectCount": 1
+    },
+    {
+      "id": "Signage_Decals_Pack_GDTV",
+      "hasUproject": true,
+      "projectRel": "Signage_Decals_Pack_GDTV",
+      "uproject": "Signage_Decals.uproject",
+      "contentPath": "H:\\Unreal Assets\\Signage_Decals_Pack_GDTV\\Content",
+      "contentMounts": "Warning_Sign_Decals",
+      "uprojectCount": 1
+    },
+    {
+      "id": "StackedSlum",
+      "hasUproject": true,
+      "projectRel": "StackedSlum",
+      "uproject": "StackedSlum.uproject",
+      "contentPath": "H:\\Unreal Assets\\StackedSlum\\Content",
+      "contentMounts": "StackedSlum",
+      "uprojectCount": 1
+    },
+    {
+      "id": "StylizedCountrysideLife",
+      "hasUproject": true,
+      "projectRel": "StylizedCountrysideLife",
+      "uproject": "STE021_UnrealProject.uproject",
+      "contentPath": "H:\\Unreal Assets\\StylizedCountrysideLife\\Content",
+      "contentMounts": "CountrysideLife",
+      "uprojectCount": 1
+    },
+    {
+      "id": "StylizedVillage",
+      "hasUproject": true,
+      "projectRel": "StylizedVillage",
+      "uproject": "StylizedVillage.uproject",
+      "contentPath": "H:\\Unreal Assets\\StylizedVillage\\Content",
+      "contentMounts": "StylizedVillage",
+      "uprojectCount": 1
+    },
+    {
+      "id": "TEESVESSEL",
+      "hasUproject": true,
+      "projectRel": "TEESVESSEL",
+      "uproject": "TEESVESSEL.uproject",
+      "contentPath": "H:\\Unreal Assets\\TEESVESSEL\\Content",
+      "contentMounts": "Sci_Fi_SpaceShio",
+      "uprojectCount": 1
+    },
+    {
+      "id": "Temple_5.5",
+      "hasUproject": true,
+      "projectRel": "Temple_5.5",
+      "uproject": "Temple.uproject",
+      "contentPath": "H:\\Unreal Assets\\Temple_5.5\\Content",
+      "contentMounts": "Temple",
+      "uprojectCount": 1
+    },
+    {
+      "id": "Tuscana_02",
+      "hasUproject": true,
+      "projectRel": "Tuscana_02",
+      "uproject": "Tuscana_S_New.uproject",
+      "contentPath": "H:\\Unreal Assets\\Tuscana_02\\Content",
+      "contentMounts": "TuscanyTown",
+      "uprojectCount": 1
+    },
+    {
+      "id": "Unreal Material Pack - GameDev.tv Asset Pack",
+      "hasUproject": true,
+      "projectRel": "Unreal Material Pack - GameDev.tv Asset Pack",
+      "uproject": "Unreal_Materials.uproject",
+      "contentPath": "H:\\Unreal Assets\\Unreal Material Pack - GameDev.tv Asset Pack\\Content",
+      "contentMounts": "MaterialsBundle",
+      "uprojectCount": 1
+    },
+    {
+      "id": "VikingEnvUnreal",
+      "hasUproject": true,
+      "projectRel": "VikingEnvUnreal\\VikingEnv",
+      "uproject": "VikingEnv.uproject",
+      "contentPath": "H:\\Unreal Assets\\VikingEnvUnreal\\VikingEnv\\Content",
+      "contentMounts": "VikingEnv",
+      "uprojectCount": 1
+    },
+    {
+      "id": "Waterfall_Environment_5.5",
+      "hasUproject": true,
+      "projectRel": "Waterfall_Environment_5.5",
+      "uproject": "WaterfallEnvironment.uproject",
+      "contentPath": "H:\\Unreal Assets\\Waterfall_Environment_5.5\\Content",
+      "contentMounts": "WaterFall",
+      "uprojectCount": 1
+    },
+    {
+      "id": "WeddingDressShop_4.27",
+      "hasUproject": true,
+      "projectRel": "WeddingDressShop_4.27",
+      "uproject": "WeddingDressShop.uproject",
+      "contentPath": "H:\\Unreal Assets\\WeddingDressShop_4.27\\Content",
+      "contentMounts": "WeddingDressShop",
+      "uprojectCount": 1
+    },
+    {
+      "id": "Wizard'sRoom_V1.01",
+      "hasUproject": true,
+      "projectRel": "Wizard'sRoom_V1.01\\Wizard'sRoom\\Wizard'sRoom",
+      "uproject": "Wizard'sRoom.uproject",
+      "contentPath": "H:\\Unreal Assets\\Wizard'sRoom_V1.01\\Wizard'sRoom\\Wizard'sRoom\\Content",
+      "contentMounts": [
+        "Demo",
+        "WizardRoom"
+      ],
+      "uprojectCount": 1
+    },
+    {
+      "id": "Wrecked_Ship_5.5",
+      "hasUproject": true,
+      "projectRel": "Wrecked_Ship_5.5",
+      "uproject": "OCEANGRAVE.uproject",
+      "contentPath": "H:\\Unreal Assets\\Wrecked_Ship_5.5\\Content",
+      "contentMounts": "UnderWaterSubmarine",
+      "uprojectCount": 1
+    }
+  ]
+}

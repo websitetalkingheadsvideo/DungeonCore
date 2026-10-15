@@ -108,8 +108,15 @@ Legible titles from the screenshot (unreadable tiles omitted — re-export or sc
 
 ## H:\Unreal Assets (local installs)
 
-Base path: `H:\Unreal Assets\<FolderName>\`
+**Catalog id** = top-level folder: `H:\Unreal Assets\<FolderName>\`
 
+That name is what this table and `library.md` use. It is **not** the same as the Unreal project folder, the `.uproject` file name, or the `/Game/<Mount>/...` path inside the pack — all three often differ (e.g. id `MedievalFantasyDungeon_5.4` → project dir `...\MedievalFantasyDungeon_Cinematic\` → `FantasyDungeon.uproject` → content mount `FantasyDungeon`). Some packs nest the project one or more levels below the catalog folder.
+
+**Resolved paths:** run `tools/asset-library/Sync-PackRoots.ps1` after adding packs; commit `tools/asset-library/pack-roots.json`. Migration helper: `Get-MigratePackCommand.ps1 -PackId <folder> -Seeds @('/Game/...')` (add `-Execute -DryRun` to run).
+
+**Local table:** edit `tools/asset-library/library-manifest.yaml` (short `summary` only), then `python tools/asset-library/update_library_table.py`. Long Gumroad tags and scans stay in `H:\Unreal Assets\asset-pack-inventory.md`. **Finding assets:** `.cursor/skills/asset-library-lookup` → `python tools/asset-library/search_library.py`.
+
+<!-- LOCAL_PACK_TABLE_START -->
 | Folder | Type | Short description |
 | --- | --- | --- |
 | Abandoned Mansion | Environment | Derelict mansion interior/exterior; horror, decay, nostalgic. |
@@ -119,24 +126,28 @@ Base path: `H:\Unreal Assets\<FolderName>\`
 | Attic_Environment_5.5 | Environment | Residential attic interior (cozy or horror). |
 | CastleIsland | Environment | Castle on island / cliff fortress exterior. |
 | CavernMahal | Environment | Fantasy cave palace (Indian / mythological vibe). |
+| City_Street_Decal_PACK_GDTV | Decals | GameDev.tv — urban street decals (bulbs, grime, pavement wear). |
 | ComplexLab_5.5 | Environment | Underground near-future research lab. |
 | ConvenienceStore_5.2 | Environment | Modern convenience store interior. |
 | Crystal_Cave | Environment | Glowing crystal cave underground. |
-| FantasyGothicCastle | Environment | AAA fantasy gothic castle (Leartes *Fantasycastle*). |
+| FantasyGothicCastle | Environment | AAA fantasy gothic castle (Leartes Fantasycastle). |
 | Fishing_Dock_5.1 | Environment | Asian fishing village waterfront (Leartes). |
 | FoggyJapaneseStreet_5.6 | Environment | Foggy Japanese urban street. |
+| FPS Music Pack | Audio | GameDev.tv — 15 loop-friendly WAV tracks (military / FPS combat mood); import to UE as Sound Waves. |
 | FuyohRestaurantEnv_5.5 | Environment | Japanese restaurant interior. |
+| General_SciFi_Decal_Pack_GDTV | Decals | GameDev.tv — sci-fi panel / hull decals (normals + opacity). |
 | Gothic_Cathedral_5.4 | Environment | Ancient cathedral modular environment (Leartes). |
 | HauntedVillage | Environment | European haunted / decayed village. |
 | JungleRuins_5.1 | Environment | Overgrown jungle ruins (Mayan / adventure). |
 | Lakeside_Village_Environment_5.1 | Environment | Chinese lakeside town (Leartes). |
 | Lakeside_Village_House_5.4 | Environment | Modular house slice of lakeside town set. |
+| LightingTool_5.7 | Tool | Lighting workflow / editor tool pack. |
 | Lost_Cave | Environment | Dark exploration cave. |
 | MayanCave | Environment | Mayan temple cave ruins. |
 | Medieval_Church_5.5 | Environment | Dark fantasy church (Leartes). |
 | Medieval_French_Town_5.3 | Environment | French quarter street (Leartes). |
 | MedievalCastleVillage | Environment | Medieval castle and walled town. |
-| MedievalFantasyDungeon_5.4 | Environment | **Dungeon Core** — fantasy dungeon interiors (Leartes *Fantasy Dungeon*). |
+| MedievalFantasyDungeon_5.4 | Environment | **Dungeon Core** — fantasy dungeon interiors (Leartes Fantasy Dungeon). Mount `/Game/FantasyDungeon/...`. |
 | MedievalVillage_5.0 | Environment | European medieval village (Leartes). |
 | MetroEntrance01 | Environment | Metro / subway entrance underground. |
 | Monastery_Refuge_5.5 | Environment | Mountain monastery refuge. |
@@ -145,18 +156,20 @@ Base path: `H:\Unreal Assets\<FolderName>\`
 | Restaurant01 | Environment | Generic restaurant interior. |
 | Sands_of_Odin_5.5 | Environment | Norse / mythological desert sands. |
 | SciFiRobotFactory_5.5 | Environment | Robot assembly factory interior. |
+| Signage_Decals_Pack_GDTV | Decals | GameDev.tv — warning / notice / shape signage decals with dirt masks. |
 | StackedSlum | Environment | Dense stacked urban slum (cyberpunk / gritty). |
 | StylizedCountrysideLife | Environment | Stylized rural farm countryside. |
 | StylizedVillage | Environment | Stylized European fantasy village. |
 | TEESVESSEL | Environment | Ship / vessel industrial coastal. |
 | Temple_5.5 | Environment | Asian / fantasy temple shrine. |
 | Tuscana_02 | Environment | Tuscany / Italian rural villa landscape. |
+| Unreal Material Pack - GameDev.tv Asset Pack | Material | GameDev.tv — seamless 4K PBR set (stone, brick, wood, metal, rust, cobble); master MIs under MaterialsBundle. |
 | VikingEnvUnreal | Environment | Viking village and Norse exterior. |
 | Waterfall_Environment_5.5 | Environment | Jungle waterfall nature scene. |
 | WeddingDressShop_4.27 | Environment | Modern bridal shop interior. |
 | Wizard'sRoom_V1.01 | Environment | Stylized wizard study interior (Stylarts). |
 | Wrecked_Ship_5.5 | Environment | Shipwreck coastal adventure / horror. |
-| LightingTool_5.7 | Tool | Lighting workflow / editor tool pack. |
+<!-- LOCAL_PACK_TABLE_END -->
 
 ### Dungeon Core — suggested picks from local library
 
@@ -169,6 +182,9 @@ Base path: `H:\Unreal Assets\<FolderName>\`
 | Sunken ruins | `MayanCave`, `JungleRuins_5.1`, `Wrecked_Ship_5.5` |
 | Mountain surface / breach approach | `CastleIsland`, `Monastery_Refuge_5.5`, `Waterfall_Environment_5.5` |
 | Invader “town” far exterior | `MedievalVillage_5.0`, `MedievalCastleVillage`, `VikingEnvUnreal` |
+| Block / corridor surfaces (PBR) | `Unreal Material Pack - GameDev.tv Asset Pack` (stone, mossy stone, rough wood, rusted metal) |
+| Grime, wear, industrial labels | `Signage_Decals_Pack_GDTV`, `General_SciFi_Decal_Pack_GDTV` (`Reactor_Hall`, `ComplexLab_5.5`, `MetroEntrance01`) |
+| Surface-town street dressing | `City_Street_Decal_PACK_GDTV` (kitbash with medieval / Parisian exteriors) |
 
 ## \\AMBER\VideoCopilot\Materials (raw texture maps, network share)
 
@@ -189,5 +205,5 @@ Use when a Fab pack lacks a specific surface; otherwise prefer the pack MI_* ins
 ## Maintenance
 
 - **Full Fab catalog:** Export or scroll entire Fab library (256+ items) and append to this file, or drop a CSV export into `reference/` and merge.
-- **Richer local metadata:** `H:\Unreal Assets\asset-pack-inventory.md` (tags, Gumroad links, folder scans).
+- **New pack on H:** `Sync-PackRoots.ps1` → add entry to `library-manifest.yaml` → `update_library_table.py`. Optional deep write-up in `H:\Unreal Assets\asset-pack-inventory.md` only when you need Gumroad/tags.
 - **Do not** commit `.uasset` / `.umap` from these packs into Dungeon Core unless intentionally migrated — reference via external paths or Fab add-to-project.
