@@ -1,8 +1,18 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #pragma once
 
 #include "CoreMinimal.h"
 
-/** Main log category used across the project */
-DECLARE_LOG_CATEGORY_EXTERN(LogDungeonCore, Log, All);
+#ifndef DUNGEONCORE_LOG_CATEGORY_DEFINED
+#define DUNGEONCORE_LOG_CATEGORY_DEFINED
+
+struct FLogCategoryLogDungeonCore : public FLogCategory<ELogVerbosity::Log, ELogVerbosity::All>
+{
+    UE_FORCEINLINE_HINT FLogCategoryLogDungeonCore()
+        : FLogCategory(TEXT("LogDungeonCore"))
+    {
+    }
+};
+
+extern FLogCategoryLogDungeonCore LogDungeonCore;
+
+#endif

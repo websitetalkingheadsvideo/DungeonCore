@@ -2,8 +2,10 @@
 
 #include "Data/DungeonContentSubsystem.h"
 #include "Engine/Engine.h"
+#include "Engine/GameViewportClient.h"
 #include "Engine/World.h"
 #include "EngineUtils.h"
+#include "Framework/Application/SlateApplication.h"
 #include "InputCoreTypes.h"
 #include "Player/DungeonCameraPawn.h"
 #include "Sim/DungeonSimSubsystem.h"
@@ -117,6 +119,8 @@ void ADungeonPlayerController::SetupInputComponent()
     InputComponent->BindKey(EKeys::MouseScrollUp, IE_Pressed, this, &ADungeonPlayerController::ZoomIn);
     InputComponent->BindKey(EKeys::MouseScrollDown, IE_Pressed, this, &ADungeonPlayerController::ZoomOut);
     InputComponent->BindKey(EKeys::R, IE_Pressed, this, &ADungeonPlayerController::RestartRun);
+    InputComponent->BindKey(EKeys::B, IE_Pressed, this, &ADungeonPlayerController::ToggleDungeonStore);
+    InputComponent->BindKey(EKeys::Escape, IE_Pressed, this, &ADungeonPlayerController::CloseDungeonStore);
     InputComponent->BindKey(EKeys::F5, IE_Pressed, this, &ADungeonPlayerController::QuickSaveRun);
     InputComponent->BindKey(EKeys::F9, IE_Pressed, this, &ADungeonPlayerController::QuickLoadRun);
 }
@@ -269,10 +273,7 @@ void ADungeonPlayerController::StartRunFromSetup(const EDungeonThemeId ThemeId, 
         HudWidget->AddToViewport(10);
     }
 
-    FInputModeGameOnly GameOnlyInput;
-    GameOnlyInput.SetConsumeCaptureMouseDown(false);
-    SetInputMode(GameOnlyInput);
-    bShowMouseCursor = true;
+    KeepMouseCursorFree();
 
     bRunActive = true;
     EnsureChunkActorExists();
@@ -430,10 +431,16 @@ void ADungeonPlayerController::HandleAdventurersChanged()
 void ADungeonPlayerController::HandleLeftMousePressed()
 {
     LeftMouseDragDistancePixels = 0.0f;
+    bPrimaryClickStartedOverWorld = IsPointerOverDungeonWorld();
 }
 
 void ADungeonPlayerController::HandleLeftMouseReleased()
 {
+    if (bDungeonStoreOpen || !bPrimaryClickStartedOverWorld)
+    {
+        return;
+    }
+
     if (LeftMouseDragDistancePixels <= ClickDragThresholdPixels)
     {
         HandlePrimaryAction();
@@ -442,6 +449,12 @@ void ADungeonPlayerController::HandleLeftMouseReleased()
 
 void ADungeonPlayerController::ApplyClickDragCameraInput()
 {
+    if (bDungeonStoreOpen)
+    {
+        bHasPreviousMousePosition = false;
+        return;
+    }
+
     ADungeonCameraPawn* CameraPawn = GetDungeonCameraPawn();
     if (CameraPawn == nullptr)
     {
@@ -477,11 +490,19 @@ void ADungeonPlayerController::ApplyClickDragCameraInput()
     {
         CameraPawn->AddOrbitFromScreenDelta(DeltaX, DeltaY);
     }
-    else if (bLeftMouseDown && (!FMath::IsNearlyZero(DeltaX) || !FMath::IsNearlyZero(DeltaY)))
+    else if (bLeftMouseDown && bPrimaryClickStartedOverWorld && (!FMath::IsNearlyZero(DeltaX) || !FMath::IsNearlyZero(DeltaY)))
     {
         CameraPawn->AddPanFromScreenDelta(DeltaX, DeltaY);
         LeftMouseDragDistancePixels += FVector2D(DeltaX, DeltaY).Size();
     }
+}
+
+bool ADungeonPlayerController::IsSolidRockDigTarget(const FBlockCoord& BlockCoord) const
+{
+    const UDungeonSimSubsystem* DungeonSimSubsystem = GetDungeonSimSubsystem();
+    const UDungeonGridState* GridState = DungeonSimSubsystem != nullptr ? DungeonSimSubsystem->GetGridState() : nullptr;
+    const FTileData* TileData = GridState != nullptr ? GridState->FindTileData(BlockCoord) : nullptr;
+    return TileData != nullptr && TileData->bDiggable && TileData->TileState == ETileState::SolidRock;
 }
 
 void ADungeonPlayerController::HandlePrimaryAction()
@@ -491,11 +512,41 @@ void ADungeonPlayerController::HandlePrimaryAction()
         return;
     }
 
-    PlaceSelectedBuildableAt(HoveredBlockCoord);
+    UDungeonSimSubsystem* DungeonSimSubsystem = GetDungeonSimSubsystem();
+    if (DungeonSimSubsystem == nullptr)
+    {
+        return;
+    }
+
+    const FPlacementResult Result = IsSolidRockDigTarget(HoveredBlockCoord)
+        ? DungeonSimSubsystem->DigBlock(HoveredBlockCoord)
+        : PlaceSelectedBuildableAt(HoveredBlockCoord);
+
+    if (HudWidget == nullptr)
+    {
+        UpdatePlacementPreview();
+        return;
+    }
+
+    if (Result.bSuccess)
+    {
+        HudWidget->HideOutOfManaNotice();
+    }
+    else if (Result.FailureReason == EPlacementFailureReason::InsufficientMana)
+    {
+        HudWidget->ShowOutOfManaNotice(Result.ManaCost);
+    }
+
+    UpdatePlacementPreview();
 }
 
 void ADungeonPlayerController::SelectShopHotkey(const int32 HotkeyIndex)
 {
+    if (bDungeonStoreOpen)
+    {
+        return;
+    }
+
     const TArray<FName> HotkeyIds = GetShopHotkeyBuildableIds();
     if (!HotkeyIds.IsValidIndex(HotkeyIndex))
     {
@@ -577,6 +628,15 @@ bool ADungeonPlayerController::ProjectMouseToDungeonSurface(FVector& OutWorldPoi
 
 void ADungeonPlayerController::UpdateCursorFromMouse()
 {
+    if (bDungeonStoreOpen)
+    {
+        if (BuildCursorActor != nullptr)
+        {
+            BuildCursorActor->SetActorHiddenInGame(true);
+        }
+        return;
+    }
+
     if (BuildCursorActor == nullptr || !bRunActive)
     {
         if (BuildCursorActor != nullptr)
@@ -620,6 +680,14 @@ void ADungeonPlayerController::UpdateCursorFromMouse()
 
     BuildCursorActor->SetActorHiddenInGame(false);
     BuildCursorActor->SetHoveredTileState(HoveredTileState);
+    if (IsSolidRockDigTarget(HoveredBlockCoord))
+    {
+        BuildCursorActor->SetPreviewBuildable(EBuildableCategory::Dig, FRoomFootprint());
+    }
+    else if (const FDungeonBuildableRow* Row = GetSelectedBuildableRow())
+    {
+        BuildCursorActor->SetPreviewBuildable(Row->Category, Row->Footprint);
+    }
     BuildCursorActor->SetPreviewOriginBlock(HoveredBlockCoord);
     UpdatePlacementPreview();
 }
@@ -640,7 +708,11 @@ void ADungeonPlayerController::UpdatePlacementPreview()
     }
 
     const FDungeonBuildableRow* Row = GetSelectedBuildableRow();
-    if (Row == nullptr)
+    if (IsSolidRockDigTarget(HoveredBlockCoord))
+    {
+        CurrentPlacementPreview = DungeonSimSubsystem->PreviewDigAtBlock(HoveredBlockCoord);
+    }
+    else if (Row == nullptr)
     {
         CurrentPlacementPreview = FPlacementResult();
         CurrentPlacementPreview.FailureReason = EPlacementFailureReason::UnknownBuildable;
@@ -682,6 +754,11 @@ void ADungeonPlayerController::UpdatePlacementPreview()
 
 void ADungeonPlayerController::ZoomIn()
 {
+    if (bDungeonStoreOpen)
+    {
+        return;
+    }
+
     if (ADungeonCameraPawn* CameraPawn = GetDungeonCameraPawn())
     {
         CameraPawn->AdjustZoom(-350.0f);
@@ -690,6 +767,11 @@ void ADungeonPlayerController::ZoomIn()
 
 void ADungeonPlayerController::ZoomOut()
 {
+    if (bDungeonStoreOpen)
+    {
+        return;
+    }
+
     if (ADungeonCameraPawn* CameraPawn = GetDungeonCameraPawn())
     {
         CameraPawn->AdjustZoom(350.0f);
@@ -704,11 +786,120 @@ void ADungeonPlayerController::RecenterCameraOnCore()
     }
 }
 
+void ADungeonPlayerController::KeepMouseCursorFree()
+{
+    if (UWorld* World = GetWorld())
+    {
+        if (UGameViewportClient* Viewport = World->GetGameViewport())
+        {
+            Viewport->SetMouseCaptureMode(EMouseCaptureMode::NoCapture);
+            Viewport->SetMouseLockMode(EMouseLockMode::DoNotLock);
+            Viewport->SetHideCursorDuringCapture(false);
+        }
+    }
+
+    if (FSlateApplication::IsInitialized())
+    {
+        FSlateApplication::Get().ReleaseAllPointerCapture();
+    }
+
+    // Stay in Game+UI so the vault button and the world both take clicks. Closing the vault must not
+    // drop back to game-only, or the vault chip stops receiving the mouse.
+    FInputModeGameAndUI InputMode;
+    InputMode.SetHideCursorDuringCapture(false);
+    InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+    SetInputMode(InputMode);
+    SetShowMouseCursor(true);
+}
+
+bool ADungeonPlayerController::IsPointerOverDungeonWorld() const
+{
+    if (!FSlateApplication::IsInitialized())
+    {
+        return true;
+    }
+
+    FSlateApplication& Slate = FSlateApplication::Get();
+    const FWidgetPath Path = Slate.LocateWindowUnderMouse(Slate.GetCursorPos(), Slate.GetInteractiveTopLevelWindows());
+    if (!Path.IsValid())
+    {
+        return true;
+    }
+
+    // The editor window itself is an SBorder. Only widgets under our UMG (SObjectWidget) are the HUD.
+    bool bInsideGameWidget = false;
+    for (int32 WidgetIndex = 0; WidgetIndex < Path.Widgets.Num(); ++WidgetIndex)
+    {
+        const FName WidgetType = Path.Widgets[WidgetIndex].Widget->GetType();
+        if (WidgetType == FName(TEXT("SObjectWidget")))
+        {
+            bInsideGameWidget = true;
+            continue;
+        }
+
+        if (!bInsideGameWidget)
+        {
+            continue;
+        }
+
+        if (WidgetType == FName(TEXT("SButton"))
+            || WidgetType == FName(TEXT("SBorder"))
+            || WidgetType == FName(TEXT("STextBlock"))
+            || WidgetType == FName(TEXT("SScrollBox")))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+void ADungeonPlayerController::SetDungeonStoreOpen(const bool bOpen)
+{
+    if (!bRunActive || HudWidget == nullptr)
+    {
+        return;
+    }
+
+    if (bDungeonStoreOpen == bOpen)
+    {
+        return;
+    }
+
+    bDungeonStoreOpen = bOpen;
+    HudWidget->SetStoreVisible(bOpen);
+
+    KeepMouseCursorFree();
+}
+
+void ADungeonPlayerController::ToggleDungeonStore()
+{
+    SetDungeonStoreOpen(!bDungeonStoreOpen);
+}
+
+void ADungeonPlayerController::CloseDungeonStore()
+{
+    if (bDungeonStoreOpen)
+    {
+        SetDungeonStoreOpen(false);
+    }
+}
+
+bool ADungeonPlayerController::IsDungeonStoreOpen() const
+{
+    return bDungeonStoreOpen;
+}
+
 void ADungeonPlayerController::RestartRun()
 {
     if (!bRunActive)
     {
         return;
+    }
+
+    if (bDungeonStoreOpen)
+    {
+        SetDungeonStoreOpen(false);
     }
 
     if (UDungeonSimSubsystem* DungeonSimSubsystem = GetDungeonSimSubsystem())

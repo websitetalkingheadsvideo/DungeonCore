@@ -1,41 +1,29 @@
 #include "UI/DungeonHudWidget.h"
 
 #include "Blueprint/WidgetTree.h"
+#include "TimerManager.h"
+#include "Components/Border.h"
+#include "Components/Button.h"
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
+#include "Components/SizeBox.h"
 #include "Components/TextBlock.h"
 #include "Components/VerticalBox.h"
 #include "Components/VerticalBoxSlot.h"
 #include "Data/DungeonContentSubsystem.h"
 #include "Player/DungeonPlayerController.h"
 #include "Sim/DungeonSimSubsystem.h"
-#include "UI/DungeonShopItemButton.h"
+#include "UI/DungeonStoreStyle.h"
+#include "UI/DungeonStoreWidget.h"
 
 namespace
 {
-    FLinearColor ShopLabelColorSelected()
+    void StyleHudText(UTextBlock* Text, const FName Typeface, const int32 Size, const int32 LetterSpacing, const FLinearColor& Color)
     {
-        return FLinearColor(1.0f, 0.85f, 0.3f, 1.0f);
-    }
-
-    FLinearColor ShopLabelColorAffordable()
-    {
-        return FLinearColor::White;
-    }
-
-    FLinearColor ShopLabelColorUnaffordable()
-    {
-        return FLinearColor(0.75f, 0.45f, 0.45f, 1.0f);
-    }
-
-    FLinearColor ShopLabelColorOwned()
-    {
-        return FLinearColor(0.55f, 0.85f, 0.55f, 1.0f);
-    }
-
-    FLinearColor ShopHeadingColor()
-    {
-        return FLinearColor(0.7f, 0.8f, 1.0f, 1.0f);
+        Text->SetFont(DungeonStoreStyle::MakeFont(Typeface, Size, LetterSpacing));
+        Text->SetColorAndOpacity(FSlateColor(Color));
+        Text->SetShadowOffset(FVector2D(0.0f, 1.0f));
+        Text->SetShadowColorAndOpacity(FLinearColor(0.0f, 0.0f, 0.0f, 0.65f));
     }
 }
 
@@ -76,6 +64,11 @@ void UDungeonHudWidget::NativeDestruct()
         DungeonPlayerController->OnPlacementPreviewChanged.RemoveDynamic(this, &UDungeonHudWidget::HandlePlacementPreviewChanged);
     }
 
+    if (UWorld* World = GetWorld())
+    {
+        World->GetTimerManager().ClearTimer(OutOfManaNoticeTimer);
+    }
+
     if (UDungeonSimSubsystem* DungeonSimSubsystem = GetDungeonSimSubsystem())
     {
         DungeonSimSubsystem->OnResourceChanged.RemoveDynamic(this, &UDungeonHudWidget::HandleResourceChanged);
@@ -84,21 +77,33 @@ void UDungeonHudWidget::NativeDestruct()
         DungeonSimSubsystem->OnCoreHealthChanged.RemoveDynamic(this, &UDungeonHudWidget::HandleCoreHealthChanged);
     }
 
-    for (const FDungeonShopButtonEntry& Entry : ShopButtons)
+    if (VaultButton != nullptr)
     {
-        if (Entry.Button != nullptr)
-        {
-            Entry.Button->OnShopItemClicked.RemoveDynamic(this, &UDungeonHudWidget::HandleShopItemClicked);
-        }
+        VaultButton->OnClicked.RemoveDynamic(this, &UDungeonHudWidget::HandleVaultClicked);
     }
 
     Super::NativeDestruct();
 }
 
+void UDungeonHudWidget::SetStoreVisible(const bool bVisible)
+{
+    if (StoreWidget == nullptr)
+    {
+        UE_LOG(LogTemp, Error, TEXT("Core Vault widget is missing."));
+        return;
+    }
+
+    StoreWidget->SetVisibility(bVisible ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
+    if (bVisible)
+    {
+        StoreWidget->RefreshStore();
+    }
+}
+
 void UDungeonHudWidget::HandleResourceChanged(const FResourceState ResourceState)
 {
     RefreshManaText(ResourceState);
-    RefreshShopButtons();
+    RefreshStore();
 }
 
 void UDungeonHudWidget::HandleBreachStateChanged(const EBreachState BreachState)
@@ -109,7 +114,7 @@ void UDungeonHudWidget::HandleBreachStateChanged(const EBreachState BreachState)
 void UDungeonHudWidget::HandleSelectedBuildableChanged(const FName BuildableId)
 {
     RefreshSelectedText(BuildableId);
-    RefreshShopButtons();
+    RefreshStore();
 }
 
 void UDungeonHudWidget::HandleWaveChanged(const int32 CurrentWaveNumber)
@@ -127,11 +132,11 @@ void UDungeonHudWidget::HandlePlacementPreviewChanged(const FPlacementResult Pla
     RefreshPlacementPreviewText(PlacementResult);
 }
 
-void UDungeonHudWidget::HandleShopItemClicked(const FName BuildableId)
+void UDungeonHudWidget::HandleVaultClicked()
 {
     if (ADungeonPlayerController* DungeonPlayerController = GetDungeonPlayerController())
     {
-        DungeonPlayerController->ActivateShopItem(BuildableId);
+        DungeonPlayerController->SetDungeonStoreOpen(true);
     }
 }
 
@@ -143,114 +148,122 @@ void UDungeonHudWidget::BuildHud()
     }
 
     RootCanvas = WidgetTree->ConstructWidget<UCanvasPanel>(UCanvasPanel::StaticClass(), TEXT("RootCanvas"));
+    RootCanvas->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
     WidgetTree->RootWidget = RootCanvas;
 
+    UBorder* StatusPlate = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass(), TEXT("StatusPlate"));
+    StatusPlate->SetPadding(FMargin(18.0f, 14.0f, 20.0f, 14.0f));
+    StatusPlate->SetBrush(DungeonStoreStyle::MakeRoundedBrush(
+        DungeonStoreStyle::InkRaised(),
+        DungeonStoreStyle::GoldDim(),
+        16.0f,
+        1.0f
+    ));
+
     UVerticalBox* InfoBox = WidgetTree->ConstructWidget<UVerticalBox>(UVerticalBox::StaticClass(), TEXT("InfoBox"));
-    UCanvasPanelSlot* InfoBoxSlot = RootCanvas->AddChildToCanvas(InfoBox);
-    InfoBoxSlot->SetAnchors(FAnchors(0.0f, 0.0f));
-    InfoBoxSlot->SetPosition(FVector2D(24.0f, 24.0f));
-    InfoBoxSlot->SetAutoSize(true);
+    StatusPlate->AddChild(InfoBox);
+
+    UTextBlock* ManaKicker = CreateInfoTextBlock(TEXT("ManaKicker"));
+    ManaKicker->SetText(FText::FromString(TEXT("MANA")));
+    StyleHudText(ManaKicker, TEXT("Bold"), 11, 280, DungeonStoreStyle::Gold());
 
     ManaTextBlock = CreateInfoTextBlock(TEXT("ManaText"));
+    StyleHudText(ManaTextBlock, TEXT("Bold"), 32, 0, DungeonStoreStyle::Gold());
+
+    IncomeTextBlock = CreateInfoTextBlock(TEXT("IncomeText"));
+    StyleHudText(IncomeTextBlock, TEXT("Regular"), 14, 30, DungeonStoreStyle::Violet());
+
     BreachTextBlock = CreateInfoTextBlock(TEXT("BreachText"));
     SelectedTextBlock = CreateInfoTextBlock(TEXT("SelectedText"));
     WaveTextBlock = CreateInfoTextBlock(TEXT("WaveText"));
     CoreHealthTextBlock = CreateInfoTextBlock(TEXT("CoreHealthText"));
     PlacementPreviewTextBlock = CreateInfoTextBlock(TEXT("PlacementPreviewText"));
-    ControlsTextBlock = CreateInfoTextBlock(TEXT("ControlsText"));
-    ControlsTextBlock->SetText(FText::FromString(TEXT("1-9 Select Tool | Left Click Act | LMB Drag Pan | RMB Drag Orbit | Wheel Zoom | R Restart | F5 Save | F9 Load")));
+    StyleHudText(BreachTextBlock, TEXT("Regular"), 14, 10, DungeonStoreStyle::Ivory());
+    StyleHudText(SelectedTextBlock, TEXT("Regular"), 14, 10, DungeonStoreStyle::Ivory());
+    StyleHudText(WaveTextBlock, TEXT("Regular"), 14, 10, DungeonStoreStyle::Ivory());
+    StyleHudText(CoreHealthTextBlock, TEXT("Regular"), 14, 10, DungeonStoreStyle::Ivory());
+    StyleHudText(PlacementPreviewTextBlock, TEXT("Regular"), 14, 10, DungeonStoreStyle::Muted());
 
+    ControlsTextBlock = CreateInfoTextBlock(TEXT("ControlsText"));
+    ControlsTextBlock->SetAutoWrapText(true);
+    ControlsTextBlock->SetText(FText::FromString(TEXT("B  Vault     1-9  Tool     Click  Act     Drag  Pan     RMB  Orbit     Wheel  Zoom     R  Restart     F5 Save     F9 Load")));
+    StyleHudText(ControlsTextBlock, TEXT("Regular"), 12, 10, DungeonStoreStyle::Muted());
+
+    InfoBox->AddChildToVerticalBox(ManaKicker);
     InfoBox->AddChildToVerticalBox(ManaTextBlock);
-    InfoBox->AddChildToVerticalBox(BreachTextBlock);
+    InfoBox->AddChildToVerticalBox(IncomeTextBlock);
+    UVerticalBoxSlot* BreachSlot = InfoBox->AddChildToVerticalBox(BreachTextBlock);
+    BreachSlot->SetPadding(FMargin(0.0f, 10.0f, 0.0f, 0.0f));
     InfoBox->AddChildToVerticalBox(SelectedTextBlock);
     InfoBox->AddChildToVerticalBox(WaveTextBlock);
     InfoBox->AddChildToVerticalBox(CoreHealthTextBlock);
     InfoBox->AddChildToVerticalBox(PlacementPreviewTextBlock);
-    InfoBox->AddChildToVerticalBox(ControlsTextBlock);
+    UVerticalBoxSlot* ControlsSlot = InfoBox->AddChildToVerticalBox(ControlsTextBlock);
+    ControlsSlot->SetPadding(FMargin(0.0f, 10.0f, 0.0f, 0.0f));
 
-    UVerticalBox* ShopBox = WidgetTree->ConstructWidget<UVerticalBox>(UVerticalBox::StaticClass(), TEXT("ShopBox"));
-    UCanvasPanelSlot* ShopBoxSlot = RootCanvas->AddChildToCanvas(ShopBox);
-    ShopBoxSlot->SetAnchors(FAnchors(1.0f, 0.0f));
-    ShopBoxSlot->SetAlignment(FVector2D(1.0f, 0.0f));
-    ShopBoxSlot->SetPosition(FVector2D(-24.0f, 24.0f));
-    ShopBoxSlot->SetAutoSize(true);
+    USizeBox* PlateSize = WidgetTree->ConstructWidget<USizeBox>(USizeBox::StaticClass(), TEXT("StatusPlateSize"));
+    PlateSize->SetWidthOverride(460.0f);
+    PlateSize->AddChild(StatusPlate);
+    UCanvasPanelSlot* PlateSlot = RootCanvas->AddChildToCanvas(PlateSize);
+    PlateSlot->SetAnchors(FAnchors(0.0f, 0.0f));
+    PlateSlot->SetPosition(FVector2D(28.0f, 28.0f));
+    PlateSlot->SetAutoSize(true);
 
-    BuildShopPanel(ShopBox);
+    VaultButton = WidgetTree->ConstructWidget<UButton>(UButton::StaticClass(), TEXT("VaultButton"));
+    VaultButton->SetStyle(DungeonStoreStyle::MakeButtonStyle(
+        DungeonStoreStyle::Ink(),
+        DungeonStoreStyle::CardHover(),
+        DungeonStoreStyle::CardSelected(),
+        DungeonStoreStyle::Gold(),
+        12.0f,
+        1.25f
+    ));
+    VaultButton->OnClicked.AddDynamic(this, &UDungeonHudWidget::HandleVaultClicked);
+    UTextBlock* VaultLabel = CreateInfoTextBlock(TEXT("VaultLabel"));
+    VaultLabel->SetText(FText::FromString(TEXT("VAULT    B")));
+    VaultLabel->SetJustification(ETextJustify::Center);
+    VaultLabel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+    StyleHudText(VaultLabel, TEXT("Bold"), 14, 280, DungeonStoreStyle::Gold());
+    VaultButton->AddChild(VaultLabel);
+    USizeBox* VaultSize = WidgetTree->ConstructWidget<USizeBox>(USizeBox::StaticClass(), TEXT("VaultButtonSize"));
+    VaultSize->SetWidthOverride(168.0f);
+    VaultSize->SetHeightOverride(48.0f);
+    VaultSize->AddChild(VaultButton);
+    UCanvasPanelSlot* VaultSlot = RootCanvas->AddChildToCanvas(VaultSize);
+    VaultSlot->SetAnchors(FAnchors(1.0f, 0.0f));
+    VaultSlot->SetAlignment(FVector2D(1.0f, 0.0f));
+    VaultSlot->SetPosition(FVector2D(-28.0f, 28.0f));
+    VaultSlot->SetAutoSize(true);
+
+    StoreWidget = WidgetTree->ConstructWidget<UDungeonStoreWidget>(UDungeonStoreWidget::StaticClass(), TEXT("Store"));
+    UCanvasPanelSlot* StoreSlot = RootCanvas->AddChildToCanvas(StoreWidget);
+    StoreSlot->SetAnchors(FAnchors(0.0f, 0.0f, 1.0f, 1.0f));
+    StoreSlot->SetOffsets(FMargin(0.0f));
+    StoreSlot->SetZOrder(10);
+    StoreWidget->SetVisibility(ESlateVisibility::Collapsed);
+
+    OutOfManaNotice = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass(), TEXT("OutOfManaNotice"));
+    OutOfManaNotice->SetPadding(FMargin(22.0f, 12.0f));
+    OutOfManaNotice->SetBrush(DungeonStoreStyle::MakeRoundedBrush(
+        DungeonStoreStyle::Ink(),
+        DungeonStoreStyle::Danger(),
+        14.0f,
+        1.5f
+    ));
+    OutOfManaNotice->SetVisibility(ESlateVisibility::Collapsed);
+    OutOfManaText = CreateInfoTextBlock(TEXT("OutOfManaText"));
+    OutOfManaText->SetJustification(ETextJustify::Center);
+    OutOfManaText->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+    StyleHudText(OutOfManaText, TEXT("Bold"), 16, 180, DungeonStoreStyle::Danger());
+    OutOfManaNotice->AddChild(OutOfManaText);
+    UCanvasPanelSlot* NoticeSlot = RootCanvas->AddChildToCanvas(OutOfManaNotice);
+    NoticeSlot->SetAnchors(FAnchors(0.5f, 0.0f));
+    NoticeSlot->SetAlignment(FVector2D(0.5f, 0.0f));
+    NoticeSlot->SetPosition(FVector2D(0.0f, 28.0f));
+    NoticeSlot->SetAutoSize(true);
+    NoticeSlot->SetZOrder(5);
 
     bHudBuilt = true;
-}
-
-void UDungeonHudWidget::BuildShopPanel(UVerticalBox* ShopBox)
-{
-    const UDungeonContentSubsystem* ContentSubsystem = GetDungeonContentSubsystem();
-    const UDungeonSimSubsystem* DungeonSimSubsystem = GetDungeonSimSubsystem();
-    if (ContentSubsystem == nullptr || DungeonSimSubsystem == nullptr || ShopBox == nullptr)
-    {
-        UE_LOG(LogTemp, Fatal, TEXT("Shop panel needs the content and sim subsystems."));
-        return;
-    }
-
-    UTextBlock* ShopTitle = CreateInfoTextBlock(TEXT("ShopTitle"));
-    ShopTitle->SetText(FText::FromString(TEXT("Shop (mana)")));
-    ShopTitle->SetColorAndOpacity(FSlateColor(ShopHeadingColor()));
-    ShopBox->AddChildToVerticalBox(ShopTitle);
-
-    for (const FDungeonShopGroup& Group : ContentSubsystem->GetShopGroups())
-    {
-        TArray<const FDungeonBuildableRow*> VisibleRows;
-        for (const FName& BuildableId : Group.BuildableIds)
-        {
-            const FDungeonBuildableRow* Row = ContentSubsystem->FindBuildable(BuildableId);
-            if (Row == nullptr)
-            {
-                UE_LOG(LogTemp, Fatal, TEXT("Shop group '%s' references unknown item '%s'."), *Group.GroupId.ToString(), *BuildableId.ToString());
-                return;
-            }
-
-            if (DungeonSimSubsystem->IsBuildableAvailableForRun(BuildableId))
-            {
-                VisibleRows.Add(Row);
-            }
-        }
-
-        if (VisibleRows.Num() == 0)
-        {
-            continue;
-        }
-
-        UTextBlock* Heading = CreateInfoTextBlock(FName(*FString::Printf(TEXT("ShopHeading_%s"), *Group.GroupId.ToString())));
-        Heading->SetText(Group.DisplayName);
-        Heading->SetColorAndOpacity(FSlateColor(ShopHeadingColor()));
-        UVerticalBoxSlot* HeadingSlot = ShopBox->AddChildToVerticalBox(Heading);
-        HeadingSlot->SetPadding(FMargin(0.0f, 10.0f, 0.0f, 2.0f));
-
-        for (const FDungeonBuildableRow* Row : VisibleRows)
-        {
-            const FString ButtonName = FString::Printf(TEXT("ShopButton_%s"), *Row->BuildableId.ToString());
-            UDungeonShopItemButton* Button = WidgetTree->ConstructWidget<UDungeonShopItemButton>(
-                UDungeonShopItemButton::StaticClass(),
-                FName(*ButtonName)
-            );
-            Button->SetBuildableId(Row->BuildableId);
-            Button->SetToolTipText(Row->RoleText);
-            Button->OnShopItemClicked.AddDynamic(this, &UDungeonHudWidget::HandleShopItemClicked);
-
-            UTextBlock* Label = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass());
-            Button->AddChild(Label);
-
-            UVerticalBoxSlot* ButtonSlot = ShopBox->AddChildToVerticalBox(Button);
-            ButtonSlot->SetPadding(FMargin(0.0f, 2.0f, 0.0f, 0.0f));
-            ButtonSlot->SetHorizontalAlignment(HAlign_Fill);
-
-            FDungeonShopButtonEntry Entry;
-            Entry.BuildableId = Row->BuildableId;
-            Entry.Button = Button;
-            Entry.Label = Label;
-            ShopButtons.Add(Entry);
-        }
-    }
-
-    RefreshShopButtons();
 }
 
 void UDungeonHudWidget::RefreshAllText()
@@ -270,21 +283,75 @@ void UDungeonHudWidget::RefreshAllText()
         RefreshCoreHealthText(DungeonSimSubsystem->GetCurrentCoreHealth());
     }
 
-    RefreshShopButtons();
+    RefreshStore();
+}
+
+void UDungeonHudWidget::ShowOutOfManaNotice(const int32 ManaCost)
+{
+    if (OutOfManaNotice == nullptr || OutOfManaText == nullptr)
+    {
+        UE_LOG(LogTemp, Error, TEXT("Out-of-mana notice is missing from the HUD."));
+        return;
+    }
+
+    const FString Label = ManaCost > 0
+        ? FString::Printf(TEXT("NOT ENOUGH MANA     NEED %d"), ManaCost)
+        : FString(TEXT("NOT ENOUGH MANA"));
+    OutOfManaText->SetText(FText::FromString(Label));
+    OutOfManaNotice->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+    bOutOfManaNoticeVisible = true;
+    if (ManaTextBlock != nullptr)
+    {
+        ManaTextBlock->SetColorAndOpacity(FSlateColor(DungeonStoreStyle::Danger()));
+    }
+
+    if (UWorld* World = GetWorld())
+    {
+        World->GetTimerManager().SetTimer(
+            OutOfManaNoticeTimer,
+            this,
+            &UDungeonHudWidget::HandleOutOfManaNoticeExpired,
+            2.5f,
+            false
+        );
+    }
+}
+
+void UDungeonHudWidget::HideOutOfManaNotice()
+{
+    bOutOfManaNoticeVisible = false;
+    if (OutOfManaNotice != nullptr)
+    {
+        OutOfManaNotice->SetVisibility(ESlateVisibility::Collapsed);
+    }
+    if (ManaTextBlock != nullptr)
+    {
+        ManaTextBlock->SetColorAndOpacity(FSlateColor(DungeonStoreStyle::Gold()));
+    }
+    if (UWorld* World = GetWorld())
+    {
+        World->GetTimerManager().ClearTimer(OutOfManaNoticeTimer);
+    }
+}
+
+void UDungeonHudWidget::HandleOutOfManaNoticeExpired()
+{
+    HideOutOfManaNotice();
 }
 
 void UDungeonHudWidget::RefreshManaText(const FResourceState& ResourceState)
 {
-    if (ManaTextBlock == nullptr)
+    if (ManaTextBlock != nullptr)
     {
-        return;
+        ManaTextBlock->SetText(FText::AsNumber(FMath::Max(0, ResourceState.CurrentMana)));
+        ManaTextBlock->SetColorAndOpacity(FSlateColor(
+            bOutOfManaNoticeVisible ? DungeonStoreStyle::Danger() : DungeonStoreStyle::Gold()
+        ));
     }
-
-    ManaTextBlock->SetText(FText::FromString(FString::Printf(
-        TEXT("Mana: %d  (+%.1f/s)"),
-        ResourceState.CurrentMana,
-        ResourceState.ManaIncomePerSecond
-    )));
+    if (IncomeTextBlock != nullptr)
+    {
+        IncomeTextBlock->SetText(FText::FromString(FString::Printf(TEXT("+%.1f / sec"), ResourceState.ManaIncomePerSecond)));
+    }
 }
 
 void UDungeonHudWidget::RefreshBreachText(const EBreachState BreachState)
@@ -295,7 +362,7 @@ void UDungeonHudWidget::RefreshBreachText(const EBreachState BreachState)
     }
 
     const FString BreachLabel = BreachState == EBreachState::Open ? TEXT("Open") : TEXT("Sealed");
-    BreachTextBlock->SetText(FText::FromString(FString::Printf(TEXT("Breach: %s"), *BreachLabel)));
+    BreachTextBlock->SetText(FText::FromString(FString::Printf(TEXT("Breach   %s"), *BreachLabel)));
 }
 
 void UDungeonHudWidget::RefreshSelectedText(const FName BuildableId)
@@ -308,7 +375,7 @@ void UDungeonHudWidget::RefreshSelectedText(const FName BuildableId)
     const UDungeonContentSubsystem* ContentSubsystem = GetDungeonContentSubsystem();
     const FDungeonBuildableRow* Row = ContentSubsystem != nullptr ? ContentSubsystem->FindBuildable(BuildableId) : nullptr;
     const FString SelectedLabel = Row != nullptr ? Row->DisplayName.ToString() : TEXT("None");
-    SelectedTextBlock->SetText(FText::FromString(FString::Printf(TEXT("Tool: %s"), *SelectedLabel)));
+    SelectedTextBlock->SetText(FText::FromString(FString::Printf(TEXT("Tool   %s"), *SelectedLabel)));
 }
 
 void UDungeonHudWidget::RefreshWaveText(const int32 CurrentWaveNumber)
@@ -318,7 +385,7 @@ void UDungeonHudWidget::RefreshWaveText(const int32 CurrentWaveNumber)
         return;
     }
 
-    WaveTextBlock->SetText(FText::FromString(FString::Printf(TEXT("Wave: %d"), CurrentWaveNumber)));
+    WaveTextBlock->SetText(FText::FromString(FString::Printf(TEXT("Wave   %d"), CurrentWaveNumber)));
 }
 
 void UDungeonHudWidget::RefreshCoreHealthText(const int32 CurrentCoreHealth)
@@ -328,7 +395,7 @@ void UDungeonHudWidget::RefreshCoreHealthText(const int32 CurrentCoreHealth)
         return;
     }
 
-    CoreHealthTextBlock->SetText(FText::FromString(FString::Printf(TEXT("Core HP: %d"), CurrentCoreHealth)));
+    CoreHealthTextBlock->SetText(FText::FromString(FString::Printf(TEXT("Core   %d"), CurrentCoreHealth)));
 }
 
 void UDungeonHudWidget::RefreshPlacementPreviewText(const FPlacementResult& PlacementResult)
@@ -338,109 +405,30 @@ void UDungeonHudWidget::RefreshPlacementPreviewText(const FPlacementResult& Plac
         return;
     }
 
+    const bool bOutOfMana = !PlacementResult.bSuccess
+        && PlacementResult.FailureReason == EPlacementFailureReason::InsufficientMana;
+    PlacementPreviewTextBlock->SetColorAndOpacity(FSlateColor(
+        bOutOfMana ? DungeonStoreStyle::Danger() : DungeonStoreStyle::Muted()
+    ));
+
     if (PlacementResult.bSuccess)
     {
-        PlacementPreviewTextBlock->SetText(FText::FromString(TEXT("Placement: Valid")));
+        PlacementPreviewTextBlock->SetText(FText::FromString(TEXT("Placement   Clear")));
         return;
     }
 
     PlacementPreviewTextBlock->SetText(FText::FromString(FString::Printf(
-        TEXT("Placement: %s"),
+        TEXT("Placement   %s"),
         *DescribePlacementFailure(PlacementResult.FailureReason)
     )));
 }
 
-void UDungeonHudWidget::RefreshShopButtons()
+void UDungeonHudWidget::RefreshStore()
 {
-    const UDungeonContentSubsystem* ContentSubsystem = GetDungeonContentSubsystem();
-    const UDungeonSimSubsystem* DungeonSimSubsystem = GetDungeonSimSubsystem();
-    const ADungeonPlayerController* DungeonPlayerController = GetDungeonPlayerController();
-    if (ContentSubsystem == nullptr || DungeonSimSubsystem == nullptr || DungeonPlayerController == nullptr)
+    if (StoreWidget != nullptr && StoreWidget->IsVisible())
     {
-        return;
+        StoreWidget->RefreshStore();
     }
-
-    const TArray<FName> HotkeyIds = DungeonPlayerController->GetShopHotkeyBuildableIds();
-    const FName SelectedId = DungeonPlayerController->GetSelectedBuildableId();
-    const int32 CurrentMana = DungeonSimSubsystem->GetResourceState().CurrentMana;
-
-    for (const FDungeonShopButtonEntry& Entry : ShopButtons)
-    {
-        const FDungeonBuildableRow* Row = ContentSubsystem->FindBuildable(Entry.BuildableId);
-        if (Row == nullptr || Entry.Button == nullptr || Entry.Label == nullptr)
-        {
-            continue;
-        }
-
-        const int32 HotkeyIndex = HotkeyIds.IndexOfByKey(Entry.BuildableId);
-        Entry.Label->SetText(MakeShopButtonLabel(*Row, HotkeyIndex));
-
-        if (Row->Category == EBuildableCategory::Upgrade)
-        {
-            const FPlacementResult Preview = DungeonSimSubsystem->PreviewUpgradePurchase(Entry.BuildableId);
-            const bool bOwned = Preview.FailureReason == EPlacementFailureReason::AlreadyOwned;
-            Entry.Button->SetIsEnabled(Preview.bSuccess);
-            Entry.Label->SetColorAndOpacity(FSlateColor(
-                bOwned ? ShopLabelColorOwned()
-                : Preview.bSuccess ? ShopLabelColorAffordable()
-                : ShopLabelColorUnaffordable()
-            ));
-            continue;
-        }
-
-        Entry.Button->SetIsEnabled(true);
-        const bool bSelected = Entry.BuildableId == SelectedId;
-        const bool bAffordable = CurrentMana >= Row->ManaCost;
-        Entry.Label->SetColorAndOpacity(FSlateColor(
-            bSelected ? ShopLabelColorSelected()
-            : bAffordable ? ShopLabelColorAffordable()
-            : ShopLabelColorUnaffordable()
-        ));
-    }
-}
-
-FText UDungeonHudWidget::MakeShopButtonLabel(const FDungeonBuildableRow& Row, const int32 HotkeyIndex) const
-{
-    const UDungeonSimSubsystem* DungeonSimSubsystem = GetDungeonSimSubsystem();
-
-    FString Prefix;
-    if (HotkeyIndex != INDEX_NONE)
-    {
-        Prefix = FString::Printf(TEXT("[%d] "), HotkeyIndex + 1);
-    }
-
-    FString Suffix;
-    if (Row.Category == EBuildableCategory::Upgrade && DungeonSimSubsystem != nullptr)
-    {
-        const FPlacementResult Preview = DungeonSimSubsystem->PreviewUpgradePurchase(Row.BuildableId);
-        if (Preview.FailureReason == EPlacementFailureReason::AlreadyOwned)
-        {
-            Suffix = TEXT("  (owned)");
-        }
-        else if (Preview.FailureReason == EPlacementFailureReason::MissingPrerequisite)
-        {
-            Suffix = TEXT("  (locked)");
-        }
-    }
-
-    FString Income;
-    if (Row.ManaPerSecond > 0.0f)
-    {
-        Income = FString::Printf(TEXT("  +%.1f/s"), Row.ManaPerSecond);
-    }
-    if (Row.ManaPerAdventurerPerSecond > 0.0f)
-    {
-        Income += FString::Printf(TEXT("  +%.2f/s per intruder"), Row.ManaPerAdventurerPerSecond);
-    }
-
-    return FText::FromString(FString::Printf(
-        TEXT("%s%s  %d%s%s"),
-        *Prefix,
-        *Row.DisplayName.ToString(),
-        Row.ManaCost,
-        *Income,
-        *Suffix
-    ));
 }
 
 FString UDungeonHudWidget::DescribePlacementFailure(const EPlacementFailureReason FailureReason) const

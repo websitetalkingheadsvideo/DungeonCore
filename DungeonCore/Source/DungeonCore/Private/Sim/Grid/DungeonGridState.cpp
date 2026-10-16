@@ -81,12 +81,6 @@ FPlacementResult UDungeonGridState::ValidateDig(
         return Result;
     }
 
-    if (CurrentMana < DigManaCost)
-    {
-        Result.FailureReason = EPlacementFailureReason::InsufficientMana;
-        return Result;
-    }
-
     if (!ExistingTile->bDiggable || ExistingTile->TileState != ETileState::SolidRock)
     {
         Result.FailureReason = EPlacementFailureReason::Blocked;
@@ -96,6 +90,12 @@ FPlacementResult UDungeonGridState::ValidateDig(
     if (!HasAdjacentWalkableBlock(BlockCoord))
     {
         Result.FailureReason = EPlacementFailureReason::WouldDisconnectPath;
+        return Result;
+    }
+
+    if (CurrentMana < DigManaCost)
+    {
+        Result.FailureReason = EPlacementFailureReason::InsufficientMana;
         return Result;
     }
 
@@ -136,12 +136,6 @@ FPlacementResult UDungeonGridState::ValidateRoomPlacement(
         return Result;
     }
 
-    if (CurrentMana < ManaCost)
-    {
-        Result.FailureReason = EPlacementFailureReason::InsufficientMana;
-        return Result;
-    }
-
     for (const FBlockCoord& BlockCoord : Result.AffectedBlocks)
     {
         const FTileData* ExistingTile = FindTileData(BlockCoord);
@@ -156,6 +150,12 @@ FPlacementResult UDungeonGridState::ValidateRoomPlacement(
             Result.FailureReason = EPlacementFailureReason::RequiresClearedTile;
             return Result;
         }
+    }
+
+    if (CurrentMana < ManaCost)
+    {
+        Result.FailureReason = EPlacementFailureReason::InsufficientMana;
+        return Result;
     }
 
     Result.bSuccess = true;
@@ -200,15 +200,15 @@ FPlacementResult UDungeonGridState::ValidateTrapPlacement(
         return Result;
     }
 
-    if (CurrentMana < ManaCost)
-    {
-        Result.FailureReason = EPlacementFailureReason::InsufficientMana;
-        return Result;
-    }
-
     if (!DungeonGridRules::IsInteriorPlaceableTile(*ExistingTile))
     {
         Result.FailureReason = EPlacementFailureReason::RequiresClearedTile;
+        return Result;
+    }
+
+    if (CurrentMana < ManaCost)
+    {
+        Result.FailureReason = EPlacementFailureReason::InsufficientMana;
         return Result;
     }
 

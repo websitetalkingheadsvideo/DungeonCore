@@ -74,6 +74,13 @@ public:
     UFUNCTION(Exec)
     void DungeonPlace(const FString& BuildableId, const int32 BlockX, const int32 BlockY);
 
+    /** Opens or closes the Core Vault. While open, digs, placement, and camera drag are suspended. */
+    void SetDungeonStoreOpen(const bool bOpen);
+
+    void ToggleDungeonStore();
+
+    bool IsDungeonStoreOpen() const;
+
     UPROPERTY(BlueprintAssignable, Category = "Dungeon")
     FDungeonSelectedBuildableChangedSignature OnSelectedBuildableChanged;
 
@@ -100,6 +107,9 @@ private:
 
     void SelectShopHotkey(const int32 HotkeyIndex);
 
+    /** Solid rock the player can point at. Dig rules still require a walkable neighbor and enough mana. */
+    bool IsSolidRockDigTarget(const FBlockCoord& BlockCoord) const;
+
     /** Runs the selected item's action (dig / room / trap) at the given block. Upgrades are never placed. */
     FPlacementResult PlaceSelectedBuildableAt(const FBlockCoord& BlockCoord);
 
@@ -122,6 +132,14 @@ private:
     void QuickSaveRun();
 
     void QuickLoadRun();
+
+    void CloseDungeonStore();
+
+    /** Leaves the cursor on screen. PIE must not capture it or the editor shows Shift+F1 and eats the click. */
+    void KeepMouseCursorFree();
+
+    /** True when the cursor is not over the HUD or vault. Editor window chrome is ignored. */
+    bool IsPointerOverDungeonWorld() const;
 
     void RefreshChunkVisuals();
 
@@ -158,6 +176,10 @@ private:
     bool bHasHoveredBlock = false;
 
     bool bRunActive = false;
+
+    bool bDungeonStoreOpen = false;
+
+    bool bPrimaryClickStartedOverWorld = false;
 
     bool bHasPreviousMousePosition = false;
 

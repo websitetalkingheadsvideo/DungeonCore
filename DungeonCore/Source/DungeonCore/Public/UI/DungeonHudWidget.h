@@ -7,29 +7,13 @@
 #include "DungeonHudWidget.generated.h"
 
 class ADungeonPlayerController;
+class UBorder;
+class UButton;
 class UCanvasPanel;
 class UDungeonContentSubsystem;
-class UDungeonShopItemButton;
 class UDungeonSimSubsystem;
+class UDungeonStoreWidget;
 class UTextBlock;
-class UVerticalBox;
-struct FDungeonBuildableRow;
-
-/** One generated shop row: the button plus the label we rewrite when affordability or ownership changes. */
-USTRUCT()
-struct FDungeonShopButtonEntry
-{
-    GENERATED_BODY()
-
-    UPROPERTY()
-    FName BuildableId;
-
-    UPROPERTY()
-    TObjectPtr<UDungeonShopItemButton> Button;
-
-    UPROPERTY()
-    TObjectPtr<UTextBlock> Label;
-};
 
 UCLASS()
 class DUNGEONCORE_API UDungeonHudWidget : public UUserWidget
@@ -43,6 +27,13 @@ public:
     virtual void NativeConstruct() override;
 
     virtual void NativeDestruct() override;
+
+    void SetStoreVisible(const bool bVisible);
+
+    /** Click tried to spend mana the core does not have. Mana itself is left unchanged. */
+    void ShowOutOfManaNotice(const int32 ManaCost);
+
+    void HideOutOfManaNotice();
 
 private:
     UFUNCTION()
@@ -64,12 +55,12 @@ private:
     void HandlePlacementPreviewChanged(FPlacementResult PlacementResult);
 
     UFUNCTION()
-    void HandleShopItemClicked(FName BuildableId);
+    void HandleVaultClicked();
+
+    UFUNCTION()
+    void HandleOutOfManaNoticeExpired();
 
     void BuildHud();
-
-    /** Generates one heading + button per catalog group/item available to this run. */
-    void BuildShopPanel(UVerticalBox* ShopBox);
 
     void RefreshAllText();
 
@@ -85,10 +76,7 @@ private:
 
     void RefreshPlacementPreviewText(const FPlacementResult& PlacementResult);
 
-    /** Rewrites labels/enabled state: hotkey, cost, owned/locked suffix, selected highlight. */
-    void RefreshShopButtons();
-
-    FText MakeShopButtonLabel(const FDungeonBuildableRow& Row, const int32 HotkeyIndex) const;
+    void RefreshStore();
 
     FString DescribePlacementFailure(const EPlacementFailureReason FailureReason) const;
 
@@ -102,11 +90,18 @@ private:
 
     bool bHudBuilt = false;
 
+    bool bOutOfManaNoticeVisible = false;
+
+    FTimerHandle OutOfManaNoticeTimer;
+
     UPROPERTY()
     TObjectPtr<UCanvasPanel> RootCanvas;
 
     UPROPERTY()
     TObjectPtr<UTextBlock> ManaTextBlock;
+
+    UPROPERTY()
+    TObjectPtr<UTextBlock> IncomeTextBlock;
 
     UPROPERTY()
     TObjectPtr<UTextBlock> BreachTextBlock;
@@ -127,5 +122,14 @@ private:
     TObjectPtr<UTextBlock> PlacementPreviewTextBlock;
 
     UPROPERTY()
-    TArray<FDungeonShopButtonEntry> ShopButtons;
+    TObjectPtr<UBorder> OutOfManaNotice;
+
+    UPROPERTY()
+    TObjectPtr<UTextBlock> OutOfManaText;
+
+    UPROPERTY()
+    TObjectPtr<UButton> VaultButton;
+
+    UPROPERTY()
+    TObjectPtr<UDungeonStoreWidget> StoreWidget;
 };
