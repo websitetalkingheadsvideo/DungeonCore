@@ -1,0 +1,34 @@
+---
+description: Design/ holds the authoritative art, UX, and tone direction for Dungeon Core
+alwaysApply: true
+---
+
+# Design Docs Are the Direction
+
+`Design/*.md` is the source of truth for look, feel, and UX. Read the matching doc before any
+player-visible work (UI, menus, environment, creatures, traps, VFX, fonts, audio).
+
+| Topic | Doc |
+| --- | --- |
+| Art pillar ("Crystalline Ley-Line Arcana"), floor/wall/door tiles, ley-line grid states, trap concepts, defender constructs | `Design/General.md` |
+| Biome × resident creature matrix (Gothic/Undead, Goblin Tunnels/Orcs, Fungal Warren/Spiders, Sunken Ruins/Evil Fairies), core loop (dig → breach → defend) | `Design/Creatures and style.md` |
+| Title menu: idle geode core, per-option hover FX, click transitions | `Design/Start Screen.md` |
+| Fonts: titles (Friz Quadrata / Cinzel / Percolator), telemetry (Orbitron / Rajdhani / Exo 2), body (Goudy Old Style / Palatino) | `Design/fonts.md` |
+
+## Pillars to hold in mind
+
+- Clean, not grimy: polished obsidian/amethyst floors, dark basalt walls pocketed with glowing quartz,
+  sapphire, emerald geodes. No mud-and-torches dungeon dressing.
+- Grid is visible through hair-thin fractures that pulse when a room is powered; zone state = line
+  state (powered: bright/clean, dormant: dark/cracked, attacked: white-hot arcing).
+- Breaching a biome swaps tile style in place; the core room always stays the clean obsidian style.
+- Target layout is a 21:9 monitor; telemetry text prioritizes legibility over styling.
+
+## Rules
+
+- Implement what the doc says; if a doc is silent on the point you need, say so and state the assumption
+  you are making rather than inventing direction silently.
+- When a design decision is made in conversation, append it to the relevant `Design/*.md` in the same
+  short, concrete style (colors, timings, asset ids, scale in UU).
+- Translate described moods into `search_library.py` queries per `asset-library-first.mdc`
+  (e.g. "basalt + geode" → `Crystal_Cave`, `Lost_Cave`; "ruined cathedral pillars" → `Gothic_Cathedral_5.4`).

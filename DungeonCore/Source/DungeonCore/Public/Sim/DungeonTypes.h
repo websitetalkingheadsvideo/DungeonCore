@@ -80,6 +80,14 @@ enum class EBreachState : uint8
 };
 
 UENUM(BlueprintType)
+enum class ERunOutcome : uint8
+{
+    InProgress,
+    Victory,
+    Defeat
+};
+
+UENUM(BlueprintType)
 enum class EPlacementFailureReason : uint8
 {
     None,
@@ -93,7 +101,9 @@ enum class EPlacementFailureReason : uint8
     ThemeLocked,
     AlreadyOwned,
     MissingPrerequisite,
-    UnknownBuildable
+    UnknownBuildable,
+    /** The run has already ended in victory or defeat; nothing may be built or dug until restart. */
+    RunEnded
 };
 
 /** What buying a shop item does: Dig/Room/Trap are placed on the grid, Upgrade applies to the core immediately. */
@@ -412,7 +422,7 @@ namespace DungeonCore
     inline constexpr int32 BlockSizeUnits = 300;
     inline constexpr int32 HalfBlockSizeUnits = BlockSizeUnits / 2;
     inline constexpr int32 DefaultChunkSizeInBlocks = 32;
-    /** Sealed starting core chamber (CoreChamber room): 30 ft x 30 ft = 3 x 3 blocks carved out of solid rock; core on the centre block. */
+    /** Sealed starting core chamber (CoreChamber room): 3 x 3 blocks with the core on the centre block (1, 1). */
     inline constexpr int32 StartingCoreChamberWidthBlocks = 3;
     inline constexpr int32 StartingCoreChamberHeightBlocks = 3;
     /** Solid rock around the chamber that the player digs into. */
@@ -529,6 +539,8 @@ namespace DungeonCore
         return GridSurfaceOffsetUnits;
     }
     inline constexpr int32 StartingMana = 120;
+    /** First prototype win: survive this many completed invasion waves after breach. */
+    inline constexpr int32 PrototypeVictoryWaveCount = 5;
     /**
      * Mana economy: the core trickles mana on its own, faster once open, more per adventurer wandering inside.
      * Per-item income (wells, taps, attunements) comes from the shop catalog rows, not from constants here.
@@ -788,7 +800,7 @@ namespace DungeonCore
         return 9.0f;
     }
 
-    /** Close enough to inspect a single 2 x 2 block room. */
+    /** Close enough to inspect a single small room. */
     inline float GetCameraMinSpringArmLength()
     {
         return 1200.0f;
@@ -808,14 +820,19 @@ namespace DungeonCore
 
     inline float GetCameraDefaultSpringArmLength()
     {
-        int32 MinX = 0;
-        int32 MaxX = 0;
-        int32 MinY = 0;
-        int32 MaxY = 0;
-        GetStartingBuildAreaBlockBounds(MinX, MaxX, MinY, MaxY);
-        const double BlocksAcross = static_cast<double>(FMath::Max(MaxX - MinX + 1, MaxY - MinY + 1));
-        const double WorldSpan = BlocksAcross * static_cast<double>(BlockSizeUnits);
-        return static_cast<float>(WorldSpan * 1.08);
+        int32 ChamberMinX = 0;
+        int32 ChamberMaxX = 0;
+        int32 ChamberMinY = 0;
+        int32 ChamberMaxY = 0;
+        GetCoreChamberBlockBounds(ChamberMinX, ChamberMaxX, ChamberMinY, ChamberMaxY);
+        const double ChamberBlocksAcross = static_cast<double>(FMath::Max(
+            ChamberMaxX - ChamberMinX + 1,
+            ChamberMaxY - ChamberMinY + 1
+        ));
+        // Frame the starting chamber plus a little rock context — not the full dig margin.
+        const double BlocksWithContext = ChamberBlocksAcross + 8.0;
+        const double WorldSpan = BlocksWithContext * static_cast<double>(BlockSizeUnits);
+        return static_cast<float>(WorldSpan * 1.15);
     }
 
     inline FBlockCoord GetStartingCoreBlockCoord()

@@ -1,0 +1,34 @@
+---
+description: Use the owned Unreal asset library (H:\Unreal Assets, Fab) before engine primitives or new art
+alwaysApply: true
+---
+
+# Asset Library First
+
+The user owns ~50 locally installed packs (`H:\Unreal Assets\<PackId>\`) plus a 256-item Fab library.
+Any visual, audio, VFX, or material need must be checked against the library before using engine
+primitives, placeholder cubes, or asking the user for new art.
+
+## Required workflow
+
+1. **Lookup** — use the `asset-library-lookup` skill: `python tools/asset-library/search_library.py -q <theme>`
+   then `-a "SM_.*Wall" --pack <PackId>` for concrete `/Game/...` paths. Start from the
+   **Dungeon Core — suggested picks** table in `library.md`.
+2. **Migrate** — use the `fab-asset-migration` skill (`Get-MigratePackCommand.ps1 -DryRun` first).
+   Copy only the SM_/MI_/T_ packages actually used; never whole packs or `.umap` files.
+3. **Wire** — reference via `ConstructorHelpers::FObjectFinder` using `AssignLibraryMesh` /
+   `AssignLibraryMaterial` in `DungeonChunkActor.cpp`. A failed finder logs an `Error`; do not fall
+   back to a primitive silently.
+4. **Verify** — launch, grep `Saved/Logs/DungeonCore.log` for `Failed to find|library (mesh|material) missing`,
+   screenshot, and look at it.
+
+## Rules
+
+- A primitive or engine-default material is a last resort and must be called out in the response as a gap.
+- Catalog id ≠ `/Game` mount (e.g. `MedievalFantasyDungeon_5.4` → `/Game/FantasyDungeon/...`); always resolve
+  via `tools/asset-library/pack-roots.json`, never guess `H:\Unreal Assets\<id>\Content`.
+- Pack meshes have arbitrary pivots; lay out from `UStaticMesh::GetBounds()`, don't hard-code offsets.
+- After new installs on `H:`: `& tools/asset-library/Sync-PackRoots.ps1`, add a manifest row,
+  `python tools/asset-library/update_library_table.py`.
+- Fab items not on `H:` must be added to the project through the Epic/Fab launcher by the user — flag it
+  as a TODO rather than substituting a primitive.

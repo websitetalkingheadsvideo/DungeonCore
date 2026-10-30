@@ -175,6 +175,7 @@ That name is what this table and `library.md` use. It is **not** the same as the
 
 | Theme / use | Assets |
 | --- | --- |
+| Core room / crystalline base style (`Design/General.md`) | `Crystal_Cave` (geode clusters, `MI_GlowCrystalls`), `Lost_Cave` / `MayanCave` (dark basalt walls), GameDev.tv material pack (polished stone floors) |
 | Gothic core & chambers | `Gothic_Cathedral_5.4`, `FantasyGothicCastle`, `Medieval_Church_5.5`, `Abandoned Mansion`, `HauntedVillage` |
 | Dungeons & tunnels | `MedievalFantasyDungeon_5.4`, `Lost_Cave`, `Crystal_Cave`, `MayanCave`, `MetroEntrance01` |
 | Goblin / rough tunnels | `Lost_Cave`, `MayanCave`, `JungleRuins_5.1` (kitbash) |

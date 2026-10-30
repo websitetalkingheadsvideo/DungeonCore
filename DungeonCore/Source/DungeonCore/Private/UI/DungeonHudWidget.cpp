@@ -20,7 +20,7 @@ namespace
 {
     void StyleHudText(UTextBlock* Text, const FName Typeface, const int32 Size, const int32 LetterSpacing, const FLinearColor& Color)
     {
-        Text->SetFont(DungeonStoreStyle::MakeFont(Typeface, Size, LetterSpacing));
+        Text->SetFont(DungeonStoreStyle::MakeFantasyFont(Typeface, Size, LetterSpacing));
         Text->SetColorAndOpacity(FSlateColor(Color));
         Text->SetShadowOffset(FVector2D(0.0f, 1.0f));
         Text->SetShadowColorAndOpacity(FLinearColor(0.0f, 0.0f, 0.0f, 0.65f));
@@ -50,6 +50,7 @@ void UDungeonHudWidget::NativeConstruct()
         DungeonSimSubsystem->OnBreachStateChanged.AddDynamic(this, &UDungeonHudWidget::HandleBreachStateChanged);
         DungeonSimSubsystem->OnWaveChanged.AddDynamic(this, &UDungeonHudWidget::HandleWaveChanged);
         DungeonSimSubsystem->OnCoreHealthChanged.AddDynamic(this, &UDungeonHudWidget::HandleCoreHealthChanged);
+        DungeonSimSubsystem->OnRunOutcomeChanged.AddDynamic(this, &UDungeonHudWidget::HandleRunOutcomeChanged);
     }
 
     RefreshAllText();
@@ -75,6 +76,7 @@ void UDungeonHudWidget::NativeDestruct()
         DungeonSimSubsystem->OnBreachStateChanged.RemoveDynamic(this, &UDungeonHudWidget::HandleBreachStateChanged);
         DungeonSimSubsystem->OnWaveChanged.RemoveDynamic(this, &UDungeonHudWidget::HandleWaveChanged);
         DungeonSimSubsystem->OnCoreHealthChanged.RemoveDynamic(this, &UDungeonHudWidget::HandleCoreHealthChanged);
+        DungeonSimSubsystem->OnRunOutcomeChanged.RemoveDynamic(this, &UDungeonHudWidget::HandleRunOutcomeChanged);
     }
 
     if (VaultButton != nullptr)
@@ -127,6 +129,11 @@ void UDungeonHudWidget::HandleCoreHealthChanged(const int32 CurrentCoreHealth)
     RefreshCoreHealthText(CurrentCoreHealth);
 }
 
+void UDungeonHudWidget::HandleRunOutcomeChanged(const ERunOutcome RunOutcome)
+{
+    RefreshRunOutcome(RunOutcome);
+}
+
 void UDungeonHudWidget::HandlePlacementPreviewChanged(const FPlacementResult PlacementResult)
 {
     RefreshPlacementPreviewText(PlacementResult);
@@ -165,29 +172,31 @@ void UDungeonHudWidget::BuildHud()
 
     UTextBlock* ManaKicker = CreateInfoTextBlock(TEXT("ManaKicker"));
     ManaKicker->SetText(FText::FromString(TEXT("MANA")));
-    StyleHudText(ManaKicker, TEXT("Bold"), 11, 280, DungeonStoreStyle::Gold());
+    StyleHudText(ManaKicker, DungeonStoreStyle::PanelBold(), 11, 280, DungeonStoreStyle::Gold());
 
     ManaTextBlock = CreateInfoTextBlock(TEXT("ManaText"));
-    StyleHudText(ManaTextBlock, TEXT("Bold"), 32, 0, DungeonStoreStyle::Gold());
+    StyleHudText(ManaTextBlock, DungeonStoreStyle::TelemetryBold(), 32, 0, DungeonStoreStyle::Gold());
 
     IncomeTextBlock = CreateInfoTextBlock(TEXT("IncomeText"));
-    StyleHudText(IncomeTextBlock, TEXT("Regular"), 14, 30, DungeonStoreStyle::Violet());
+    StyleHudText(IncomeTextBlock, DungeonStoreStyle::Telemetry(), 14, 30, DungeonStoreStyle::Violet());
 
     BreachTextBlock = CreateInfoTextBlock(TEXT("BreachText"));
     SelectedTextBlock = CreateInfoTextBlock(TEXT("SelectedText"));
     WaveTextBlock = CreateInfoTextBlock(TEXT("WaveText"));
     CoreHealthTextBlock = CreateInfoTextBlock(TEXT("CoreHealthText"));
+    RunOutcomeTextBlock = CreateInfoTextBlock(TEXT("RunOutcomeText"));
     PlacementPreviewTextBlock = CreateInfoTextBlock(TEXT("PlacementPreviewText"));
-    StyleHudText(BreachTextBlock, TEXT("Regular"), 14, 10, DungeonStoreStyle::Ivory());
-    StyleHudText(SelectedTextBlock, TEXT("Regular"), 14, 10, DungeonStoreStyle::Ivory());
-    StyleHudText(WaveTextBlock, TEXT("Regular"), 14, 10, DungeonStoreStyle::Ivory());
-    StyleHudText(CoreHealthTextBlock, TEXT("Regular"), 14, 10, DungeonStoreStyle::Ivory());
-    StyleHudText(PlacementPreviewTextBlock, TEXT("Regular"), 14, 10, DungeonStoreStyle::Muted());
+    StyleHudText(BreachTextBlock, DungeonStoreStyle::Panel(), 14, 10, DungeonStoreStyle::Ivory());
+    StyleHudText(SelectedTextBlock, DungeonStoreStyle::Panel(), 14, 10, DungeonStoreStyle::Ivory());
+    StyleHudText(WaveTextBlock, DungeonStoreStyle::Panel(), 14, 10, DungeonStoreStyle::Ivory());
+    StyleHudText(CoreHealthTextBlock, DungeonStoreStyle::Panel(), 14, 10, DungeonStoreStyle::Ivory());
+    StyleHudText(RunOutcomeTextBlock, DungeonStoreStyle::FantasyBold(), 15, 20, DungeonStoreStyle::Gold());
+    StyleHudText(PlacementPreviewTextBlock, DungeonStoreStyle::Panel(), 14, 10, DungeonStoreStyle::Muted());
 
     ControlsTextBlock = CreateInfoTextBlock(TEXT("ControlsText"));
     ControlsTextBlock->SetAutoWrapText(true);
     ControlsTextBlock->SetText(FText::FromString(TEXT("B  Vault     1-9  Tool     Click  Act     Drag  Pan     RMB  Orbit     Wheel  Zoom     R  Restart     F5 Save     F9 Load")));
-    StyleHudText(ControlsTextBlock, TEXT("Regular"), 12, 10, DungeonStoreStyle::Muted());
+    StyleHudText(ControlsTextBlock, DungeonStoreStyle::Panel(), 12, 10, DungeonStoreStyle::Muted());
 
     InfoBox->AddChildToVerticalBox(ManaKicker);
     InfoBox->AddChildToVerticalBox(ManaTextBlock);
@@ -197,6 +206,7 @@ void UDungeonHudWidget::BuildHud()
     InfoBox->AddChildToVerticalBox(SelectedTextBlock);
     InfoBox->AddChildToVerticalBox(WaveTextBlock);
     InfoBox->AddChildToVerticalBox(CoreHealthTextBlock);
+    InfoBox->AddChildToVerticalBox(RunOutcomeTextBlock);
     InfoBox->AddChildToVerticalBox(PlacementPreviewTextBlock);
     UVerticalBoxSlot* ControlsSlot = InfoBox->AddChildToVerticalBox(ControlsTextBlock);
     ControlsSlot->SetPadding(FMargin(0.0f, 10.0f, 0.0f, 0.0f));
@@ -223,7 +233,7 @@ void UDungeonHudWidget::BuildHud()
     VaultLabel->SetText(FText::FromString(TEXT("VAULT    B")));
     VaultLabel->SetJustification(ETextJustify::Center);
     VaultLabel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-    StyleHudText(VaultLabel, TEXT("Bold"), 14, 280, DungeonStoreStyle::Gold());
+    StyleHudText(VaultLabel, DungeonStoreStyle::PanelBold(), 14, 280, DungeonStoreStyle::Gold());
     VaultButton->AddChild(VaultLabel);
     USizeBox* VaultSize = WidgetTree->ConstructWidget<USizeBox>(USizeBox::StaticClass(), TEXT("VaultButtonSize"));
     VaultSize->SetWidthOverride(168.0f);
@@ -254,7 +264,7 @@ void UDungeonHudWidget::BuildHud()
     OutOfManaText = CreateInfoTextBlock(TEXT("OutOfManaText"));
     OutOfManaText->SetJustification(ETextJustify::Center);
     OutOfManaText->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-    StyleHudText(OutOfManaText, TEXT("Bold"), 16, 180, DungeonStoreStyle::Danger());
+    StyleHudText(OutOfManaText, DungeonStoreStyle::PanelBold(), 16, 180, DungeonStoreStyle::Danger());
     OutOfManaNotice->AddChild(OutOfManaText);
     UCanvasPanelSlot* NoticeSlot = RootCanvas->AddChildToCanvas(OutOfManaNotice);
     NoticeSlot->SetAnchors(FAnchors(0.5f, 0.0f));
@@ -262,6 +272,46 @@ void UDungeonHudWidget::BuildHud()
     NoticeSlot->SetPosition(FVector2D(0.0f, 28.0f));
     NoticeSlot->SetAutoSize(true);
     NoticeSlot->SetZOrder(5);
+
+    GameOverOverlay = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass(), TEXT("GameOverOverlay"));
+    GameOverOverlay->SetBrushColor(FLinearColor(0.01f, 0.0f, 0.04f, 0.88f));
+    GameOverOverlay->SetVisibility(ESlateVisibility::Collapsed);
+    GameOverOverlay->SetPadding(FMargin(0.0f));
+
+    UVerticalBox* GameOverBox = WidgetTree->ConstructWidget<UVerticalBox>(UVerticalBox::StaticClass(), TEXT("GameOverBox"));
+    UBorder* GameOverCard = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass(), TEXT("GameOverCard"));
+    GameOverCard->SetPadding(FMargin(48.0f, 40.0f, 48.0f, 40.0f));
+    GameOverCard->SetBrush(DungeonStoreStyle::MakeRoundedBrush(
+        DungeonStoreStyle::Ink(),
+        DungeonStoreStyle::Danger(),
+        20.0f,
+        2.0f
+    ));
+    GameOverCard->AddChild(GameOverBox);
+
+    GameOverTitleText = CreateInfoTextBlock(TEXT("GameOverTitleText"));
+    GameOverTitleText->SetText(FText::FromString(TEXT("Core Destroyed Game Over!")));
+    GameOverTitleText->SetJustification(ETextJustify::Center);
+    StyleHudText(GameOverTitleText, DungeonStoreStyle::FantasyDisplay(), 34, 100, DungeonStoreStyle::Danger());
+
+    GameOverSubtitleText = CreateInfoTextBlock(TEXT("GameOverSubtitleText"));
+    GameOverSubtitleText->SetText(FText::FromString(TEXT("Press R to restart")));
+    GameOverSubtitleText->SetJustification(ETextJustify::Center);
+    GameOverSubtitleText->SetAutoWrapText(true);
+    StyleHudText(GameOverSubtitleText, DungeonStoreStyle::FantasyRegular(), 22, 80, DungeonStoreStyle::Ivory());
+
+    GameOverBox->AddChildToVerticalBox(GameOverTitleText);
+    UVerticalBoxSlot* SubtitleSlot = GameOverBox->AddChildToVerticalBox(GameOverSubtitleText);
+    SubtitleSlot->SetPadding(FMargin(0.0f, 16.0f, 0.0f, 0.0f));
+
+    GameOverOverlay->AddChild(GameOverCard);
+    GameOverOverlay->SetHorizontalAlignment(HAlign_Center);
+    GameOverOverlay->SetVerticalAlignment(VAlign_Center);
+
+    UCanvasPanelSlot* GameOverOverlaySlot = RootCanvas->AddChildToCanvas(GameOverOverlay);
+    GameOverOverlaySlot->SetAnchors(FAnchors(0.0f, 0.0f, 1.0f, 1.0f));
+    GameOverOverlaySlot->SetOffsets(FMargin(0.0f));
+    GameOverOverlaySlot->SetZOrder(25);
 
     bHudBuilt = true;
 }
@@ -281,6 +331,7 @@ void UDungeonHudWidget::RefreshAllText()
         RefreshBreachText(DungeonSimSubsystem->GetFloorState().BreachState);
         RefreshWaveText(DungeonSimSubsystem->GetCurrentWaveNumber());
         RefreshCoreHealthText(DungeonSimSubsystem->GetCurrentCoreHealth());
+        RefreshRunOutcome(DungeonSimSubsystem->GetRunOutcome());
     }
 
     RefreshStore();
@@ -361,8 +412,13 @@ void UDungeonHudWidget::RefreshBreachText(const EBreachState BreachState)
         return;
     }
 
-    const FString BreachLabel = BreachState == EBreachState::Open ? TEXT("Open") : TEXT("Sealed");
-    BreachTextBlock->SetText(FText::FromString(FString::Printf(TEXT("Breach   %s"), *BreachLabel)));
+    if (BreachState == EBreachState::Open)
+    {
+        BreachTextBlock->SetText(FText::FromString(TEXT("Breach   Open")));
+        return;
+    }
+
+    BreachTextBlock->SetText(FText::FromString(TEXT("Breach   Sealed — dig to the build border")));
 }
 
 void UDungeonHudWidget::RefreshSelectedText(const FName BuildableId)
@@ -396,6 +452,60 @@ void UDungeonHudWidget::RefreshCoreHealthText(const int32 CurrentCoreHealth)
     }
 
     CoreHealthTextBlock->SetText(FText::FromString(FString::Printf(TEXT("Core   %d"), CurrentCoreHealth)));
+}
+
+void UDungeonHudWidget::RefreshRunOutcome(const ERunOutcome RunOutcome)
+{
+    if (RunOutcomeTextBlock == nullptr)
+    {
+        return;
+    }
+
+    switch (RunOutcome)
+    {
+    case ERunOutcome::Defeat:
+        RunOutcomeTextBlock->SetText(FText::FromString(TEXT("Defeat — core destroyed")));
+        RunOutcomeTextBlock->SetColorAndOpacity(FSlateColor(DungeonStoreStyle::Danger()));
+        ShowDefeatGameOverModal();
+        break;
+    case ERunOutcome::Victory:
+        RunOutcomeTextBlock->SetText(FText::FromString(
+            FString::Printf(TEXT("Victory — %d waves survived"), DungeonCore::PrototypeVictoryWaveCount)));
+        RunOutcomeTextBlock->SetColorAndOpacity(FSlateColor(DungeonStoreStyle::Gold()));
+        HideGameOverModal();
+        break;
+    default:
+        RunOutcomeTextBlock->SetText(FText::FromString(FString::Printf(
+            TEXT("Goal   survive %d waves"),
+            DungeonCore::PrototypeVictoryWaveCount)));
+        RunOutcomeTextBlock->SetColorAndOpacity(FSlateColor(DungeonStoreStyle::Muted()));
+        HideGameOverModal();
+        break;
+    }
+}
+
+void UDungeonHudWidget::ShowDefeatGameOverModal()
+{
+    if (GameOverOverlay == nullptr)
+    {
+        return;
+    }
+
+    if (ADungeonPlayerController* DungeonPlayerController = GetDungeonPlayerController())
+    {
+        DungeonPlayerController->SetDungeonStoreOpen(false);
+    }
+
+    HideOutOfManaNotice();
+    GameOverOverlay->SetVisibility(ESlateVisibility::Visible);
+}
+
+void UDungeonHudWidget::HideGameOverModal()
+{
+    if (GameOverOverlay != nullptr)
+    {
+        GameOverOverlay->SetVisibility(ESlateVisibility::Collapsed);
+    }
 }
 
 void UDungeonHudWidget::RefreshPlacementPreviewText(const FPlacementResult& PlacementResult)
@@ -459,6 +569,8 @@ FString UDungeonHudWidget::DescribePlacementFailure(const EPlacementFailureReaso
         return TEXT("Requires an earlier upgrade");
     case EPlacementFailureReason::UnknownBuildable:
         return TEXT("No tool selected");
+    case EPlacementFailureReason::RunEnded:
+        return TEXT("Run is over - press R to restart");
     default:
         UE_LOG(LogTemp, Fatal, TEXT("Unhandled placement failure reason in HUD."));
         return TEXT("");

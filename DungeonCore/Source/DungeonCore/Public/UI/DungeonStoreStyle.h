@@ -2,7 +2,9 @@
 
 #include "CoreMinimal.h"
 #include "Engine/Texture2D.h"
-#include "Styling/CoreStyle.h"
+#include "Fonts/CompositeFont.h"
+#include "Fonts/SlateFontInfo.h"
+#include "Misc/Paths.h"
 #include "Styling/SlateBrush.h"
 #include "Styling/SlateTypes.h"
 
@@ -130,9 +132,76 @@ namespace DungeonStoreStyle
         return Style;
     }
 
-    inline FSlateFontInfo MakeFont(const FName Typeface, const int32 Size, const int32 LetterSpacing)
+    /**
+     * Typeface names inside the fantasy composite font. Tiers follow Design/fonts.md:
+     * titles (Cinzel), telemetry (Orbitron digits, Rajdhani labels), body copy (Sorts Mill Goudy).
+     */
+    inline FName FantasyRegular() { return FName(TEXT("Regular")); }
+    inline FName FantasyBold() { return FName(TEXT("Bold")); }
+    /** Cinzel Decorative: titles and headings only. */
+    inline FName FantasyDisplay() { return FName(TEXT("Display")); }
+    /** Orbitron: resource counters, costs, coordinates. */
+    inline FName Telemetry() { return FName(TEXT("Telemetry")); }
+    inline FName TelemetryBold() { return FName(TEXT("TelemetryBold")); }
+    /** Rajdhani: compact panel labels, kickers, readouts. */
+    inline FName Panel() { return FName(TEXT("Panel")); }
+    inline FName PanelBold() { return FName(TEXT("PanelBold")); }
+    /** Sorts Mill Goudy: descriptions, tooltips, lore. */
+    inline FName Body() { return FName(TEXT("Body")); }
+    inline FName BodyItalic() { return FName(TEXT("BodyItalic")); }
+
+    /**
+     * All faces are SIL OFL TTFs shipped raw under Content/UI/Fonts and staged loose via DefaultGame.ini,
+     * so no font .uasset is required. Built once; Slate caches the FreeType faces.
+     */
+    inline TSharedPtr<const FCompositeFont> FantasyCompositeFont()
     {
-        FSlateFontInfo Font = FCoreStyle::GetDefaultFontStyle(Typeface, Size);
+        static TSharedPtr<const FCompositeFont> CachedFont;
+        if (CachedFont.IsValid())
+        {
+            return CachedFont;
+        }
+
+        struct FFace
+        {
+            FName Typeface;
+            const TCHAR* FileName;
+        };
+        const FFace Faces[] = {
+            {FantasyRegular(), TEXT("Cinzel-Regular.ttf")},
+            {FantasyBold(), TEXT("Cinzel-Bold.ttf")},
+            {FantasyDisplay(), TEXT("CinzelDecorative-Bold.ttf")},
+            {Telemetry(), TEXT("Orbitron-Regular.ttf")},
+            {TelemetryBold(), TEXT("Orbitron-Bold.ttf")},
+            {Panel(), TEXT("Rajdhani-Regular.ttf")},
+            {PanelBold(), TEXT("Rajdhani-SemiBold.ttf")},
+            {Body(), TEXT("SortsMillGoudy-Regular.ttf")},
+            {BodyItalic(), TEXT("SortsMillGoudy-Italic.ttf")},
+        };
+
+        const FString FontDirectory = FPaths::ProjectContentDir() / TEXT("UI/Fonts");
+        TSharedPtr<FStandaloneCompositeFont> Font;
+        for (const FFace& Face : Faces)
+        {
+            const FString FontPath = FontDirectory / Face.FileName;
+            if (!FPaths::FileExists(FontPath))
+            {
+                UE_LOG(LogTemp, Error, TEXT("Fantasy UI font missing on disk: %s"), *FontPath);
+            }
+            if (!Font.IsValid())
+            {
+                Font = MakeShared<FStandaloneCompositeFont>(Face.Typeface, FontPath, EFontHinting::Default, EFontLoadingPolicy::LazyLoad);
+                continue;
+            }
+            Font->DefaultTypeface.AppendFont(Face.Typeface, FontPath, EFontHinting::Default, EFontLoadingPolicy::LazyLoad);
+        }
+        CachedFont = Font;
+        return CachedFont;
+    }
+
+    inline FSlateFontInfo MakeFantasyFont(const FName Typeface, const int32 Size, const int32 LetterSpacing)
+    {
+        FSlateFontInfo Font(FantasyCompositeFont(), static_cast<float>(Size), Typeface);
         Font.LetterSpacing = LetterSpacing;
         return Font;
     }

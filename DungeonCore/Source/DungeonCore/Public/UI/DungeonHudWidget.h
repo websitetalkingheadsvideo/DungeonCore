@@ -52,6 +52,9 @@ private:
     void HandleCoreHealthChanged(int32 CurrentCoreHealth);
 
     UFUNCTION()
+    void HandleRunOutcomeChanged(ERunOutcome RunOutcome);
+
+    UFUNCTION()
     void HandlePlacementPreviewChanged(FPlacementResult PlacementResult);
 
     UFUNCTION()
@@ -73,6 +76,13 @@ private:
     void RefreshWaveText(const int32 CurrentWaveNumber);
 
     void RefreshCoreHealthText(const int32 CurrentCoreHealth);
+
+    /** Updates the goal line and shows/hides the game-over modal. */
+    void RefreshRunOutcome(const ERunOutcome RunOutcome);
+
+    void ShowDefeatGameOverModal();
+
+    void HideGameOverModal();
 
     void RefreshPlacementPreviewText(const FPlacementResult& PlacementResult);
 
@@ -119,6 +129,9 @@ private:
     TObjectPtr<UTextBlock> CoreHealthTextBlock;
 
     UPROPERTY()
+    TObjectPtr<UTextBlock> RunOutcomeTextBlock;
+
+    UPROPERTY()
     TObjectPtr<UTextBlock> PlacementPreviewTextBlock;
 
     UPROPERTY()
@@ -126,6 +139,15 @@ private:
 
     UPROPERTY()
     TObjectPtr<UTextBlock> OutOfManaText;
+
+    UPROPERTY()
+    TObjectPtr<UBorder> GameOverOverlay;
+
+    UPROPERTY()
+    TObjectPtr<UTextBlock> GameOverTitleText;
+
+    UPROPERTY()
+    TObjectPtr<UTextBlock> GameOverSubtitleText;
 
     UPROPERTY()
     TObjectPtr<UButton> VaultButton;

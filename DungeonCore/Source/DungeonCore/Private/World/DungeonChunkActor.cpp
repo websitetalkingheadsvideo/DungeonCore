@@ -215,15 +215,12 @@ ADungeonChunkActor::ADungeonChunkActor()
         DefenderInstances->SetStaticMesh(CubeMesh.Object);
     }
 
-    // Migrated library assets (see library.md): Crystal_Cave for the core + rock, Leartes Fantasy Dungeon for stone.
+    // Migrated library assets (see library.md): Crystal_Cave for the core, Leartes Fantasy Dungeon for stone.
     static ConstructorHelpers::FObjectFinder<UStaticMesh> CrystalMeshFinder(
         TEXT("/Game/Crystal_Cave/Meshes/SM_Crystal_D_01.SM_Crystal_D_01")
     );
     static ConstructorHelpers::FObjectFinder<UMaterialInterface> CrystalGlowMaterialFinder(
         TEXT("/Game/Crystal_Cave/Materials/MI_GlowCrystalls.MI_GlowCrystalls")
-    );
-    static ConstructorHelpers::FObjectFinder<UMaterialInterface> RockMaterialFinder(
-        TEXT("/Game/Crystal_Cave/Materials/MI_Rock_A.MI_Rock_A")
     );
     static ConstructorHelpers::FObjectFinder<UMaterialInterface> StoneFloorMaterialFinder(
         TEXT("/Game/FantasyDungeon/Materials/MI_FloorTiles_Clean_V01.MI_FloorTiles_Clean_V01")
@@ -236,11 +233,6 @@ ADungeonChunkActor::ADungeonChunkActor()
     );
     DungeonChunkVisuals::AssignLibraryMesh(DungeonCoreCrystalMesh, CrystalMeshFinder, TEXT("core crystal mesh"));
     DungeonChunkVisuals::ApplyCoreCrystalLook(DungeonCoreCrystalMesh, CrystalGlowMaterialFinder, this);
-    DungeonChunkVisuals::AssignLibraryMaterial(RockInstances, RockMaterialFinder, TEXT("rock blocks"));
-    DungeonChunkVisuals::AssignLibraryMaterial(GridBaseInstances, RockMaterialFinder, TEXT("rock surface caps"));
-    DungeonChunkVisuals::AssignLibraryMaterial(CoreChamberFloorVisual, StoneFloorMaterialFinder, TEXT("chamber stone floor"));
-    DungeonChunkVisuals::AssignLibraryMaterial(ChamberWallInstances, StoneWallMaterialFinder, TEXT("chamber stone walls"));
-    DungeonChunkVisuals::AssignLibraryMaterial(ClearedInstances, DirtFloorMaterialFinder, TEXT("dug dirt floor"));
 
     static ConstructorHelpers::FObjectFinder<UMaterial> BaseMaterialFinder(
         TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial")
@@ -253,6 +245,18 @@ ADungeonChunkActor::ADungeonChunkActor()
     {
         TintParentMaterial = LitColorMaterialFinder.Object;
     }
+
+    if (TintParentMaterial != nullptr)
+    {
+        // MI_Rock_A (MM_SimpleAsset / anisotropy) asserts during Win64 shader cook; engine MIDs are safe.
+        const FLinearColor RockColor(0.34f, 0.31f, 0.28f);
+        DungeonChunkVisuals::ApplyTintedMaterial(RockInstances, TintParentMaterial, this, RockColor, 0.0f);
+        DungeonChunkVisuals::ApplyTintedMaterial(GridBaseInstances, TintParentMaterial, this, RockColor, 0.0f);
+    }
+
+    DungeonChunkVisuals::AssignLibraryMaterial(CoreChamberFloorVisual, StoneFloorMaterialFinder, TEXT("chamber stone floor"));
+    DungeonChunkVisuals::AssignLibraryMaterial(ChamberWallInstances, StoneWallMaterialFinder, TEXT("chamber stone walls"));
+    DungeonChunkVisuals::AssignLibraryMaterial(ClearedInstances, DirtFloorMaterialFinder, TEXT("dug dirt floor"));
 
     if (TintParentMaterial != nullptr)
     {

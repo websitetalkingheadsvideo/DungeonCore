@@ -18,6 +18,20 @@
 
 namespace DungeonCoreWorld
 {
+    FString GetActorIdentificationString(const AActor* Actor)
+    {
+        if (Actor == nullptr)
+        {
+            return FString();
+        }
+
+#if WITH_EDITOR
+        return Actor->GetActorLabel();
+#else
+        return Actor->GetName();
+#endif
+    }
+
     bool IsLegacyPrototypeDungeonActor(const AActor* Actor)
     {
         if (Actor == nullptr)
@@ -48,7 +62,7 @@ namespace DungeonCoreWorld
             return true;
         }
 
-        const FString ActorLabel = Actor->GetActorLabel();
+        const FString ActorLabel = GetActorIdentificationString(Actor);
         if (ActorLabel.Contains(TEXT("Dungeon"), ESearchCase::IgnoreCase)
             && !ActorLabel.Contains(TEXT("Chunk"), ESearchCase::IgnoreCase))
         {
@@ -80,7 +94,7 @@ namespace DungeonCoreWorld
                 LogDungeonCore,
                 Warning,
                 TEXT("Removing extra dungeon actor '%s' (%s) so only C++ DungeonChunkActor draws the grid."),
-                *ActorToDestroy->GetActorLabel(),
+                *GetActorIdentificationString(ActorToDestroy),
                 *ActorToDestroy->GetClass()->GetName()
             );
             ActorToDestroy->Destroy();
@@ -98,7 +112,7 @@ namespace DungeonCoreWorld
 
         for (TActorIterator<AActor> ActorIt(World); ActorIt; ++ActorIt)
         {
-            const FString ActorLabel = ActorIt->GetActorLabel();
+            const FString ActorLabel = GetActorIdentificationString(*ActorIt);
             const FString ClassName = ActorIt->GetClass()->GetName();
             if (ActorLabel.Contains(TEXT("CameraPlane"), ESearchCase::IgnoreCase)
                 || ActorLabel.Contains(TEXT("BuildCamera"), ESearchCase::IgnoreCase)
@@ -127,7 +141,7 @@ namespace DungeonCoreWorld
 
         for (TActorIterator<AStaticMeshActor> StaticMeshIt(World); StaticMeshIt; ++StaticMeshIt)
         {
-            const FString ActorLabel = StaticMeshIt->GetActorLabel();
+            const FString ActorLabel = GetActorIdentificationString(*StaticMeshIt);
             const UStaticMeshComponent* MeshComponent = StaticMeshIt->GetStaticMeshComponent();
             const UStaticMesh* StaticMesh = MeshComponent != nullptr ? MeshComponent->GetStaticMesh() : nullptr;
             const FString MeshName = StaticMesh != nullptr ? StaticMesh->GetName() : FString();
@@ -226,48 +240,14 @@ namespace DungeonCoreWorld
             return;
         }
 
-        FRunSetup RunSetup;
-        RunSetup.ThemeId = EDungeonThemeId::Gothic;
-        RunSetup.CreatureFamilyId = ECreatureFamilyId::Undead;
-        RunSetup.Seed = 1;
-        RunSetup.StartingFloorIndex = 1;
-        DungeonSimSubsystem->StartNewRun(RunSetup);
-
-        ChunkActor->RefreshFromSimulation(
-            DungeonSimSubsystem->GetGridState(),
-            DungeonSimSubsystem->GetActiveAdventurers(),
-            DungeonSimSubsystem->GetActiveDefenders()
-        );
-
-        const int32 TileCount = DungeonSimSubsystem->GetGridState() != nullptr
-            ? DungeonSimSubsystem->GetGridState()->GetAllTiles().Num()
-            : 0;
-
         UE_LOG(
             LogDungeonCore,
             Log,
-            TEXT("Dungeon grid built: %d tiles, %dx%d block CoreChamber carved at origin, %duu blocks."),
-            TileCount,
+            TEXT("Dungeon chunk actor ready; sim run starts from the setup screen (%dx%d core chamber, %duu/block)."),
             DungeonCore::StartingCoreChamberWidthBlocks,
             DungeonCore::StartingCoreChamberHeightBlocks,
             DungeonCore::BlockSizeUnits
         );
-
-        if (GEngine != nullptr)
-        {
-            GEngine->AddOnScreenDebugMessage(
-                0,
-                12.0f,
-                FColor::Cyan,
-                FString::Printf(
-                    TEXT("Dungeon grid: %d tiles | %dx%d block (%d ft) starting chamber carved into rock."),
-                    TileCount,
-                    DungeonCore::StartingCoreChamberWidthBlocks,
-                    DungeonCore::StartingCoreChamberHeightBlocks,
-                    DungeonCore::StartingCoreChamberWidthBlocks * 10
-                )
-            );
-        }
     }
 }
 

@@ -67,8 +67,8 @@ void ADungeonPlayerController::BeginPlay()
         SetViewTarget(CameraPawn);
     }
 
-    // Bootstrap the sim immediately so Play shows the dungeon grid (setup UI comes back later).
-    StartRunFromSetup(EDungeonThemeId::Gothic, ECreatureFamilyId::Undead);
+    // Run begins from the setup widget; do not seed the sim here.
+    ShowRunSetupScreen();
 
     // Controls live in the HUD now; only the misconfiguration diagnostic stays on screen.
     if (GEngine != nullptr && GetDungeonCameraPawn() == nullptr)
@@ -242,6 +242,24 @@ FPlacementResult ADungeonPlayerController::GetCurrentPlacementPreview() const
     return CurrentPlacementPreview;
 }
 
+void ADungeonPlayerController::ShowRunSetupScreen()
+{
+    if (SetupWidget == nullptr)
+    {
+        SetupWidget = CreateWidget<UDungeonRunSetupWidget>(this, UDungeonRunSetupWidget::StaticClass());
+    }
+
+    if (SetupWidget != nullptr && !SetupWidget->IsInViewport())
+    {
+        SetupWidget->AddToViewport(1000);
+        SetupWidget->SetAnchorsInViewport(FAnchors(0.0f, 0.0f, 1.0f, 1.0f));
+        SetupWidget->SetAlignmentInViewport(FVector2D(0.0f, 0.0f));
+    }
+
+    bRunActive = false;
+    KeepMouseCursorFree();
+}
+
 void ADungeonPlayerController::StartRunFromSetup(const EDungeonThemeId ThemeId, const ECreatureFamilyId CreatureFamilyId)
 {
     UDungeonSimSubsystem* DungeonSimSubsystem = GetDungeonSimSubsystem();
@@ -278,6 +296,7 @@ void ADungeonPlayerController::StartRunFromSetup(const EDungeonThemeId ThemeId, 
     bRunActive = true;
     EnsureChunkActorExists();
     RefreshChunkVisuals();
+    RecenterCameraOnCore();
     SelectBuildable(FName(DungeonCore::DigBuildableId));
 }
 

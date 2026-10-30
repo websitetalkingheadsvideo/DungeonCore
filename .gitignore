@@ -3,6 +3,8 @@ Build/
 DerivedDataCache/
 Intermediate/
 Saved/
+Packaged/
+*.lnk
 .vs/
 *.VC.db
 *.VC.opendb

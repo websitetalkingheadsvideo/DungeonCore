@@ -10,6 +10,20 @@ class ADungeonPlayerController;
 class UButton;
 class UCanvasPanel;
 class UTextBlock;
+class UWidget;
+
+/** One selectable tile on the setup screen: the button plus the label whose colour flips when selected. */
+USTRUCT()
+struct FDungeonSetupOptionWidgets
+{
+    GENERATED_BODY()
+
+    UPROPERTY()
+    TObjectPtr<UButton> Button;
+
+    UPROPERTY()
+    TObjectPtr<UTextBlock> Label;
+};
 
 UCLASS()
 class DUNGEONCORE_API UDungeonRunSetupWidget : public UUserWidget
@@ -17,6 +31,8 @@ class DUNGEONCORE_API UDungeonRunSetupWidget : public UUserWidget
     GENERATED_BODY()
 
 public:
+    virtual void NativeOnInitialized() override;
+
     virtual void NativeConstruct() override;
 
     virtual void NativeDestruct() override;
@@ -51,7 +67,8 @@ private:
 
     void BuildWidget();
 
-    void RefreshSelectionText();
+    /** Repaints the selected tiles and the summary line from SelectedThemeId / SelectedFamilyId. */
+    void RefreshSelection();
 
     FText GetThemeDisplayText(const EDungeonThemeId ThemeId) const;
 
@@ -59,9 +76,15 @@ private:
 
     ADungeonPlayerController* GetDungeonPlayerController() const;
 
-    UButton* CreateActionButton(const FText& LabelText, const FName WidgetName);
+    FDungeonSetupOptionWidgets CreateOptionTile(const FText& LabelText, const FName WidgetName);
 
-    UTextBlock* CreateTextBlock(const FName WidgetName);
+    void ApplyOptionTileStyle(const FDungeonSetupOptionWidgets& Option, const bool bSelected);
+
+    UTextBlock* CreateTextBlock(const FName WidgetName, const FName Typeface, const int32 Size, const int32 LetterSpacing, const FLinearColor& Color);
+
+    UTextBlock* CreateSectionHeader(const FText& HeaderText, const FName WidgetName);
+
+    UWidget* CreateDivider(const FName WidgetName);
 
     bool bWidgetBuilt = false;
 
@@ -75,10 +98,13 @@ private:
     TObjectPtr<UCanvasPanel> RootCanvas;
 
     UPROPERTY()
-    TObjectPtr<UTextBlock> SelectedThemeTextBlock;
+    TMap<EDungeonThemeId, FDungeonSetupOptionWidgets> ThemeOptions;
 
     UPROPERTY()
-    TObjectPtr<UTextBlock> SelectedFamilyTextBlock;
+    TMap<ECreatureFamilyId, FDungeonSetupOptionWidgets> FamilyOptions;
+
+    UPROPERTY()
+    TObjectPtr<UTextBlock> SelectionSummaryTextBlock;
 
     UPROPERTY()
     TObjectPtr<UButton> StartRunButton;

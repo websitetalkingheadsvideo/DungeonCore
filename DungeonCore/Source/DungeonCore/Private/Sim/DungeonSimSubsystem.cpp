@@ -17,13 +17,7 @@ void UDungeonSimSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 
 void UDungeonSimSubsystem::Deinitialize()
 {
-    if (UWorld* World = GetWorld())
-    {
-        World->GetTimerManager().ClearTimer(WaveStartTimerHandle);
-        World->GetTimerManager().ClearTimer(AdventurerAdvanceTimerHandle);
-        World->GetTimerManager().ClearTimer(DefenderSpawnTimerHandle);
-        World->GetTimerManager().ClearTimer(ManaTickTimerHandle);
-    }
+    StopRunTimers();
 
     RoomInstances.Reset();
     TrapInstances.Reset();
@@ -59,14 +53,9 @@ void UDungeonSimSubsystem::StartNewRun(const FRunSetup& InRunSetup)
     PurchasedUpgradeIds.Reset();
     CurrentWaveNumber = 0;
     CurrentCoreHealth = 100;
+    CurrentRunOutcome = ERunOutcome::InProgress;
 
-    if (UWorld* World = GetWorld())
-    {
-        World->GetTimerManager().ClearTimer(WaveStartTimerHandle);
-        World->GetTimerManager().ClearTimer(AdventurerAdvanceTimerHandle);
-        World->GetTimerManager().ClearTimer(DefenderSpawnTimerHandle);
-    }
-
+    StopRunTimers();
     SeedFirstFloor();
     StartManaTickTimer();
     ResourceState.ManaIncomePerSecond = ComputeManaIncomePerSecond();
@@ -75,6 +64,7 @@ void UDungeonSimSubsystem::StartNewRun(const FRunSetup& InRunSetup)
     OnBreachStateChanged.Broadcast(FloorState.BreachState);
     OnWaveChanged.Broadcast(CurrentWaveNumber);
     OnCoreHealthChanged.Broadcast(CurrentCoreHealth);
+    OnRunOutcomeChanged.Broadcast(CurrentRunOutcome);
     OnAdventurersChanged.Broadcast();
 }
 
@@ -113,6 +103,11 @@ bool UDungeonSimSubsystem::SpendMana(const int32 Amount)
 FPlacementResult UDungeonSimSubsystem::DigBlock(const FBlockCoord& BlockCoord)
 {
     EnsureGridState();
+
+    if (CurrentRunOutcome != ERunOutcome::InProgress)
+    {
+        return MakeRunEndedPlacementResult();
+    }
 
     const int32 DigManaCost = GetDigManaCost();
     FPlacementResult Result = GridState->ValidateDig(BlockCoord, ResourceState.CurrentMana, DigManaCost);
@@ -167,6 +162,11 @@ FPlacementResult UDungeonSimSubsystem::PlaceRoom(
 {
     EnsureGridState();
 
+    if (CurrentRunOutcome != ERunOutcome::InProgress)
+    {
+        return MakeRunEndedPlacementResult();
+    }
+
     FPlacementResult Result = GridState->ValidateRoomPlacement(OriginBlock, Footprint, ResourceState.CurrentMana, ManaCost);
     if (!Result.bSuccess)
     {
@@ -219,6 +219,11 @@ FPlacementResult UDungeonSimSubsystem::PlaceTrap(
 {
     EnsureGridState();
 
+    if (CurrentRunOutcome != ERunOutcome::InProgress)
+    {
+        return MakeRunEndedPlacementResult();
+    }
+
     FPlacementResult Result = GridState->ValidateTrapPlacement(OriginBlock, ResourceState.CurrentMana, ManaCost);
     if (!Result.bSuccess)
     {
@@ -256,6 +261,11 @@ FPlacementResult UDungeonSimSubsystem::PlaceTrap(
 
 FPlacementResult UDungeonSimSubsystem::PurchaseUpgrade(const FName BuildableId)
 {
+    if (CurrentRunOutcome != ERunOutcome::InProgress)
+    {
+        return MakeRunEndedPlacementResult();
+    }
+
     FPlacementResult Result = ValidateUpgradePurchase(BuildableId);
     if (!Result.bSuccess)
     {
@@ -302,6 +312,7 @@ bool UDungeonSimSubsystem::SaveCurrentRun(const FString& SlotName)
     SaveGame->Tiles = GridState->GetAllTiles();
     SaveGame->CurrentWaveNumber = CurrentWaveNumber;
     SaveGame->CurrentCoreHealth = CurrentCoreHealth;
+    SaveGame->CurrentRunOutcome = CurrentRunOutcome;
     SaveGame->ActiveAdventurers = ActiveAdventurers;
     SaveGame->ActiveDefenders = ActiveDefenders;
     SaveGame->PurchasedUpgradeIds = PurchasedUpgradeIds;
@@ -333,12 +344,7 @@ bool UDungeonSimSubsystem::LoadSavedRun(const FString& SlotName)
         return false;
     }
 
-    if (UWorld* World = GetWorld())
-    {
-        World->GetTimerManager().ClearTimer(WaveStartTimerHandle);
-        World->GetTimerManager().ClearTimer(AdventurerAdvanceTimerHandle);
-        World->GetTimerManager().ClearTimer(DefenderSpawnTimerHandle);
-    }
+    StopRunTimers();
 
     RunSetup = SaveGame->RunSetup;
     ResourceState = SaveGame->ResourceState;
@@ -346,6 +352,7 @@ bool UDungeonSimSubsystem::LoadSavedRun(const FString& SlotName)
     AdventurerDecisionStream.Initialize(RunSetup.Seed);
     CurrentWaveNumber = SaveGame->CurrentWaveNumber;
     CurrentCoreHealth = SaveGame->CurrentCoreHealth;
+    CurrentRunOutcome = SaveGame->CurrentRunOutcome;
     ActiveAdventurers = SaveGame->ActiveAdventurers;
     ActiveDefenders = SaveGame->ActiveDefenders;
     PurchasedUpgradeIds = SaveGame->PurchasedUpgradeIds;
@@ -369,13 +376,13 @@ bool UDungeonSimSubsystem::LoadSavedRun(const FString& SlotName)
     }
 
     RestoreSimulationTimers();
-    StartManaTickTimer();
     ResourceState.ManaIncomePerSecond = ComputeManaIncomePerSecond();
     BroadcastAllTiles();
     OnResourceChanged.Broadcast(ResourceState);
     OnBreachStateChanged.Broadcast(FloorState.BreachState);
     OnWaveChanged.Broadcast(CurrentWaveNumber);
     OnCoreHealthChanged.Broadcast(CurrentCoreHealth);
+    OnRunOutcomeChanged.Broadcast(CurrentRunOutcome);
     OnAdventurersChanged.Broadcast();
     return true;
 }
@@ -482,6 +489,11 @@ int32 UDungeonSimSubsystem::GetCurrentWaveNumber() const
 int32 UDungeonSimSubsystem::GetCurrentCoreHealth() const
 {
     return CurrentCoreHealth;
+}
+
+ERunOutcome UDungeonSimSubsystem::GetRunOutcome() const
+{
+    return CurrentRunOutcome;
 }
 
 TArray<FUnitInstanceData> UDungeonSimSubsystem::GetActiveAdventurers() const
@@ -619,6 +631,13 @@ void UDungeonSimSubsystem::BroadcastAllTiles()
 
 void UDungeonSimSubsystem::RestoreSimulationTimers()
 {
+    if (CurrentRunOutcome != ERunOutcome::InProgress)
+    {
+        return;
+    }
+
+    StartManaTickTimer();
+
     if (FloorState.BreachState != EBreachState::Open)
     {
         return;
@@ -794,9 +813,71 @@ FBlockCoord UDungeonSimSubsystem::FindNearestSurfaceEntry(const FBlockCoord& Fro
     return Nearest;
 }
 
+void UDungeonSimSubsystem::StopRunTimers()
+{
+    if (UWorld* World = GetWorld())
+    {
+        World->GetTimerManager().ClearTimer(WaveStartTimerHandle);
+        World->GetTimerManager().ClearTimer(AdventurerAdvanceTimerHandle);
+        World->GetTimerManager().ClearTimer(DefenderSpawnTimerHandle);
+        World->GetTimerManager().ClearTimer(ManaTickTimerHandle);
+    }
+}
+
+FPlacementResult UDungeonSimSubsystem::MakeRunEndedPlacementResult()
+{
+    FPlacementResult Result;
+    Result.FailureReason = EPlacementFailureReason::RunEnded;
+    return Result;
+}
+
+void UDungeonSimSubsystem::SetRunOutcome(const ERunOutcome NewOutcome)
+{
+    if (CurrentRunOutcome != ERunOutcome::InProgress || NewOutcome == ERunOutcome::InProgress)
+    {
+        return;
+    }
+
+    CurrentRunOutcome = NewOutcome;
+    StopRunTimers();
+    OnRunOutcomeChanged.Broadcast(CurrentRunOutcome);
+
+    if (NewOutcome == ERunOutcome::Defeat)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Run ended: core destroyed."));
+    }
+    else if (NewOutcome == ERunOutcome::Victory)
+    {
+        UE_LOG(LogTemp, Log, TEXT("Run ended: survived %d invasion waves."), DungeonCore::PrototypeVictoryWaveCount);
+    }
+}
+
+void UDungeonSimSubsystem::EvaluateVictoryAfterWaveClear()
+{
+    if (CurrentRunOutcome != ERunOutcome::InProgress)
+    {
+        return;
+    }
+
+    if (FloorState.BreachState != EBreachState::Open)
+    {
+        return;
+    }
+
+    if (ActiveAdventurers.Num() > 0)
+    {
+        return;
+    }
+
+    if (CurrentWaveNumber >= DungeonCore::PrototypeVictoryWaveCount)
+    {
+        SetRunOutcome(ERunOutcome::Victory);
+    }
+}
+
 void UDungeonSimSubsystem::ScheduleNextWave(const float DelaySeconds)
 {
-    if (FloorState.BreachState != EBreachState::Open)
+    if (FloorState.BreachState != EBreachState::Open || CurrentRunOutcome != ERunOutcome::InProgress)
     {
         return;
     }
@@ -815,7 +896,7 @@ void UDungeonSimSubsystem::ScheduleNextWave(const float DelaySeconds)
 
 void UDungeonSimSubsystem::StartNextWave()
 {
-    if (FloorState.BreachState != EBreachState::Open)
+    if (FloorState.BreachState != EBreachState::Open || CurrentRunOutcome != ERunOutcome::InProgress)
     {
         return;
     }
@@ -960,6 +1041,8 @@ void UDungeonSimSubsystem::AdvanceAdventurers()
     {
         OnAdventurersChanged.Broadcast();
     }
+
+    EvaluateVictoryAfterWaveClear();
 }
 
 void UDungeonSimSubsystem::SpawnDefenders()
@@ -1336,7 +1419,7 @@ bool UDungeonSimSubsystem::HandleAdventurerTileEffects(FUnitInstanceData& Advent
 
         if (CurrentCoreHealth == 0)
         {
-            UE_LOG(LogTemp, Warning, TEXT("The dungeon core has been destroyed."));
+            SetRunOutcome(ERunOutcome::Defeat);
         }
 
         return true;

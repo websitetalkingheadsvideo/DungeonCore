@@ -153,6 +153,8 @@ private:
 
     void EnsureBuildCursor();
 
+    void ShowRunSetupScreen();
+
     class ADungeonCameraPawn* GetDungeonCameraPawn() const;
 
     UPROPERTY()

@@ -44,4 +44,7 @@ public:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dungeon")
     int32 CurrentCoreHealth = 0;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dungeon")
+    ERunOutcome CurrentRunOutcome = ERunOutcome::InProgress;
 };

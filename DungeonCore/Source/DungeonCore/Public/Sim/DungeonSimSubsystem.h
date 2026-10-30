@@ -14,6 +14,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDungeonBreachStateChangedSignature,
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDungeonAdventurersChangedSignature);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDungeonWaveChangedSignature, int32, CurrentWaveNumber);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDungeonCoreHealthChangedSignature, int32, CurrentCoreHealth);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDungeonRunOutcomeChangedSignature, ERunOutcome, RunOutcome);
 
 UCLASS()
 class DUNGEONCORE_API UDungeonSimSubsystem : public UGameInstanceSubsystem
@@ -103,6 +104,9 @@ public:
     int32 GetCurrentCoreHealth() const;
 
     UFUNCTION(BlueprintPure, Category = "Dungeon")
+    ERunOutcome GetRunOutcome() const;
+
+    UFUNCTION(BlueprintPure, Category = "Dungeon")
     TArray<FUnitInstanceData> GetActiveAdventurers() const;
 
     UFUNCTION(BlueprintPure, Category = "Dungeon")
@@ -129,10 +133,16 @@ public:
     UPROPERTY(BlueprintAssignable, Category = "Dungeon")
     FDungeonCoreHealthChangedSignature OnCoreHealthChanged;
 
+    UPROPERTY(BlueprintAssignable, Category = "Dungeon")
+    FDungeonRunOutcomeChangedSignature OnRunOutcomeChanged;
+
 private:
     void EnsureGridState();
 
     void SeedFirstFloor();
+
+    /** Result returned by every mutating API once the run has ended in victory or defeat. */
+    static FPlacementResult MakeRunEndedPlacementResult();
 
     FTileData MakeTileData(const FBlockCoord& BlockCoord, const ETileState TileState, const bool bWalkable, const bool bDiggable) const;
 
@@ -142,10 +152,14 @@ private:
 
     void BroadcastAllTiles();
 
+    /** Restarts the mana tick and, if the breach is open, the invasion timers. No-op once the run has ended. */
     void RestoreSimulationTimers();
 
     /** Starts the invasion timers (waves, adventurer movement, defender spawns). Call once the breach is Open. */
     void StartInvasionTimers();
+
+    /** Clears every run timer: waves, adventurer movement, defender spawns, and the mana tick. */
+    void StopRunTimers();
 
     void StartManaTickTimer();
 
@@ -162,6 +176,10 @@ private:
     void ScheduleNextWave(const float DelaySeconds);
 
     void StartNextWave();
+
+    void SetRunOutcome(const ERunOutcome NewOutcome);
+
+    void EvaluateVictoryAfterWaveClear();
 
     void AdvanceAdventurers();
 
@@ -223,6 +241,8 @@ private:
     int32 CurrentWaveNumber = 0;
 
     int32 CurrentCoreHealth = 0;
+
+    ERunOutcome CurrentRunOutcome = ERunOutcome::InProgress;
 
     FTimerHandle WaveStartTimerHandle;
 

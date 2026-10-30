@@ -42,7 +42,7 @@ namespace
 
     void StyleText(UTextBlock* Text, const FName Typeface, const int32 Size, const int32 LetterSpacing, const FLinearColor& Color)
     {
-        Text->SetFont(DungeonStoreStyle::MakeFont(Typeface, Size, LetterSpacing));
+        Text->SetFont(DungeonStoreStyle::MakeFantasyFont(Typeface, Size, LetterSpacing));
         Text->SetColorAndOpacity(FSlateColor(Color));
         Text->SetShadowOffset(FVector2D(0.0f, 1.0f));
         Text->SetShadowColorAndOpacity(FLinearColor(0.0f, 0.0f, 0.0f, 0.55f));
@@ -427,10 +427,10 @@ void UDungeonStoreWidget::BuildStore()
     UVerticalBox* Wordmark = WidgetTree->ConstructWidget<UVerticalBox>(UVerticalBox::StaticClass(), TEXT("StoreWordmark"));
     UTextBlock* Title = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("StoreTitle"));
     Title->SetText(FText::FromString(TEXT("CORE VAULT")));
-    StyleText(Title, TEXT("Bold"), 26, 420, DungeonStoreStyle::Ivory());
+    StyleText(Title, DungeonStoreStyle::FantasyBold(), 26, 420, DungeonStoreStyle::Ivory());
     UTextBlock* Subtitle = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("StoreSubtitle"));
     Subtitle->SetText(FText::FromString(TEXT("Mana buys stone, snares, and a louder core.")));
-    StyleText(Subtitle, TEXT("Regular"), 13, 40, DungeonStoreStyle::Muted());
+    StyleText(Subtitle, DungeonStoreStyle::BodyItalic(), 15, 40, DungeonStoreStyle::Muted());
     Wordmark->AddChildToVerticalBox(Title);
     Wordmark->AddChildToVerticalBox(Subtitle);
     UHorizontalBoxSlot* WordmarkSlot = Header->AddChildToHorizontalBox(Wordmark);
@@ -440,13 +440,13 @@ void UDungeonStoreWidget::BuildStore()
     UVerticalBox* Balance = WidgetTree->ConstructWidget<UVerticalBox>(UVerticalBox::StaticClass(), TEXT("StoreBalance"));
     UTextBlock* BalanceKicker = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("StoreBalanceKicker"));
     BalanceKicker->SetText(FText::FromString(TEXT("MANA")));
-    StyleText(BalanceKicker, TEXT("Bold"), 11, 280, DungeonStoreStyle::Gold());
+    StyleText(BalanceKicker, DungeonStoreStyle::PanelBold(), 11, 280, DungeonStoreStyle::Gold());
     BalanceKicker->SetJustification(ETextJustify::Right);
     HeaderManaText = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("StoreMana"));
-    StyleText(HeaderManaText, TEXT("Bold"), 36, 0, DungeonStoreStyle::Gold());
+    StyleText(HeaderManaText, DungeonStoreStyle::TelemetryBold(), 36, 0, DungeonStoreStyle::Gold());
     HeaderManaText->SetJustification(ETextJustify::Right);
     HeaderIncomeText = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("StoreIncome"));
-    StyleText(HeaderIncomeText, TEXT("Regular"), 13, 40, DungeonStoreStyle::Violet());
+    StyleText(HeaderIncomeText, DungeonStoreStyle::Telemetry(), 13, 40, DungeonStoreStyle::Violet());
     HeaderIncomeText->SetJustification(ETextJustify::Right);
     Balance->AddChildToVerticalBox(BalanceKicker);
     Balance->AddChildToVerticalBox(HeaderManaText);
@@ -467,7 +467,7 @@ void UDungeonStoreWidget::BuildStore()
     CloseButton->OnClicked.AddDynamic(this, &UDungeonStoreWidget::HandleCloseClicked);
     UTextBlock* CloseLabel = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("StoreCloseLabel"));
     CloseLabel->SetText(FText::FromString(TEXT("CLOSE")));
-    StyleText(CloseLabel, TEXT("Bold"), 12, 220, DungeonStoreStyle::Ivory());
+    StyleText(CloseLabel, DungeonStoreStyle::PanelBold(), 12, 220, DungeonStoreStyle::Ivory());
     CloseLabel->SetJustification(ETextJustify::Center);
     PassClicksToButton(CloseLabel);
     CloseButton->AddChild(CloseLabel);
@@ -492,9 +492,9 @@ void UDungeonStoreWidget::BuildStore()
 
     UVerticalBox* ListColumn = WidgetTree->ConstructWidget<UVerticalBox>(UVerticalBox::StaticClass(), TEXT("StoreListColumn"));
     ListHeadingText = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("StoreListHeading"));
-    StyleText(ListHeadingText, TEXT("Bold"), 20, 80, DungeonStoreStyle::Ivory());
+    StyleText(ListHeadingText, DungeonStoreStyle::FantasyBold(), 20, 80, DungeonStoreStyle::Ivory());
     OfferingCountText = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("StoreOfferingCount"));
-    StyleText(OfferingCountText, TEXT("Bold"), 11, 240, DungeonStoreStyle::Muted());
+    StyleText(OfferingCountText, DungeonStoreStyle::PanelBold(), 11, 240, DungeonStoreStyle::Muted());
     ListColumn->AddChildToVerticalBox(ListHeadingText);
     UVerticalBoxSlot* CountSlot = ListColumn->AddChildToVerticalBox(OfferingCountText);
     CountSlot->SetPadding(FMargin(0.0f, 2.0f, 0.0f, 12.0f));
@@ -518,18 +518,18 @@ void UDungeonStoreWidget::BuildStore()
     Dossier->AddChild(DossierColumn);
 
     DetailKickerText = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("StoreDetailKicker"));
-    StyleText(DetailKickerText, TEXT("Bold"), 11, 280, DungeonStoreStyle::Violet());
+    StyleText(DetailKickerText, DungeonStoreStyle::PanelBold(), 11, 280, DungeonStoreStyle::Violet());
     DetailTitleText = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("StoreDetailTitle"));
-    StyleText(DetailTitleText, TEXT("Bold"), 28, 0, DungeonStoreStyle::Ivory());
+    StyleText(DetailTitleText, DungeonStoreStyle::FantasyBold(), 28, 0, DungeonStoreStyle::Ivory());
     DetailTitleText->SetAutoWrapText(true);
     DetailRoleText = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("StoreDetailRole"));
-    StyleText(DetailRoleText, TEXT("Regular"), 14, 10, DungeonStoreStyle::Muted());
+    StyleText(DetailRoleText, DungeonStoreStyle::BodyItalic(), 16, 10, DungeonStoreStyle::Muted());
     DetailRoleText->SetAutoWrapText(true);
     DetailStatsText = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("StoreDetailStats"));
-    StyleText(DetailStatsText, TEXT("Regular"), 14, 10, DungeonStoreStyle::Ivory());
+    StyleText(DetailStatsText, DungeonStoreStyle::Panel(), 14, 10, DungeonStoreStyle::Ivory());
     DetailStatsText->SetAutoWrapText(true);
     DetailCostText = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("StoreDetailCost"));
-    StyleText(DetailCostText, TEXT("Bold"), 40, 0, DungeonStoreStyle::Gold());
+    StyleText(DetailCostText, DungeonStoreStyle::TelemetryBold(), 40, 0, DungeonStoreStyle::Gold());
 
     DossierColumn->AddChildToVerticalBox(DetailKickerText);
     UVerticalBoxSlot* TitleSlot = DossierColumn->AddChildToVerticalBox(DetailTitleText);
@@ -544,7 +544,7 @@ void UDungeonStoreWidget::BuildStore()
 
     UTextBlock* CostKicker = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("StoreCostKicker"));
     CostKicker->SetText(FText::FromString(TEXT("COST")));
-    StyleText(CostKicker, TEXT("Bold"), 11, 280, DungeonStoreStyle::Muted());
+    StyleText(CostKicker, DungeonStoreStyle::PanelBold(), 11, 280, DungeonStoreStyle::Muted());
     DossierColumn->AddChildToVerticalBox(CostKicker);
     DossierColumn->AddChildToVerticalBox(DetailCostText);
 
@@ -569,7 +569,7 @@ void UDungeonStoreWidget::BuildStore()
 
     UTextBlock* Footer = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("StoreFooter"));
     Footer->SetText(FText::FromString(TEXT("B  CLOSE      ATTUNE SPENDS NOW      CHAMBERS AND TRAPS ARM A TOOL")));
-    StyleText(Footer, TEXT("Bold"), 10, 180, DungeonStoreStyle::Muted());
+    StyleText(Footer, DungeonStoreStyle::PanelBold(), 10, 180, DungeonStoreStyle::Muted());
     UVerticalBoxSlot* FooterSlot = PanelColumn->AddChildToVerticalBox(Footer);
     FooterSlot->SetPadding(FMargin(0.0f, 14.0f, 0.0f, 0.0f));
 
@@ -615,7 +615,7 @@ void UDungeonStoreWidget::BuildStore()
 
         UTextBlock* TabLabel = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass());
         TabLabel->SetText(Group.DisplayName);
-        StyleText(TabLabel, TEXT("Bold"), 13, 160, DungeonStoreStyle::Ivory());
+        StyleText(TabLabel, DungeonStoreStyle::PanelBold(), 13, 160, DungeonStoreStyle::Ivory());
         PassClicksToButton(TabLabel);
         UHorizontalBoxSlot* LabelSlot = TabBody->AddChildToHorizontalBox(TabLabel);
         LabelSlot->SetVerticalAlignment(VAlign_Center);
@@ -654,7 +654,7 @@ void UDungeonStoreWidget::BuildStore()
             UTextBlock* MonogramText = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass());
             MonogramText->SetText(FText::FromString(MakeMonogram(*Row)));
             MonogramText->SetJustification(ETextJustify::Center);
-            StyleText(MonogramText, TEXT("Bold"), 16, 40, DungeonStoreStyle::Ivory());
+            StyleText(MonogramText, DungeonStoreStyle::FantasyBold(), 16, 40, DungeonStoreStyle::Ivory());
             PassClicksToButton(MonogramText);
             MonogramPlate->AddChild(MonogramText);
             if (UBorderSlot* MonogramContentSlot = Cast<UBorderSlot>(MonogramText->Slot))
@@ -675,10 +675,10 @@ void UDungeonStoreWidget::BuildStore()
             PassClicksToButton(CardCopy);
             UTextBlock* NameText = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass());
             NameText->SetText(Row->DisplayName);
-            StyleText(NameText, TEXT("Bold"), 16, 20, DungeonStoreStyle::Ivory());
+            StyleText(NameText, DungeonStoreStyle::FantasyBold(), 16, 20, DungeonStoreStyle::Ivory());
             PassClicksToButton(NameText);
             UTextBlock* DetailText = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass());
-            StyleText(DetailText, TEXT("Regular"), 12, 20, DungeonStoreStyle::Muted());
+            StyleText(DetailText, DungeonStoreStyle::Body(), 14, 20, DungeonStoreStyle::Muted());
             PassClicksToButton(DetailText);
             CardCopy->AddChildToVerticalBox(NameText);
             CardCopy->AddChildToVerticalBox(DetailText);
@@ -688,7 +688,7 @@ void UDungeonStoreWidget::BuildStore()
 
             UTextBlock* CostText = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass());
             CostText->SetJustification(ETextJustify::Right);
-            StyleText(CostText, TEXT("Bold"), 16, 0, DungeonStoreStyle::Gold());
+            StyleText(CostText, DungeonStoreStyle::TelemetryBold(), 16, 0, DungeonStoreStyle::Gold());
             PassClicksToButton(CostText);
             USizeBox* CostSize = WidgetTree->ConstructWidget<USizeBox>(USizeBox::StaticClass());
             CostSize->SetWidthOverride(72.0f);
@@ -933,7 +933,7 @@ void UDungeonStoreWidget::RefreshStore()
                 12.0f,
                 0.0f
             ));
-            StyleText(ActionLabel, TEXT("Bold"), 14, 220, DungeonStoreStyle::InkText());
+            StyleText(ActionLabel, DungeonStoreStyle::PanelBold(), 14, 220, DungeonStoreStyle::InkText());
         }
         else
         {
@@ -945,7 +945,7 @@ void UDungeonStoreWidget::RefreshStore()
                 12.0f,
                 1.0f
             ));
-            StyleText(ActionLabel, TEXT("Bold"), 14, 220, DungeonStoreStyle::Muted());
+            StyleText(ActionLabel, DungeonStoreStyle::PanelBold(), 14, 220, DungeonStoreStyle::Muted());
         }
     }
 }
