@@ -1,0 +1,20 @@
+{
+  "slug": "dark-fairy-worker",
+  "task_id": "bc19af7ea56348bea946b5cde4626434",
+  "prompt": "T-pose dark fairy dungeon worker, full body A-pose arms visible, short blue-purple hair, large tattered insect wings green and magenta iridescence not violet glow, dark green tunic black leather vest white stitching, brown tool belt with pickaxe and pouches, work boots, grubby forearms, evil fairy digger for sunken ruins biome, clean stylized fantasy game character reference, neutral simple background, no text, no watermark",
+  "source_image": "E:\\Dungeon Core\\Design\\Reference Images\\Dark Fairy-Worker.png",
+  "upload": {
+    "source": "E:\\Dungeon Core\\Design\\Reference Images\\Dark Fairy-Worker.png",
+    "mime_type": "image/png",
+    "bytes": 477430
+  },
+  "model_page_url": "https://www.hi3d.ai/3d-model/bc19af7ea56348bea946b5cde4626434",
+  "preview_url": "https://hitem3dstatic.zaohaowu.net/jjewelry/web/model3ds/img2model3d/20261101/fc1c855f75f944ccaec9385b0cb034b7/target/cover/resize512/0.webp?auth_key=18d1734dd34afcf9222e2b8c4cd315f4&t=1793575481",
+  "actual_points": 45,
+  "files": [
+    {
+      "name": "Dark_Fairy_Worker.glb",
+      "path": "Dark_Fairy_Worker.glb"
+    }
+  ]
+}

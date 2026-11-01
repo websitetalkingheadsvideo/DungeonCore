@@ -16,7 +16,7 @@ Creature picks by family. **Worker** = digs and builds (non-combat or barely), *
 | | Minion | MetaGoblin or 3dGoblin (check fidelity) |
 | | Elite | Warrior Orc |
 | | Boss | Paragon: Narbash |
-| **Evil Fairies** | Worker | TBD |
+| **Evil Fairies** | Worker | **Dark Fairy Worker** — Hi3D from [Reference Images/Dark Fairy-Worker.png](./Reference%20Images/Dark%20Fairy-Worker.png); GLB `imports/hi3d/dark-fairy-worker/Dark_Fairy_Worker.glb` (task `bc19af7ea56348bea946b5cde4626434`) |
 | | Minion | Cutie Goddess (retexture to dark palette) |
 | | Elite | TBD — Hi3D |
 | | Boss | **Dark Fairy Queen** — Hi3D from [Reference Images/Fairy_Boss.png](./Reference%20Images/Fairy_Boss.png). Purple fabric and hair OK; wing glow must not be violet (reserved for Will)—shift to magenta/rose or silver-black, or make wings reflective, not emissive |
