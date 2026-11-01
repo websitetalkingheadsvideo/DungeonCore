@@ -203,6 +203,34 @@ Use when a Fab pack lacks a specific surface; otherwise prefer the pack MI_* ins
 
 ---
 
+## Fab tools (noted 2026-11-01)
+
+| Tool | Use |
+| --- | --- |
+| **AssetDump: Agents-readable assets** (UE 5.7–5.8, editor-only) | Dumps what's inside a `.uasset` (material params, skeleton bones/slots/sockets, mesh LODs/material slots, animation tables, Blueprint flow, Niagara/MetaSound graphs) as text for AI agents. Right-click asset → clipboard; right-click folder → index. Python/console for headless agent use. Ships an `AGENTS.md`. |
+| Audio Tension Manager | Possible dynamic music (calm build → breach → combat) |
+| Dash – Advanced Asset Manager | Asset organization |
+| AdaptivePathfindingSystem v2.06 | 3D navigation; evaluate vs grid pathing |
+
+---
+
+## Fab Megascans additions (2026-11-01)
+
+Library total now **485**. Quixel Megascans pulled via Fab (Nanite recommended; import only what's used).
+
+| Asset | Type | Use |
+| --- | --- | --- |
+| **Old Mine** | 61-asset environment (UE 5.4–5.8, up to 8K) | **Goblin Tunnels core kit** — timber-braced tunnels, rails, carts, mining gear, ore/coal |
+| Modular Mine Tunnel Start End | 3D | Tunnel entrances / dead ends, pairs with Old Mine |
+| Military Trenches (dirt rough/fine, rock patch, tunnel entrance wood, storage crates) | Surfaces + 3D | Goblin Tunnels floors, entrances, clutter |
+| Wooden Barrel, Wooden Chest (×2), Rusty Hammer, Rope Net | 3D | Goblin clutter; chests as loot bait |
+| Flagstone Wall, Roman Stone Floor | Surfaces | Gothic / Sunken Ruins floors and walls |
+| Forest Floor, Mossy Grass, Violet Wood Sorrel | Surfaces + plant | Fungal Warren ground cover |
+| Medieval Banquet | 3D | Surface-town tavern or goblin feast hall |
+| Worn Concrete Ceiling, Basket Weave Parquet, Flake Boards, Denim | Surfaces | Poor fit (modern) |
+
+---
+
 ## Fab 3D (cataloged 2026-11-01)
 
 332 of 333 3D items read from My Library → 3D. Only Dungeon Core–relevant items listed. Avoid anything **Stylized / cartoon / low poly** (art direction).

@@ -49,6 +49,7 @@ The core’s radius of influence reads like a growing circulatory system: liquid
 | **Prism Beam** | Gem node on a pillar fires a beam that refracts off wall mirrors into a geometric kill web. The beam shows faintly in build mode and once built, so the player can read the web. |
 | **Resonance Plate** | Quartz floor tile; harmonic vibration shatters non-magical kinetic armor and staggers enemies |
 | **Gravity Well** | Ceiling geode reverses local gravity—pin to ceiling crystals, then drop |
+| **Runaway Cart** | Mine cart released down a built rail line; crushes everything on the track. Natural fit for Goblin Tunnels (Old Mine kit) |
 
 ## Entity and defender aesthetic (core constructs)
 

@@ -19,3 +19,17 @@ Possible effects:
 - Plan the curated color palette around the affinities so each color maps to one.
 - Keep reserved colors free: teal (Load pulse), emerald (Options), white-hot (under attack), red (warnings).
 - Existing saves need a default affinity for their cosmetic color.
+
+## Ore veins
+
+**Idea:** Workers digging into fog of war can hit ore veins (Old Mine kit). A vein gives a visible reward: a burst of mana, a rare material, or a pattern unlock.
+
+- Veins make blind digging a risk/reward choice alongside breaches.
+- Could tie into absorb-to-unlock if that loop is adopted.
+
+## Rails as worker routes
+
+**Idea:** The player builds rail lines; carts move workers or resources faster along them.
+
+- Shares rail infrastructure with the Runaway Cart trap ([General.md](./General.md)), so one rail network serves both logistics and defense.
+- Invaders could sabotage or ride the rails.
