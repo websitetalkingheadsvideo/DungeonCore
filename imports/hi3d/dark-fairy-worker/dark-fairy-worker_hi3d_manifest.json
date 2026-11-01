@@ -1,15 +1,17 @@
 {
   "slug": "dark-fairy-worker",
-  "task_id": "bc19af7ea56348bea946b5cde4626434",
-  "prompt": "T-pose dark fairy dungeon worker, full body A-pose arms visible, short blue-purple hair, large tattered insect wings green and magenta iridescence not violet glow, dark green tunic black leather vest white stitching, brown tool belt with pickaxe and pouches, work boots, grubby forearms, evil fairy digger for sunken ruins biome, clean stylized fantasy game character reference, neutral simple background, no text, no watermark",
-  "source_image": "E:\\Dungeon Core\\Design\\Reference Images\\Dark Fairy-Worker.png",
+  "task_id": "7b80057401c247e89baf8dfd013d57ea",
+  "prompt": "T-pose dark fairy dungeon worker, BALD HEAD absolutely no hair geometry, smooth bare scalp, eyebrows clearly visible for facial animation, full body A-pose arms visible, large tattered insect wings green and magenta iridescence not violet glow, dark green tunic black leather vest white stitching, brown tool belt with pickaxe and pouches, work boots, grubby forearms, evil fairy digger, stylized fantasy game character reference, neutral simple background, no text",
+  "source_image": "E:\\Dungeon Core\\Design\\Reference Images\\Dark Fairy-Worker-NoHair.png",
   "upload": {
-    "source": "E:\\Dungeon Core\\Design\\Reference Images\\Dark Fairy-Worker.png",
+    "source": "E:\\Dungeon Core\\Design\\Reference Images\\Dark Fairy-Worker-NoHair.png",
     "mime_type": "image/png",
-    "bytes": 477430
+    "bytes": 1182807,
+    "edit_task_id": "c610127667d24c45a44c7d1a833d7ebb",
+    "note": "bald head for facial animation"
   },
-  "model_page_url": "https://www.hi3d.ai/3d-model/bc19af7ea56348bea946b5cde4626434",
-  "preview_url": "https://hitem3dstatic.zaohaowu.net/jjewelry/web/model3ds/img2model3d/20261101/fc1c855f75f944ccaec9385b0cb034b7/target/cover/resize512/0.webp?auth_key=18d1734dd34afcf9222e2b8c4cd315f4&t=1793575481",
+  "model_page_url": "https://www.hi3d.ai/3d-model/7b80057401c247e89baf8dfd013d57ea",
+  "preview_url": "https://hitem3dstatic.zaohaowu.net/jjewelry/web/model3ds/img2model3d/20261101/8ede2a00591149aea8fa0eed2b9f150d/target/cover/resize512/0.webp?auth_key=6b61837e0d616cdd41dc8371877d06d3&t=1793578409",
   "actual_points": 45,
   "files": [
     {
