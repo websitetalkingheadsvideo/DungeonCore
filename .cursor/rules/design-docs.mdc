@@ -14,6 +14,8 @@ player-visible work (UI, menus, environment, creatures, traps, VFX, fonts, audio
 | Biome × resident creature matrix (Gothic/Undead, Goblin Tunnels/Orcs, Fungal Warren/Spiders, Sunken Ruins/Evil Fairies), core loop (dig → breach → defend) | `Design/Creatures and style.md` |
 | Title menu: idle geode core, per-option hover FX, click transitions | `Design/Start Screen.md` |
 | Fonts: titles (Friz Quadrata / Cinzel / Percolator), telemetry (Orbitron / Rajdhani / Exo 2), body (Goudy Old Style / Palatino) | `Design/fonts.md` |
+| LitRPG genre conventions and game-design takeaways (essence loop, reputation, companion, core stakes) | `Design/Overall.md` |
+| Per-faction creature asset picks (base / medium / boss) and intruder heroes | `Design/Monsters.md` |
 
 ## Pillars to hold in mind
 

@@ -1,34 +1,52 @@
-Main Menu Titles & UI Headings
+# Typography
 
-To mimic that sleek, ethereal crystal matrix look for the big text ("New Game", "Continue"), use a clean, sharp, or slightly stylized serif or high-contrast display font:
-• Friz Quadrata: Highly recognizable, sharp-edged, and carries a classic corporate-gothic weight. It has subtle, needle-sharp serifs that mirror hard crystal cuts perfectly.
-• Cinzel / Cinzel Decorative: A beautiful, modern geometric serif inspired by classical Roman proportions. The decorative variant adds elegant, floating flourishes that fit right into a celestial ley-line vibe.
-• Percolator: A heavy, prominent, sharp-cornered font originally used for classic White Wolf Revised edition headings. It provides a punchy, ancient-yet-structured look that commands screen presence.
+Target layout: **21:9** monitor. Telemetry and grid readouts prioritize legibility over ornament.
 
-2. Technical Data, Resource Counters & Grid Overlays
+## 1. Main menu titles and UI headings
 
-When your game displays active layout numbers, grid coordinates, or crystal energy costs, the display must prioritize strict clarity over styling to remain readable on your 21:9 monitor layout:
-• Orbitron: A sharp, geometric sans-serif that looks like clean, futuristic digital telemetry without feeling out-of-place in a high-magic setting.
-• Rajdhani / Exo 2: Crisp, condensed geometric sans-serifs that keep resource panels compact, legible, and structurally aligned with a map builder layout.
+Sharp, high-contrast display faces for large labels (“New Game”, “Continue”)—crystal-matrix feel:
 
-3. Core / Lore Text & Descriptions
+| Candidate | Role |
+| --- | --- |
+| **Friz Quadrata** | Sharp serifs, corporate-gothic weight; needle serifs like crystal cuts |
+| **Cinzel / Cinzel Decorative** | Geometric Roman serif; Decorative adds flourishes for ley-line / celestial UI |
+| **Percolator** | Heavy, sharp-cornered classic White Wolf–style headings; strong screen presence |
 
-For tooltip boxes, block descriptions, or character sheets, you need an elegant but highly legible reading font that pairs well with sharp titles:
-• Goudy Old Style / Palatino: Excellent, classic editorial serifs that are incredibly easy on the eyes for paragraphs of text while maintaining an old-school rulebook aesthetic.
+## 2. Technical data, counters, and grid overlays
+
+Mana costs, coordinates, layout numbers—strict clarity first:
+
+| Candidate | Role |
+| --- | --- |
+| **Orbitron** | Geometric sans; clean digital telemetry in a high-magic shell |
+| **Rajdhani / Exo 2** | Condensed geometric sans for compact resource panels aligned to map UI |
+
+## 3. Core lore, tooltips, and body copy
+
+Paragraph-friendly serifs for descriptions and sheets:
+
+| Candidate | Role |
+| --- | --- |
+| **Goudy Old Style / Palatino** | Editorial readability; old-school rulebook pairing with sharp titles |
 
 ---
 
-Decision 2026-10-29 — shipped set (all SIL OFL, raw TTFs in `DungeonCore/Content/UI/Fonts`, loaded via `DungeonStoreStyle::FantasyCompositeFont()`)
+## Shipped set (2026-10-29)
 
-| Tier | Licensed pick | Free replacement shipped | Composite typeface name | Used for |
+All **SIL OFL**. Raw TTFs: `DungeonCore/Content/UI/Fonts`. Loaded via `DungeonStoreStyle::FantasyCompositeFont()`.
+
+| Tier | Licensed pick | Free replacement shipped | Composite typeface | Used for |
 | --- | --- | --- | --- | --- |
 | Titles | Friz Quadrata, Percolator | Cinzel Regular/Bold, Cinzel Decorative Bold | `Regular`, `Bold`, `Display` | Store/detail titles, list headings, game-over title, item names, run-setup headers |
-| Telemetry | Orbitron | Orbitron Regular/Bold (static instances from the variable font) | `Telemetry`, `TelemetryBold` | Mana balance, income rate, item cost |
-| Panel labels | Rajdhani / Exo 2 | Rajdhani Regular/SemiBold | `Panel`, `PanelBold` | Kickers (MANA, VAULT, CLOSE), tabs, footers, HUD readouts (breach/wave/core), stats lines, controls hint |
+| Telemetry | Orbitron | Orbitron Regular/Bold (from variable font) | `Telemetry`, `TelemetryBold` | Mana balance, income rate, item cost |
+| Panel labels | Rajdhani / Exo 2 | Rajdhani Regular/SemiBold | `Panel`, `PanelBold` | Kickers (MANA, VAULT, CLOSE), tabs, footers, HUD (breach/wave/core), stats, controls hint |
 | Body | Goudy Old Style / Palatino | Sorts Mill Goudy Regular/Italic | `Body`, `BodyItalic` | Store subtitle, item descriptions, item role line |
 
-Notes
-• Friz Quadrata and Percolator are dropped, not substituted: Cinzel Bold covers the sharp-serif title role and Cinzel Decorative Bold covers the heavy display role. If a closer Friz stand-in is ever wanted, Marcellus (OFL) is the nearest free match.
-• Exo 2 dropped; Rajdhani alone covers the condensed-panel role.
-• Sorts Mill Goudy has a smaller x-height than Roboto; body sizes were bumped +2 (13→15, 12→14, 14→16) to keep the same optical size.
-• Engine default Roboto is no longer used anywhere in the UI.
+### Notes
+
+- **Friz Quadrata** and **Percolator** are dropped, not substituted: Cinzel Bold = sharp serif titles; Cinzel Decorative Bold = heavy display. Closest free Friz stand-in if needed: **Marcellus** (OFL).
+- **Exo 2** dropped; Rajdhani covers condensed panels alone.
+- Sorts Mill Goudy has a smaller x-height than Roboto; body sizes bumped +2 (13→15, 12→14, 14→16) for the same optical size.
+- Engine default **Roboto** is not used in project UI.
+
+Title menu motion spec: [Start Screen.md](./Start%20Screen.md).

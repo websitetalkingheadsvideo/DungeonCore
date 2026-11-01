@@ -1,30 +1,44 @@
-The Crystalline Ley-Line Arcana style shifts the classic dungeon core dynamic away from mud and torches into a pristine, high-concept environment where raw geometry, refracted light, and cosmic energies dominate.
-Since strategy and planning are the core mechanical focus, this style naturally leans into clean visual boundaries, perfect for mapping out grid layouts without feeling cluttered.
+# Crystalline Ley-Line Arcana
 
-🏛️ Room Tiles & Environmental Textures
+The art pillar shifts the classic dungeon core away from mud and torches into a pristine, high-concept space: raw geometry, refracted light, and cosmic energy. Strategy and planning are the mechanical focus, so visuals lean into **clean boundaries**—grid layouts stay readable, not cluttered.
 
-• Floors (The Foundation): Mirror-polished obsidian or deep amethyst stone blocks. Instead of standard grid lines, the square or hexagonal borders are defined by fine, hair-thin fractures that softly pulse with light when a room is powered.
-• Walls (The Geode Effect): Rough, dark basalt rock on the outer edges, but heavily pocketed with raw, unrefined clusters of glowing quartz, deep sapphires, or emerald geodes. Digging out a new room physically exposes these bright crystal matrices.
-• Doors / Thresholds: Floating, vertical stone monoliths carved with interlocking celestial rings. When a room is unlocked or open, the pieces drift apart and a thin sheet of shimmering, translucent energy fills the gap.
+## Room tiles and environmental textures
 
-⚡ Ley-Line Grid & Zone Control
+### Floors (foundation)
 
-• Visual Dominance: Your core’s radius of influence behaves like a growing circulatory system. Glowing, liquid-light capillaries thread along the floors and up the pillars.
-• State Indicators:
-	• Powered Zone: Stable, bright, clean lines tracing the grid boundaries.
-	• Unpowered / Dormant: Dark, dim, cracked stone paths waiting to be awakened.
-	• Under Attack / Overloaded: Fracturing, unstable white-hot lightning arcing between the crystal nodes.
+Mirror-polished obsidian or deep amethyst stone blocks. Square or hex borders are **hair-thin fractures** that softly pulse when a room is powered—not painted grid lines.
 
-🛡️ Trap Concepts (Geometric & Resonance-Based)
+### Walls (geode effect)
 
-• The Prism Beam: A stealthy gemstone node mounted on a pillar. When stepped on, it fires an invisible laser that refracts across pre-set mirror crystals on the walls, cutting a deadly geometric web across the entire room.
-• Resonance Plate: A flat quartz floor tile. Stepping on it creates a harmonic frequency that vibrates the room's geodes, instantly shattering any non-magical kinetic armor or staggering enemies with sonic force.
-• Gravity Well: A miniature, spinning geode core embedded in the ceiling. When triggered, it reverses gravity locally, pinning attackers to the ceiling crystals before dropping them back down.
+Rough, dark basalt on the outer shell, pocketed with raw clusters of glowing quartz, sapphire, or emerald geodes. Digging a new room **exposes** bright crystal matrices in the cut face.
 
-👾 Entity & Defender Aesthetic (The Core's Constructs)
+### Doors and thresholds
 
-• Unshackled Golems: Not lumbering mud or clay monsters, but floating fragments of sharp, interlocking obsidian stone held together by a blinding central point of ley-energy. They move with rigid, sudden mechanical precision.
-• Shard Sentinels: Small, darting crystalline wisps or geometric prisms that act as scouts. They don't have faces; they track movement through light distortion, projecting searchlight cones across the dark paths.
+Floating vertical stone monoliths carved with interlocking celestial rings. When open, segments drift apart and a thin sheet of shimmering translucent energy fills the gap.
 
+## Ley-line grid and zone control
 
+The core’s radius of influence reads like a growing circulatory system: liquid-light capillaries on floors and pillars.
 
+| Zone state | Visual |
+| --- | --- |
+| **Powered** | Stable, bright, clean lines on grid boundaries |
+| **Dormant / unpowered** | Dark, dim, cracked stone paths |
+| **Under attack / overloaded** | Fracturing nodes; white-hot lightning between crystals |
+
+## Trap concepts (geometric and resonance)
+
+| Trap | Behavior |
+| --- | --- |
+| **Prism Beam** | Gem node on a pillar fires an invisible beam that refracts off wall mirrors into a geometric kill web |
+| **Resonance Plate** | Quartz floor tile; harmonic vibration shatters non-magical kinetic armor and staggers enemies |
+| **Gravity Well** | Ceiling geode reverses local gravity—pin to ceiling crystals, then drop |
+
+## Entity and defender aesthetic (core constructs)
+
+| Construct | Look and motion |
+| --- | --- |
+| **Unshackled Golems** | Floating obsidian shards locked by a central ley-energy point; rigid, sudden mechanical moves |
+| **Shard Sentinels** | Small darting prisms or wisps; no faces—track via light distortion and searchlight cones |
+
+Biome-specific dressing and resident creatures: [Creatures and style.md](./Creatures%20and%20style.md).

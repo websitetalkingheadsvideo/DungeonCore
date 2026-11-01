@@ -1,31 +1,36 @@
-Orcs
+# Monsters — Asset Mapping
 
-Base- MetaGoblin or 3dGoblin
-Medium- Warrior Orc
-boss- Paragon: Narbash
+Creature picks by resident faction. **Base** = fodder, **Medium** = elite, **Boss** = chamber threat. Names are pack or mesh references until wired in Fab/content.
 
-Fairies
-base - Cutie Goddess(will need to be retextured to dark colors)
-Medium- Mushroom Deamon
-Boss- Harpy Assassin
+## Resident factions
 
-Spiders
-Base- Spider
-Medium- Theraposa blondi
-boss- Spider Tarantula
+| Faction | Tier | Asset / note |
+| --- | --- | --- |
+| **Orcs** | Base | MetaGoblin or 3dGoblin |
+| | Medium | Warrior Orc |
+| | Boss | Paragon: Narbash |
+| **Evil Fairies** | Base | Cutie Goddess (retexture to dark palette) |
+| | Medium | Mushroom Demon |
+| | Boss | Harpy Assassin |
+| **Spiders** | Base | Spider |
+| | Medium | Theraphosa blondi |
+| | Boss | Spider Tarantula |
+| **Undead** | Base | Skeleton Stylized Cartoonish |
+| | Medium | Zombie |
+| | Boss | Skeleton Necromancer |
+| | Backup boss | Grave Keeper |
+| **Mutants** | Base | Mutant |
+| | Medium | Flesh Mutant Monster |
+| | Boss | The Hollow Walker |
 
-Undead
-Base- Skeleton Stylized Cartoonish
-Medium- zombie
-Boss- Skeleton Necromancer
-Backup- Grave Keeper
+Biome ↔ faction pairing lives in [Creatures and style.md](./Creatures%20and%20style.md).
 
-Mutants
-Base: Mutant
-Medium: Flesh Mutant Monster
-Boss: The Hollow walker
+## Intruders (adventurers)
 
-Intruders
-Wanderer
-Medieval assassin Girl
-Heroic Warrior
+Surface parties and heroes—not dungeon residents.
+
+| Role | Asset / note |
+| --- | --- |
+| Wanderer | — |
+| Assassin | Medieval Assassin Girl |
+| Hero | Heroic Warrior |

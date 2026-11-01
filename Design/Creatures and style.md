@@ -1,19 +1,24 @@
+# Environment and Enemy Matrix
 
-Environment & Enemy Matrix
+Biome choice sets tile dressing, resident faction, and typical layout tactics. The **core room** always keeps clean obsidian styling; breached pockets swap in the biome kit in place.
 
+## Biome × resident matrix
 
-Design Option (Biomes)	Resident Creature Option	Visual Aesthetic	Strategic Layout Impact
-Gothic	Undead	Polished obsidian floors meeting jagged, ruined cathedral pillars. Cold sapphire light casting sharp, graphic ink-black shadows.	Line-of-Sight Choke Points: Rigid rectangular grids, heavy stone doors, and long corridors perfect for setting up straight-line Prism Beam traps.
-Goblin Tunnels	Orcs	Narrow, erratic paths hacked directly into the raw basalt. Heavy timber supports clashing with rough, unstable crystalline veins.	Melee Bottle-Necks: Chaotic, winding corridors with short sightlines. Forces close-quarters combat where traps must rely on area-of-effect stuns or physical staggers.
-Fungal Warren	Spiders	Sprawling, organic caverns choked with bioluminescent spores and glowing web networks that slow down unit movement.	Slowing Kill-Zones: Wide, irregular open rooms. The native flora can be harvested for unique chemical traps, but the lack of straight walls makes geometry-based traps harder to align.
-Sunken Ruins	Evil Fairies	Crumbling subterranean aqueducts and flooded crystal chambers. Emerald and teal energy pulsing through ancient, waterlogged masonry.	Terrain Hazards: Water channels split the grid tiles, creating natural moats. Players must build expensive energy bridges or utilize gravity traps to drop invaders directly into the water.
+| Design option (biome) | Resident creatures | Visual aesthetic | Strategic layout impact |
+| --- | --- | --- | --- |
+| **Gothic** | Undead | Polished obsidian floors, ruined cathedral pillars; cold sapphire light, ink-black shadows | Line-of-sight choke points: rigid grids, heavy doors, long corridors—straight-line Prism Beam setups |
+| **Goblin Tunnels** | Orcs | Narrow paths in raw basalt; timber supports vs unstable crystal veins | Melee bottlenecks: winding corridors, short sightlines—AoE stuns and physical staggers over geometry traps |
+| **Fungal Warren** | Spiders | Organic caverns; bioluminescent spores and glowing webs that slow movement | Slowing kill zones: wide irregular rooms—chemical traps from flora; hard to align mirror/beam traps |
+| **Sunken Ruins** | Evil Fairies | Flooded aqueducts and crystal chambers; emerald/teal through waterlogged masonry | Terrain hazards: water splits tiles—energy bridges or gravity drops into channels |
 
+Concrete mesh and material paths for each theme kit: [Start Screen.md](./Start%20Screen.md) (New Game setup).
 
-🔄 The Core Loop: Encountering the Factions
+## Core loop: encountering factions
 
-As the player guides their expansion outward from the pristine, safe core room, the gameplay naturally transitions through these thematic layers:
-1. The Blind Dig: The player commands their crystalline worker to shatter a basalt wall block into the dark fog of war.
-2. The Unintended Breach: Instead of finding a clean stone grid, the worker punches through into a Fungal Warren or Goblin Tunnel pocket. The floor tiles instantly morph from the core's clean obsidian style into the texture of the breached biome.
-3. Active Territorial Defense: The native creatures (like Spiders expanding from the warren or Orcs raiding from their tunnels) will attempt to follow the breach back up the energy capillaries to destroy your floating geode core.
-Would you like to detail the specific combat stats and abilities for one of these factions—like how the Undead react to your crystal light, or how Evil Fairies navigate the Sunken Ruins—so you can start translating them into game logic?
-Try without personalization
+Expansion outward from the safe core room moves through these beats:
+
+1. **Blind dig** — Worker shatters a basalt wall block into fog of war.
+2. **Unintended breach** — Worker breaks into a Fungal Warren or Goblin Tunnel pocket (etc.); floor/wall tiles **morph** from core obsidian to that biome’s kit.
+3. **Territorial defense** — Natives (Spiders from the warren, Orcs from tunnels, etc.) try to follow breach lines up the capillaries to destroy the geode core.
+
+Genre framing and progression hooks: [Overall.md](./Overall.md). Per-tier creature assets: [Monsters.md](./Monsters.md).
