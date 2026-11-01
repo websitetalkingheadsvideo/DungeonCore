@@ -21,3 +21,5 @@ Packaged/
 *.cache
 *.db
 *.uatbuildrecord
+DungeonCore/
+__pycache__/

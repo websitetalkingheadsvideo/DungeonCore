@@ -17,7 +17,7 @@ Possible effects:
 **Design notes if adopted:**
 
 - Plan the curated color palette around the affinities so each color maps to one.
-- Keep reserved colors free: teal (Load pulse), emerald (Options), white-hot (under attack), red (warnings).
+- Keep reserved colors free: teal (zone states), emerald (Options), white-hot (under attack), red (warnings), violet (Will / guidance).
 - Existing saves need a default affinity for their cosmetic color.
 
 ## Ore veins
@@ -33,3 +33,18 @@ Possible effects:
 
 - Shares rail infrastructure with the Runaway Cart trap ([General.md](./General.md)), so one rail network serves both logistics and defense.
 - Invaders could sabotage or ride the rails.
+
+## Mana generators
+
+**Idea:** Placeable objects that generate essence over time inside powered rooms.
+
+- Asset candidates (Fab library): **FREE Stylized Glowing Stones** or **Enchanted Crystal 02**.
+- Retexture the stones toward the grounded look; retint emissive so the glow avoids reserved colors (teal, emerald, white-hot, red, violet).
+- Gives invaders a secondary target besides the core.
+
+## Invader rewards
+
+**Idea:** Loot placed in a room as a reward for invaders who reach it—bait that draws stronger parties (the genre's loot-as-bait balance, [Overall.md](./Overall.md)).
+
+- Asset candidate: **Enchanted Dual-Core Fantasy Sword**.
+- Ties to the deferred tutorial beat "first loot placed as bait" ([Tutorial.md](./Tutorial.md)).

@@ -1,35 +1,44 @@
 # Monsters — Asset Mapping
 
-Creature picks by family. **Base** = fodder, **Medium** = elite, **Boss** = chamber threat. Any family can be paired with any biome ([Creatures and style.md](./Creatures%20and%20style.md)).
+Creature picks by family. **Worker** = digs and builds (non-combat or barely), **Minion** = cheap fodder spawned in numbers, **Elite** = tougher and fewer, holds chokepoints, **Boss** = one per chamber, the big threat. Any family can be paired with any biome ([Creatures and style.md](./Creatures%20and%20style.md)).
 
 ## Art direction
 
 - **No stylized cartoon assets.** Grounded, dramatic fidelity to match the skins.
 - Custom character designs come from **Hi3D**; Fab assets fill gaps.
+- Stylized Fab assets are allowed **only if retextured** toward the grounded look.
 
 ## Creature families
 
 | Family | Tier | Asset / note |
 | --- | --- | --- |
-| **Orcs** | Base | MetaGoblin or 3dGoblin (check fidelity) |
-| | Medium | Warrior Orc |
+| **Orcs** | Worker | Candidate: **Stylized Goblin Minion** (retexture; comes with torch, pairs with **Handheld Torch**) |
+| | Minion | MetaGoblin or 3dGoblin (check fidelity) |
+| | Elite | Warrior Orc |
 | | Boss | Paragon: Narbash |
-| **Evil Fairies** | Base | Cutie Goddess (retexture to dark palette) |
-| | Medium | TBD — Hi3D |
+| **Evil Fairies** | Worker | TBD |
+| | Minion | Cutie Goddess (retexture to dark palette) |
+| | Elite | TBD — Hi3D |
 | | Boss | Harpy Assassin (review fit) |
-| **Fungal** | Base | TBD — Hi3D |
-| | Medium | Mushroom Demon |
-| | Boss | TBD — Hi3D |
-| **Spiders** | Base | Spider |
-| | Medium | Theraphosa blondi |
+| **Fungal** | Worker | TBD |
+| | Minion | Candidate: **Cyclostome Agaricus**; else TBD — Hi3D |
+| | Elite | Mushroom Demon; candidate: **Female_Elegance_Root** |
+| | Boss | Candidate: **Mushroom Fungi Dragon**; else TBD — Hi3D |
+| **Spiders** | Worker | TBD |
+| | Minion | Spider |
+| | Elite | Theraphosa blondi |
 | | Boss | Spider Tarantula |
-| **Undead** | Base | TBD — replaces Skeleton Stylized Cartoonish |
-| | Medium | Zombie |
+| **Undead** | Worker | TBD |
+| | Minion | TBD — replaces Skeleton Stylized Cartoonish |
+| | Elite | Zombie |
 | | Boss | Skeleton Necromancer |
 | | Backup boss | Grave Keeper |
-| **Mutants** | Base | Mutant |
-| | Medium | Flesh Mutant Monster |
+| **Mutants** | Worker | TBD |
+| | Minion | Mutant |
+| | Elite | Flesh Mutant Monster |
 | | Boss | The Hollow Walker |
+
+Candidates are in the Fab library, not yet in the project. Add, test, and note failures here.
 
 ## Intruders (adventurers)
 
