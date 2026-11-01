@@ -8,6 +8,7 @@
 
 class ADungeonBuildCursorActor;
 class ADungeonChunkActor;
+class ADungeonShowcaseActor;
 class UDungeonContentSubsystem;
 class UDungeonSimSubsystem;
 class UDungeonHudWidget;
@@ -54,6 +55,10 @@ public:
     UFUNCTION(BlueprintPure, Category = "Dungeon")
     bool IsRunActive() const;
 
+    /** Re-skins the setup hero shot behind the card. Returns false when the family has no creature art yet. */
+    UFUNCTION(BlueprintCallable, Category = "Dungeon")
+    bool PreviewSetupSelection(const EDungeonThemeId ThemeId, const ECreatureFamilyId CreatureFamilyId);
+
     /** Console: dig the floor-1 block at (X, Y) through the normal sim rules. For testing without mouse input. */
     UFUNCTION(Exec)
     void DungeonDig(const int32 BlockX, const int32 BlockY);
@@ -73,6 +78,10 @@ public:
     /** Console: select a catalog item by id, then place it at floor-1 block (X, Y) through the normal sim rules. */
     UFUNCTION(Exec)
     void DungeonPlace(const FString& BuildableId, const int32 BlockX, const int32 BlockY);
+
+    /** Console: pick a setup-screen theme by name (gothic | goblin | fungal | sunken) as if its tile were clicked. */
+    UFUNCTION(Exec)
+    void DungeonPreviewTheme(const FString& ThemeName);
 
     /** Opens or closes the Core Vault. While open, digs, placement, and camera drag are suspended. */
     void SetDungeonStoreOpen(const bool bOpen);
@@ -155,10 +164,19 @@ private:
 
     void ShowRunSetupScreen();
 
+    /** Spawns the hero-shot chamber at the core location and frames the camera on it. */
+    void ShowSetupShowcase();
+
+    /** Destroys the hero shot and restores the top-down build camera. */
+    void HideSetupShowcase();
+
     class ADungeonCameraPawn* GetDungeonCameraPawn() const;
 
     UPROPERTY()
     TObjectPtr<ADungeonBuildCursorActor> BuildCursorActor;
+
+    UPROPERTY()
+    TObjectPtr<ADungeonShowcaseActor> ShowcaseActor;
 
     UPROPERTY()
     TObjectPtr<UDungeonHudWidget> HudWidget;

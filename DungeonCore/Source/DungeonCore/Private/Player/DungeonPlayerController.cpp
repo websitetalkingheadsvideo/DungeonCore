@@ -16,6 +16,7 @@
 #include "Engine/StaticMeshActor.h"
 #include "Landscape.h"
 #include "World/DungeonChunkActor.h"
+#include "World/DungeonShowcaseActor.h"
 
 ADungeonPlayerController::ADungeonPlayerController()
 {
@@ -244,6 +245,10 @@ FPlacementResult ADungeonPlayerController::GetCurrentPlacementPreview() const
 
 void ADungeonPlayerController::ShowRunSetupScreen()
 {
+    // The widget previews into the showcase on construct, so the actor has to exist first.
+    bRunActive = false;
+    ShowSetupShowcase();
+
     if (SetupWidget == nullptr)
     {
         SetupWidget = CreateWidget<UDungeonRunSetupWidget>(this, UDungeonRunSetupWidget::StaticClass());
@@ -256,8 +261,85 @@ void ADungeonPlayerController::ShowRunSetupScreen()
         SetupWidget->SetAlignmentInViewport(FVector2D(0.0f, 0.0f));
     }
 
-    bRunActive = false;
     KeepMouseCursorFree();
+}
+
+void ADungeonPlayerController::ShowSetupShowcase()
+{
+    UWorld* World = GetWorld();
+    if (World == nullptr)
+    {
+        return;
+    }
+
+    if (ShowcaseActor == nullptr)
+    {
+        FActorSpawnParameters SpawnParameters;
+        SpawnParameters.Owner = this;
+        ShowcaseActor = World->SpawnActor<ADungeonShowcaseActor>(
+            ADungeonShowcaseActor::StaticClass(),
+            FVector::ZeroVector,
+            FRotator::ZeroRotator,
+            SpawnParameters
+        );
+    }
+
+    if (ADungeonChunkActor* ChunkActor = FindChunkActor())
+    {
+        ChunkActor->SetActorHiddenInGame(true);
+    }
+
+    if (ADungeonCameraPawn* CameraPawn = GetDungeonCameraPawn())
+    {
+        CameraPawn->FrameForShowcase();
+    }
+}
+
+void ADungeonPlayerController::HideSetupShowcase()
+{
+    if (ShowcaseActor != nullptr)
+    {
+        ShowcaseActor->Destroy();
+        ShowcaseActor = nullptr;
+    }
+
+    if (ADungeonChunkActor* ChunkActor = FindChunkActor())
+    {
+        ChunkActor->SetActorHiddenInGame(false);
+    }
+
+    if (ADungeonCameraPawn* CameraPawn = GetDungeonCameraPawn())
+    {
+        CameraPawn->ResetToBuildView();
+    }
+}
+
+bool ADungeonPlayerController::PreviewSetupSelection(const EDungeonThemeId ThemeId, const ECreatureFamilyId CreatureFamilyId)
+{
+    if (ShowcaseActor == nullptr)
+    {
+        UE_LOG(LogTemp, Error, TEXT("PreviewSetupSelection called with no showcase actor spawned."));
+        return false;
+    }
+
+    const UDungeonContentSubsystem* ContentSubsystem = GetDungeonContentSubsystem();
+    if (ContentSubsystem == nullptr)
+    {
+        UE_LOG(LogTemp, Error, TEXT("PreviewSetupSelection: content subsystem unavailable."));
+        return false;
+    }
+
+    const FDungeonThemeRow* ThemeRow = ContentSubsystem->FindThemeRow(ThemeId);
+    const FDungeonCreatureFamilyRow* FamilyRow = ContentSubsystem->FindFamilyRow(CreatureFamilyId);
+    if (ThemeRow == nullptr || FamilyRow == nullptr)
+    {
+        UE_LOG(LogTemp, Error, TEXT("PreviewSetupSelection: theme or family row missing from content subsystem."));
+        return false;
+    }
+
+    ShowcaseActor->ApplyTheme(*ThemeRow);
+    ShowcaseActor->ApplyFamily(*FamilyRow);
+    return ShowcaseActor->HasCreatureArt();
 }
 
 void ADungeonPlayerController::StartRunFromSetup(const EDungeonThemeId ThemeId, const ECreatureFamilyId CreatureFamilyId)
@@ -267,6 +349,8 @@ void ADungeonPlayerController::StartRunFromSetup(const EDungeonThemeId ThemeId, 
     {
         return;
     }
+
+    HideSetupShowcase();
 
     FRunSetup RunSetup;
     RunSetup.ThemeId = ThemeId;
@@ -378,6 +462,41 @@ void ADungeonPlayerController::DungeonPlace(const FString& BuildableId, const in
         Result.bSuccess ? TEXT("placed") : TEXT("refused"),
         static_cast<int32>(Result.FailureReason)
     );
+}
+
+void ADungeonPlayerController::DungeonPreviewTheme(const FString& ThemeName)
+{
+    if (SetupWidget == nullptr || !SetupWidget->IsInViewport())
+    {
+        UE_LOG(LogTemp, Error, TEXT("DungeonPreviewTheme: setup screen is not showing."));
+        return;
+    }
+
+    const FString Key = ThemeName.ToLower();
+    EDungeonThemeId ThemeId = EDungeonThemeId::Gothic;
+    if (Key == TEXT("gothic"))
+    {
+        ThemeId = EDungeonThemeId::Gothic;
+    }
+    else if (Key == TEXT("goblin"))
+    {
+        ThemeId = EDungeonThemeId::GoblinTunnels;
+    }
+    else if (Key == TEXT("fungal"))
+    {
+        ThemeId = EDungeonThemeId::FungalWarren;
+    }
+    else if (Key == TEXT("sunken"))
+    {
+        ThemeId = EDungeonThemeId::SunkenRuins;
+    }
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("DungeonPreviewTheme: unknown theme '%s' (gothic | goblin | fungal | sunken)."), *ThemeName);
+        return;
+    }
+
+    SetupWidget->SelectTheme(ThemeId);
 }
 
 void ADungeonPlayerController::DungeonStatus(const float RepeatSeconds)
@@ -948,6 +1067,7 @@ void ADungeonPlayerController::QuickLoadRun()
         const bool bLoaded = DungeonSimSubsystem->LoadSavedRun(TEXT("quicksave"));
         if (bLoaded)
         {
+            HideSetupShowcase();
             if (SetupWidget != nullptr)
             {
                 SetupWidget->RemoveFromParent();

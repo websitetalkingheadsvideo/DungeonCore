@@ -37,6 +37,9 @@ public:
 
     virtual void NativeDestruct() override;
 
+    /** Same effect as clicking the theme tile; used by the DungeonPreviewTheme console command. */
+    void SelectTheme(const EDungeonThemeId ThemeId);
+
 private:
     UFUNCTION()
     void HandleThemeGothicClicked();
@@ -74,6 +77,8 @@ private:
 
     FText GetFamilyDisplayText(const ECreatureFamilyId FamilyId) const;
 
+    FText GetFamilyArtSourceText(const ECreatureFamilyId FamilyId) const;
+
     ADungeonPlayerController* GetDungeonPlayerController() const;
 
     FDungeonSetupOptionWidgets CreateOptionTile(const FText& LabelText, const FName WidgetName);
@@ -92,7 +97,7 @@ private:
     EDungeonThemeId SelectedThemeId = EDungeonThemeId::Gothic;
 
     UPROPERTY()
-    ECreatureFamilyId SelectedFamilyId = ECreatureFamilyId::Undead;
+    ECreatureFamilyId SelectedFamilyId = ECreatureFamilyId::Orcs;
 
     UPROPERTY()
     TObjectPtr<UCanvasPanel> RootCanvas;
@@ -105,6 +110,10 @@ private:
 
     UPROPERTY()
     TObjectPtr<UTextBlock> SelectionSummaryTextBlock;
+
+    /** Shown under the summary while the selected family's creature art is still only on Fab. */
+    UPROPERTY()
+    TObjectPtr<UTextBlock> PendingArtTextBlock;
 
     UPROPERTY()
     TObjectPtr<UButton> StartRunButton;

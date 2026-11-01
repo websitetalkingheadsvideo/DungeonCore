@@ -272,29 +272,69 @@ void UDungeonContentSubsystem::SeedDefaultContent()
     Themes.Reset();
     Units.Reset();
 
+    // Showcase assets are migrated library packages (see library.md). Paths are /Game package paths.
     FDungeonThemeRow GothicTheme;
     GothicTheme.ThemeId = EDungeonThemeId::Gothic;
     GothicTheme.DisplayName = FText::FromString(TEXT("Gothic"));
+    GothicTheme.FloorMaterial = TSoftObjectPtr<UMaterialInterface>(FSoftObjectPath(TEXT("/Game/GothicCathedral/Materials/MI_Floor_Tile_B.MI_Floor_Tile_B")));
+    GothicTheme.WallMaterial = TSoftObjectPtr<UMaterialInterface>(FSoftObjectPath(TEXT("/Game/GothicCathedral/Materials/MI_Stone_Tile_A.MI_Stone_Tile_A")));
+    GothicTheme.AccentMesh = TSoftObjectPtr<UStaticMesh>(FSoftObjectPath(TEXT("/Game/GothicCathedral/Meshes/SM_Pillar_A.SM_Pillar_A")));
+    GothicTheme.AccentHeightUnits = 250.0f;
+    GothicTheme.AccentLightColor = FLinearColor(1.0f, 0.78f, 0.45f, 1.0f);
+    GothicTheme.WallLightMesh = TSoftObjectPtr<UStaticMesh>(FSoftObjectPath(TEXT("/Game/Crystal_Cave/Meshes/SM_Oil_Lamp.SM_Oil_Lamp")));
+    GothicTheme.WallLightHeightUnits = 50.0f;
+    GothicTheme.WallLightMountHeightUnits = 155.0f;
+    GothicTheme.WallLightIntensityCandelas = 45.0f;
     AddThemeRow(GothicTheme);
 
     FDungeonThemeRow GoblinTheme;
     GoblinTheme.ThemeId = EDungeonThemeId::GoblinTunnels;
     GoblinTheme.DisplayName = FText::FromString(TEXT("Goblin Tunnels"));
+    GoblinTheme.FloorMaterial = TSoftObjectPtr<UMaterialInterface>(FSoftObjectPath(TEXT("/Game/FantasyDungeon/Materials/MI_Dirt_Floor_v01.MI_Dirt_Floor_v01")));
+    GoblinTheme.WallMaterial = TSoftObjectPtr<UMaterialInterface>(FSoftObjectPath(TEXT("/Game/GreenCave/Materials/Instances/MI_LargeWall_b.MI_LargeWall_b")));
+    GoblinTheme.AccentMesh = TSoftObjectPtr<UStaticMesh>(FSoftObjectPath(TEXT("/Game/GreenCave/Meshes/SM_SupportBeam.SM_SupportBeam")));
+    GoblinTheme.AccentHeightUnits = 250.0f;
+    GoblinTheme.AccentLightColor = FLinearColor(1.0f, 0.55f, 0.2f, 1.0f);
+    GoblinTheme.WallLightMesh = TSoftObjectPtr<UStaticMesh>(FSoftObjectPath(TEXT("/Game/FantasyDungeon/Meshes/SM_Torch.SM_Torch")));
+    GoblinTheme.WallLightHeightUnits = 70.0f;
+    GoblinTheme.WallLightMountHeightUnits = 150.0f;
+    GoblinTheme.WallLightIntensityCandelas = 50.0f;
     AddThemeRow(GoblinTheme);
 
     FDungeonThemeRow FungalTheme;
     FungalTheme.ThemeId = EDungeonThemeId::FungalWarren;
     FungalTheme.DisplayName = FText::FromString(TEXT("Fungal Warren"));
+    FungalTheme.FloorMaterial = TSoftObjectPtr<UMaterialInterface>(FSoftObjectPath(TEXT("/Game/GreenCave/Materials/Instances/MI_FlatStone_a.MI_FlatStone_a")));
+    FungalTheme.WallMaterial = TSoftObjectPtr<UMaterialInterface>(FSoftObjectPath(TEXT("/Game/GreenCave/Materials/Instances/MI_LargeWall_b.MI_LargeWall_b")));
+    FungalTheme.AccentMesh = TSoftObjectPtr<UStaticMesh>(FSoftObjectPath(TEXT("/Game/Crystal_Cave/Meshes/SM_CrystalCluster_D_01.SM_CrystalCluster_D_01")));
+    FungalTheme.AccentHeightUnits = 160.0f;
+    FungalTheme.AccentLightColor = FLinearColor(0.35f, 1.0f, 0.45f, 1.0f);
+    FungalTheme.WallLightMesh = TSoftObjectPtr<UStaticMesh>(FSoftObjectPath(TEXT("/Game/GreenCave/Meshes/SM_LargeMushrooms_a.SM_LargeMushrooms_a")));
+    FungalTheme.WallLightHeightUnits = 110.0f;
+    FungalTheme.WallLightMountHeightUnits = 0.0f;
+    FungalTheme.WallLightIntensityCandelas = 35.0f;
     AddThemeRow(FungalTheme);
 
     FDungeonThemeRow SunkenTheme;
     SunkenTheme.ThemeId = EDungeonThemeId::SunkenRuins;
     SunkenTheme.DisplayName = FText::FromString(TEXT("Sunken Ruins"));
+    SunkenTheme.FloorMaterial = TSoftObjectPtr<UMaterialInterface>(FSoftObjectPath(TEXT("/Game/GreenCave/Materials/Instances/MI_FlatStone_a.MI_FlatStone_a")));
+    SunkenTheme.WallMaterial = TSoftObjectPtr<UMaterialInterface>(FSoftObjectPath(TEXT("/Game/GothicCathedral/Materials/MI_Stone_Tile_A.MI_Stone_Tile_A")));
+    SunkenTheme.AccentMesh = TSoftObjectPtr<UStaticMesh>(FSoftObjectPath(TEXT("/Game/CavernMahal/Meshes/SM_ColosseumPillar_01.SM_ColosseumPillar_01")));
+    SunkenTheme.AccentHeightUnits = 250.0f;
+    SunkenTheme.AccentLightColor = FLinearColor(0.2f, 0.9f, 0.8f, 1.0f);
+    SunkenTheme.WallLightMesh = TSoftObjectPtr<UStaticMesh>(FSoftObjectPath(TEXT("/Game/AshesOfBazaar/Meshes/SM_Lamp_A.SM_Lamp_A")));
+    SunkenTheme.WallLightHeightUnits = 55.0f;
+    SunkenTheme.WallLightMountHeightUnits = 40.0f;
+    SunkenTheme.WallLightIntensityCandelas = 40.0f;
     AddThemeRow(SunkenTheme);
 
+    // Creature art comes from the Fab packs listed in Design/Monsters.md; the mesh paths are filled in once
+    // those packs are installed under H:\Unreal Assets and migrated. Until then the showcase shows the source.
     FDungeonCreatureFamilyRow UndeadFamily;
     UndeadFamily.FamilyId = ECreatureFamilyId::Undead;
     UndeadFamily.DisplayName = FText::FromString(TEXT("Undead"));
+    UndeadFamily.ShowcaseArtSource = FText::FromString(TEXT("Fab: Skeleton Stylized Cartoonish"));
     UndeadFamily.StarterSpawnerRoom = ERoomTypeId::Crypt;
     UndeadFamily.StarterTrap = ETrapTypeId::GraveGrasp;
     UndeadFamily.SignatureMechanicTag = TEXT("CorpseEconomy");
@@ -304,6 +344,7 @@ void UDungeonContentSubsystem::SeedDefaultContent()
     FDungeonCreatureFamilyRow OrcFamily;
     OrcFamily.FamilyId = ECreatureFamilyId::Orcs;
     OrcFamily.DisplayName = FText::FromString(TEXT("Orcs"));
+    OrcFamily.ShowcaseArtSource = FText::FromString(TEXT("Fab: MetaGoblin"));
     OrcFamily.StarterSpawnerRoom = ERoomTypeId::WarPens;
     OrcFamily.StarterTrap = ETrapTypeId::SpikeBarricade;
     OrcFamily.SignatureMechanicTag = TEXT("BruteForce");
@@ -313,6 +354,7 @@ void UDungeonContentSubsystem::SeedDefaultContent()
     FDungeonCreatureFamilyRow SpiderFamily;
     SpiderFamily.FamilyId = ECreatureFamilyId::Spiders;
     SpiderFamily.DisplayName = FText::FromString(TEXT("Spiders"));
+    SpiderFamily.ShowcaseArtSource = FText::FromString(TEXT("Fab: Spider"));
     SpiderFamily.StarterSpawnerRoom = ERoomTypeId::NestCluster;
     SpiderFamily.StarterTrap = ETrapTypeId::WebSnare;
     SpiderFamily.SignatureMechanicTag = TEXT("Control");
@@ -322,6 +364,7 @@ void UDungeonContentSubsystem::SeedDefaultContent()
     FDungeonCreatureFamilyRow FairyFamily;
     FairyFamily.FamilyId = ECreatureFamilyId::EvilFairies;
     FairyFamily.DisplayName = FText::FromString(TEXT("Evil Fairies"));
+    FairyFamily.ShowcaseArtSource = FText::FromString(TEXT("Fab: Cutie Goddess (dark retexture)"));
     FairyFamily.StarterSpawnerRoom = ERoomTypeId::GlamourGrove;
     FairyFamily.StarterTrap = ETrapTypeId::PixieDustCloud;
     FairyFamily.SignatureMechanicTag = TEXT("Disruption");

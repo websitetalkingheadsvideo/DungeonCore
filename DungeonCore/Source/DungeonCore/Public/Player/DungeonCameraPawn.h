@@ -28,6 +28,12 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Dungeon")
     void RecenterOnDungeonCore();
 
+    /** Three-quarter hero framing of the core chamber used behind the run setup screen. */
+    void FrameForShowcase();
+
+    /** Top-down build view at the default distance; undoes FrameForShowcase and any orbiting. */
+    void ResetToBuildView();
+
 private:
     FVector GetCameraPlanarForward() const;
 

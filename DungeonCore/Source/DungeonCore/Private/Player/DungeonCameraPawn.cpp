@@ -77,6 +77,28 @@ void ADungeonCameraPawn::RecenterOnDungeonCore()
     SpringArmComponent->TargetArmLength = DungeonCore::GetCameraDefaultSpringArmLength();
 }
 
+void ADungeonCameraPawn::FrameForShowcase()
+{
+    const FVector ChamberCenter = DungeonCore::GetCoreChamberCenterWorldLocation();
+    SetActorLocation(FVector(
+        ChamberCenter.X,
+        ChamberCenter.Y,
+        DungeonCore::GetCoreChamberSurfaceVisualFloorZ()
+    ) + DungeonCore::GetShowcaseCameraTargetOffset());
+    SpringArmComponent->TargetArmLength = DungeonCore::GetShowcaseCameraSpringArmLength();
+    SpringArmComponent->SetRelativeRotation(
+        FRotator(DungeonCore::GetShowcaseCameraPitchDegrees(), DungeonCore::GetShowcaseCameraYawDegrees(), 0.0f)
+    );
+}
+
+void ADungeonCameraPawn::ResetToBuildView()
+{
+    RecenterOnDungeonCore();
+    SpringArmComponent->SetRelativeRotation(
+        FRotator(DungeonCore::GetCameraPitchDegrees(), DungeonCore::GetCameraYawDegrees(), 0.0f)
+    );
+}
+
 FVector ADungeonCameraPawn::GetCameraPlanarForward() const
 {
     const float YawDegrees = SpringArmComponent->GetComponentRotation().Yaw;

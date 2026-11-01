@@ -794,6 +794,37 @@ namespace DungeonCore
         return 0.0f;
     }
 
+    /** Setup-screen hero shot: three-quarter view of the chamber with the core centred and the card on the left. */
+    inline float GetShowcaseCameraPitchDegrees()
+    {
+        return -28.0f;
+    }
+
+    inline float GetShowcaseCameraYawDegrees()
+    {
+        return 0.0f;
+    }
+
+    inline float GetShowcaseCameraSpringArmLength()
+    {
+        return 1300.0f;
+    }
+
+    /**
+     * Offset of the camera target from the chamber centre. The setup card covers the left ~30% of the
+     * frame, so the core is pushed to ~63% across (horizontal half-width at the target ≈ arm length at 90° FOV).
+     */
+    inline FVector GetShowcaseCameraTargetOffset()
+    {
+        return FVector(0.0, -340.0, 60.0);
+    }
+
+    /** Chamber block (0-based, inside the 3 x 3) where the showcase creature stands: right of the core from the camera. */
+    inline FBlockCoord GetShowcaseCreatureBlockCoord()
+    {
+        return FBlockCoord(1, 2, 0);
+    }
+
     /** Fixed exposure for the build camera; auto-exposure keys on the dark rock and washes everything out. */
     inline float GetCameraManualExposureBiasEV()
     {

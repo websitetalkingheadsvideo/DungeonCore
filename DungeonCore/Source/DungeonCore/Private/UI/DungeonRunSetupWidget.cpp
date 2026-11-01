@@ -10,6 +10,8 @@
 #include "Components/SizeBox.h"
 #include "Components/SizeBoxSlot.h"
 #include "Components/TextBlock.h"
+#include "Components/UniformGridPanel.h"
+#include "Components/UniformGridSlot.h"
 #include "Components/VerticalBox.h"
 #include "Components/VerticalBoxSlot.h"
 #include "Data/DungeonContentSubsystem.h"
@@ -18,16 +20,21 @@
 
 namespace DungeonSetupLayout
 {
-    constexpr float TileWidth = 196.0f;
-    constexpr float TileHeight = 60.0f;
-    constexpr float TileGap = 12.0f;
+    /** Tiles sit in a 2 x 2 grid so the card stays ~¼ of a 1920 frame and the hero shot reads on the right. */
+    constexpr float TileWidth = 190.0f;
+    constexpr float TileHeight = 54.0f;
+    constexpr float TileGap = 10.0f;
     constexpr float TileRadius = 4.0f;
-    constexpr float StartButtonHeight = 66.0f;
+    constexpr int32 TileColumns = 2;
+    constexpr float StartButtonHeight = 60.0f;
     constexpr float CardRadius = 8.0f;
+    constexpr float CardLeftInset = 56.0f;
+    /** Fraction of the viewport width the dark scrim covers behind the card. */
+    constexpr float ScrimWidthFraction = 0.3f;
 
     inline FLinearColor Backdrop()
     {
-        return FLinearColor(0.012f, 0.008f, 0.024f, 1.0f);
+        return FLinearColor(0.012f, 0.008f, 0.024f, 0.55f);
     }
 
     inline FLinearColor GoldBright()
@@ -104,6 +111,12 @@ void UDungeonRunSetupWidget::NativeDestruct()
     Super::NativeDestruct();
 }
 
+void UDungeonRunSetupWidget::SelectTheme(const EDungeonThemeId ThemeId)
+{
+    SelectedThemeId = ThemeId;
+    RefreshSelection();
+}
+
 void UDungeonRunSetupWidget::HandleThemeGothicClicked()
 {
     SelectedThemeId = EDungeonThemeId::Gothic;
@@ -170,13 +183,15 @@ void UDungeonRunSetupWidget::BuildWidget()
     RootCanvas = WidgetTree->ConstructWidget<UCanvasPanel>(UCanvasPanel::StaticClass(), TEXT("RootCanvas"));
     WidgetTree->RootWidget = RootCanvas;
 
+    // Scrim covers only the card's half of the screen; the hero shot stays clear on the right.
     UBorder* Backdrop = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass(), TEXT("Backdrop"));
     Backdrop->SetBrushColor(DungeonSetupLayout::Backdrop());
+    Backdrop->SetVisibility(ESlateVisibility::HitTestInvisible);
     UCanvasPanelSlot* BackdropSlot = RootCanvas->AddChildToCanvas(Backdrop);
-    BackdropSlot->SetAnchors(FAnchors(0.0f, 0.0f, 1.0f, 1.0f));
+    BackdropSlot->SetAnchors(FAnchors(0.0f, 0.0f, DungeonSetupLayout::ScrimWidthFraction, 1.0f));
     BackdropSlot->SetOffsets(FMargin(0.0f));
 
-    // Central plate: dark card with a gold rule, like a tome page laid on the table.
+    // Left plate: dark card with a gold rule, like a tome page laid on the table.
     UBorder* Card = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass(), TEXT("Card"));
     Card->SetBrush(DungeonStoreStyle::MakeRoundedBrush(
         DungeonStoreStyle::Ink(),
@@ -184,10 +199,11 @@ void UDungeonRunSetupWidget::BuildWidget()
         DungeonSetupLayout::CardRadius,
         2.0f
     ));
-    Card->SetPadding(FMargin(64.0f, 48.0f, 64.0f, 52.0f));
+    Card->SetPadding(FMargin(36.0f, 32.0f, 36.0f, 36.0f));
     UCanvasPanelSlot* CardSlot = RootCanvas->AddChildToCanvas(Card);
-    CardSlot->SetAnchors(FAnchors(0.5f, 0.5f));
-    CardSlot->SetAlignment(FVector2D(0.5f, 0.5f));
+    CardSlot->SetAnchors(FAnchors(0.0f, 0.5f));
+    CardSlot->SetAlignment(FVector2D(0.0f, 0.5f));
+    CardSlot->SetPosition(FVector2D(DungeonSetupLayout::CardLeftInset, 0.0f));
     CardSlot->SetAutoSize(true);
     CardSlot->SetZOrder(1);
 
@@ -197,8 +213,8 @@ void UDungeonRunSetupWidget::BuildWidget()
     UTextBlock* TitleText = CreateTextBlock(
         TEXT("TitleText"),
         DungeonStoreStyle::FantasyDisplay(),
-        52,
-        380,
+        34,
+        240,
         DungeonStoreStyle::Gold()
     );
     TitleText->SetText(FText::FromString(TEXT("DUNGEON CORE")));
@@ -211,8 +227,8 @@ void UDungeonRunSetupWidget::BuildWidget()
     UTextBlock* SubtitleText = CreateTextBlock(
         TEXT("SubtitleText"),
         DungeonStoreStyle::FantasyRegular(),
-        15,
-        260,
+        13,
+        160,
         DungeonStoreStyle::Muted()
     );
     SubtitleText->SetText(FText::FromString(TEXT("Shape the lair. Choose what dwells within.")));
@@ -223,17 +239,18 @@ void UDungeonRunSetupWidget::BuildWidget()
 
     UVerticalBoxSlot* TopRuleSlot = Column->AddChildToVerticalBox(CreateDivider(TEXT("TopRule")));
     TopRuleSlot->SetHorizontalAlignment(HAlign_Fill);
-    TopRuleSlot->SetPadding(FMargin(0.0f, 26.0f, 0.0f, 28.0f));
+    TopRuleSlot->SetPadding(FMargin(0.0f, 18.0f, 0.0f, 20.0f));
 
     UVerticalBoxSlot* ThemeHeaderSlot = Column->AddChildToVerticalBox(
         CreateSectionHeader(FText::FromString(TEXT("DUNGEON THEME")), TEXT("ThemeHeader"))
     );
     ThemeHeaderSlot->SetHorizontalAlignment(HAlign_Center);
 
-    UHorizontalBox* ThemeRow = WidgetTree->ConstructWidget<UHorizontalBox>(UHorizontalBox::StaticClass(), TEXT("ThemeRow"));
-    UVerticalBoxSlot* ThemeRowSlot = Column->AddChildToVerticalBox(ThemeRow);
-    ThemeRowSlot->SetHorizontalAlignment(HAlign_Center);
-    ThemeRowSlot->SetPadding(FMargin(0.0f, 12.0f, 0.0f, 0.0f));
+    UUniformGridPanel* ThemeGrid = WidgetTree->ConstructWidget<UUniformGridPanel>(UUniformGridPanel::StaticClass(), TEXT("ThemeGrid"));
+    ThemeGrid->SetSlotPadding(FMargin(DungeonSetupLayout::TileGap * 0.5f));
+    UVerticalBoxSlot* ThemeGridSlot = Column->AddChildToVerticalBox(ThemeGrid);
+    ThemeGridSlot->SetHorizontalAlignment(HAlign_Center);
+    ThemeGridSlot->SetPadding(FMargin(0.0f, 8.0f, 0.0f, 0.0f));
 
     const TArray<EDungeonThemeId> ThemeOrder = {
         EDungeonThemeId::Gothic,
@@ -247,8 +264,7 @@ void UDungeonRunSetupWidget::BuildWidget()
         const FName WidgetName(*FString::Printf(TEXT("ThemeTile_%d"), Index));
         const FDungeonSetupOptionWidgets Option = CreateOptionTile(GetThemeDisplayText(ThemeId), WidgetName);
         ThemeOptions.Add(ThemeId, Option);
-        UHorizontalBoxSlot* TileSlot = ThemeRow->AddChildToHorizontalBox(Option.Button);
-        TileSlot->SetPadding(FMargin(Index == 0 ? 0.0f : DungeonSetupLayout::TileGap, 0.0f, 0.0f, 0.0f));
+        ThemeGrid->AddChildToUniformGrid(Option.Button, Index / DungeonSetupLayout::TileColumns, Index % DungeonSetupLayout::TileColumns);
     }
 
     ThemeOptions[EDungeonThemeId::Gothic].Button->OnClicked.AddDynamic(this, &UDungeonRunSetupWidget::HandleThemeGothicClicked);
@@ -260,12 +276,13 @@ void UDungeonRunSetupWidget::BuildWidget()
         CreateSectionHeader(FText::FromString(TEXT("CREATURE FAMILY")), TEXT("FamilyHeader"))
     );
     FamilyHeaderSlot->SetHorizontalAlignment(HAlign_Center);
-    FamilyHeaderSlot->SetPadding(FMargin(0.0f, 30.0f, 0.0f, 0.0f));
+    FamilyHeaderSlot->SetPadding(FMargin(0.0f, 22.0f, 0.0f, 0.0f));
 
-    UHorizontalBox* FamilyRow = WidgetTree->ConstructWidget<UHorizontalBox>(UHorizontalBox::StaticClass(), TEXT("FamilyRow"));
-    UVerticalBoxSlot* FamilyRowSlot = Column->AddChildToVerticalBox(FamilyRow);
-    FamilyRowSlot->SetHorizontalAlignment(HAlign_Center);
-    FamilyRowSlot->SetPadding(FMargin(0.0f, 12.0f, 0.0f, 0.0f));
+    UUniformGridPanel* FamilyGrid = WidgetTree->ConstructWidget<UUniformGridPanel>(UUniformGridPanel::StaticClass(), TEXT("FamilyGrid"));
+    FamilyGrid->SetSlotPadding(FMargin(DungeonSetupLayout::TileGap * 0.5f));
+    UVerticalBoxSlot* FamilyGridSlot = Column->AddChildToVerticalBox(FamilyGrid);
+    FamilyGridSlot->SetHorizontalAlignment(HAlign_Center);
+    FamilyGridSlot->SetPadding(FMargin(0.0f, 8.0f, 0.0f, 0.0f));
 
     const TArray<ECreatureFamilyId> FamilyOrder = {
         ECreatureFamilyId::Undead,
@@ -279,8 +296,7 @@ void UDungeonRunSetupWidget::BuildWidget()
         const FName WidgetName(*FString::Printf(TEXT("FamilyTile_%d"), Index));
         const FDungeonSetupOptionWidgets Option = CreateOptionTile(GetFamilyDisplayText(FamilyId), WidgetName);
         FamilyOptions.Add(FamilyId, Option);
-        UHorizontalBoxSlot* TileSlot = FamilyRow->AddChildToHorizontalBox(Option.Button);
-        TileSlot->SetPadding(FMargin(Index == 0 ? 0.0f : DungeonSetupLayout::TileGap, 0.0f, 0.0f, 0.0f));
+        FamilyGrid->AddChildToUniformGrid(Option.Button, Index / DungeonSetupLayout::TileColumns, Index % DungeonSetupLayout::TileColumns);
     }
 
     FamilyOptions[ECreatureFamilyId::Undead].Button->OnClicked.AddDynamic(this, &UDungeonRunSetupWidget::HandleFamilyUndeadClicked);
@@ -290,7 +306,7 @@ void UDungeonRunSetupWidget::BuildWidget()
 
     UVerticalBoxSlot* BottomRuleSlot = Column->AddChildToVerticalBox(CreateDivider(TEXT("BottomRule")));
     BottomRuleSlot->SetHorizontalAlignment(HAlign_Fill);
-    BottomRuleSlot->SetPadding(FMargin(0.0f, 32.0f, 0.0f, 22.0f));
+    BottomRuleSlot->SetPadding(FMargin(0.0f, 22.0f, 0.0f, 16.0f));
 
     SelectionSummaryTextBlock = CreateTextBlock(
         TEXT("SelectionSummaryText"),
@@ -302,6 +318,19 @@ void UDungeonRunSetupWidget::BuildWidget()
     SelectionSummaryTextBlock->SetJustification(ETextJustify::Center);
     UVerticalBoxSlot* SummarySlot = Column->AddChildToVerticalBox(SelectionSummaryTextBlock);
     SummarySlot->SetHorizontalAlignment(HAlign_Center);
+
+    PendingArtTextBlock = CreateTextBlock(
+        TEXT("PendingArtText"),
+        DungeonStoreStyle::BodyItalic(),
+        13,
+        0,
+        DungeonStoreStyle::Muted()
+    );
+    PendingArtTextBlock->SetJustification(ETextJustify::Center);
+    PendingArtTextBlock->SetVisibility(ESlateVisibility::Collapsed);
+    UVerticalBoxSlot* PendingArtSlot = Column->AddChildToVerticalBox(PendingArtTextBlock);
+    PendingArtSlot->SetHorizontalAlignment(HAlign_Center);
+    PendingArtSlot->SetPadding(FMargin(0.0f, 6.0f, 0.0f, 0.0f));
 
     StartRunButton = WidgetTree->ConstructWidget<UButton>(UButton::StaticClass(), TEXT("StartRunButton"));
     StartRunButton->SetStyle(DungeonSetupLayout::StartButtonStyle());
@@ -322,7 +351,7 @@ void UDungeonRunSetupWidget::BuildWidget()
     StartRunButton->AddChild(StartSizeBox);
     UVerticalBoxSlot* StartSlot = Column->AddChildToVerticalBox(StartRunButton);
     StartSlot->SetHorizontalAlignment(HAlign_Fill);
-    StartSlot->SetPadding(FMargin(0.0f, 20.0f, 0.0f, 0.0f));
+    StartSlot->SetPadding(FMargin(0.0f, 16.0f, 0.0f, 0.0f));
     StartRunButton->OnClicked.AddDynamic(this, &UDungeonRunSetupWidget::HandleStartRunClicked);
 
     bWidgetBuilt = true;
@@ -347,6 +376,30 @@ void UDungeonRunSetupWidget::RefreshSelection()
             GetThemeDisplayText(SelectedThemeId),
             GetFamilyDisplayText(SelectedFamilyId)
         ));
+    }
+
+    ADungeonPlayerController* DungeonPlayerController = GetDungeonPlayerController();
+    if (DungeonPlayerController == nullptr)
+    {
+        UE_LOG(LogTemp, Error, TEXT("Setup widget has no DungeonPlayerController; hero shot preview skipped."));
+        return;
+    }
+
+    const bool bHasCreatureArt = DungeonPlayerController->PreviewSetupSelection(SelectedThemeId, SelectedFamilyId);
+    if (PendingArtTextBlock != nullptr)
+    {
+        if (bHasCreatureArt)
+        {
+            PendingArtTextBlock->SetVisibility(ESlateVisibility::Collapsed);
+        }
+        else
+        {
+            PendingArtTextBlock->SetText(FText::Format(
+                FText::FromString(TEXT("Creature art pending \u2014 {0}")),
+                GetFamilyArtSourceText(SelectedFamilyId)
+            ));
+            PendingArtTextBlock->SetVisibility(ESlateVisibility::HitTestInvisible);
+        }
     }
 }
 
@@ -381,6 +434,23 @@ FText UDungeonRunSetupWidget::GetFamilyDisplayText(const ECreatureFamilyId Famil
     }
 
     UE_LOG(LogTemp, Fatal, TEXT("Family row lookup failed for setup widget."));
+    return FText::GetEmpty();
+}
+
+FText UDungeonRunSetupWidget::GetFamilyArtSourceText(const ECreatureFamilyId FamilyId) const
+{
+    if (const UGameInstance* GameInstance = GetGameInstance())
+    {
+        if (const UDungeonContentSubsystem* ContentSubsystem = GameInstance->GetSubsystem<UDungeonContentSubsystem>())
+        {
+            if (const FDungeonCreatureFamilyRow* FamilyRow = ContentSubsystem->FindFamilyRow(FamilyId))
+            {
+                return FamilyRow->ShowcaseArtSource;
+            }
+        }
+    }
+
+    UE_LOG(LogTemp, Fatal, TEXT("Family row lookup failed for setup widget art source."));
     return FText::GetEmpty();
 }
 
