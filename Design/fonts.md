@@ -1,6 +1,6 @@
 # Typography
 
-Target layout: **21:9** monitor. Telemetry and grid readouts prioritize legibility over ornament.
+Target layout: **16:9** (1920×1080 reference). Telemetry and grid readouts prioritize legibility over ornament.
 
 ## 1. Main menu titles and UI headings
 

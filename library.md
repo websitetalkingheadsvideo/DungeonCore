@@ -203,6 +203,120 @@ Use when a Fab pack lacks a specific surface; otherwise prefer the pack MI_* ins
 
 ---
 
+## Fab 3D (cataloged 2026-11-01)
+
+332 of 333 3D items read from My Library → 3D. Only Dungeon Core–relevant items listed. Avoid anything **Stylized / cartoon / low poly** (art direction).
+
+### Invaders (adventurers)
+
+| Asset | Role idea |
+| --- | --- |
+| Paragon: Greystone, Kwang, Steel | Warrior / tank |
+| Paragon: Sparrow, Feng Mao, Wukong, Kallari | Archer / duelist / assassin |
+| Paragon: Gideon, Aurora, Yin, Terra, Muriel | Mage / support |
+| Heroic Warrior, Wanderer, Free Medieval Assassin Girl | Base roles (already in Monsters.md) |
+| Gothic Knight, Paladin RPG Set, Crimson Knight Warrior (Free) | Knight / paladin variants |
+| Infinity Blade: Warriors | Elite or champion invaders |
+| Character Creator: Kevin | Reallusion base human |
+
+Paragon gunners and sci-fi heroes (Twinblast, Dekker, Drongo, Gadget, Howitzer, Lt. Belica, GRIM.exe, Murdock, Iggy & Scorch, Wraith, Revenant, Phase, Zinx, Boris) — poor fit.
+
+### Monster candidates
+
+| Asset | Family / use idea |
+| --- | --- |
+| Paragon: Minions | Fodder (any family, retexture) |
+| Paragon: Grux, Rampage, Narbash | Brute bosses (Orcs) |
+| Paragon: Sevarog, Countess | Undead bosses |
+| Paragon: The Fey, Morigesh | Evil Fairies / Fungal bosses |
+| Paragon: Khaimera | Beast elite |
+| Armored Stone Golem, Stone Golem, Celestial_Guardian | Core constructs (Unshackled Golems) |
+| Infinity Blade: Adversaries, City of Brass: Enemies | Mixed elites and bosses |
+| Quadruped Fantasy Creatures | Beast fodder / elites |
+| Kraken, ASC Teuthisan | Sunken Ruins boss |
+| Dark Vampire Enchantress | Undead / Fairy elite |
+| Existing Monsters.md picks | 3dGoblin, MetaGoblin, Warrior Orc, Mutant, Flesh Mutant, Hollow Walker, Harpy Assassin, Grave Keeper, Skeleton Necromancer, Zombie, Spider, Theraphosa, Spider Tarantula, Mushroom Demon |
+
+### Dungeon environments
+
+| Asset | Use |
+| --- | --- |
+| Modular Dungeon, Dungeon Builder, Dungeon Environment (135+), Medieval Dungeon | Core room / corridor kits |
+| Modular Cathedral, Modular Gothic Temple, CryptForge, [SCANS] Ruined Crypt, Free Sample Dark Fantasy Gothic Environment | Gothic |
+| Modular Cave, Fantasy Cave Environment Set, Soul: Cave, Dragon Cave, Abandoned Tunnel, Modular Sewers & Tunnels | Goblin Tunnels / caves |
+| Atlantis Ruins, Temple of the Gods, Modular Temple Plaza, Goddess Temple / Dark Ruins / Derelict Corridor Megascans Samples, Maridalen Ruins | Sunken Ruins / ruins |
+| Paragon: Agora and Monolith, Infinity Blade: Castle, Temple, Hideout, Fire Lands, Ice Lands, City of Brass: Environments | Boss chambers, kitbash |
+
+### Pillars and architecture
+
+Column accents per biome (Andy added these for biome use):
+
+| Biome | Columns |
+| --- | --- |
+| Gothic | Corinthian Column, Column2 |
+| Goblin Tunnels | Medieval Modular Plain Pillar – Wood (Nanite; timber supports) |
+| Fungal Warren | Stone Pillar – Intact & Broken (broken variants, overgrown) |
+| Sunken Ruins | Ruins Greek Doric Pillar, Realistic Ruins (archway_pillar) |
+
+Column2 is unverified; check its style before assigning. Other architecture: Gargoyle Statue, stone gargoyle statue, Interactive Entrance Door with Stained Glass.
+
+### Props and loot
+
+Gothic props (pack 1), Ornate Gothic Candleholders, Door Knocker, Cemetery VOL.1 Gravestones, Corpses Environment Props (dead adventurers), Treasures VOL.1 (loot bait), Game Ready Key Pack, Leather Books, Medieval Props Megapack, Dark Fantasy Weapons, Free Fantasy Weapon Sample Pack, Infinity Blade: Weapons / Props, City of Brass: Props, Obsidian Fang Sword, Necromancer's Staff, Rpg Magic Staff Pack, staffs and swords (IronRealm-Forge gifts).
+
+### Surface town
+
+Townsmith, Hearthvale, European Village, Medieval Kingdom, Ravenhold castle, Modular Castle, Medieval Castle Modular Vol 1, Medieval Harbor Kit, Medieval Docks, Modular Haunted Village.
+
+### Avoid (stylized)
+
+Stylized Dungeon Pack, Dark Cemetery Props (stylized low poly), Skeleton Stylized Cartoonish, Stylized Fantasy Characters, Free Vampiric PolyVania, Haunted Gothic House (stylized), Stylized Town / Forest / Egypt / Eastern Village.
+
+---
+
+## Fab audio (cataloged 2026-11-01)
+
+Fab library total is now **462** items (24 audio). Cataloged from My Library → Audio.
+
+### Music
+
+| Pack | Dungeon Core use |
+| --- | --- |
+| Dark Dungeon Ambient Music (Ultra Pack 1) | Main dungeon build-phase bed |
+| Caves and Dungeons | Dungeon / cave ambience (check whether music or SFX ambience) |
+| Gothic Horror Music | Gothic biome |
+| Dark Fantasy Music | General exploration / dig |
+| Sound Phenomenon Fantasy Orchestra | Combat, breach, boss fights |
+| Fantasy Music Starter Pack v2.0 – Orchestral (Free) | Start screen, New Game setup |
+| RPG Music Pack: Starter Pack II, III | Surface town, menus, victory/defeat stings |
+| Dark Ambient Music – Into Insanity Vol. 2 | Tension layer, deep pockets |
+| Dark Horror Ambient Music – Grimytheus Vol. 2 | Undead / horror moments |
+| Dark Ambient Music Pack – A Waking Dream | Idle core, quiet phases |
+| Immersive Dark Ambient Music Pack | Biome ambient layers |
+| [FREE] Dark Ambient Pack Vol 1 | Ambient layers / variety |
+| Atmospheric Worlds – FREE Game Music Pack | Filler / variety |
+| Urban Flow BGM Pack Vol.1 | Poor fit (modern) |
+| Absolute Space and Sci Fi – Dynamic Cyberpunk… | Poor fit (sci-fi) |
+
+### SFX
+
+| Pack | Dungeon Core use |
+| --- | --- |
+| 100 RPG Fantasy SFX Pack | Spells, traps, ley-line and construct effects |
+| Deadly Creatures Sound Effects Pack 1 | Monster vocals and attacks |
+| Free Realistic Sword Sound Effects Pack | Invader melee combat |
+| Ultimate Game Item Sound Pack | UI, store, loot pickup |
+| 50 Free Game Sounds Pack | General UI / feedback |
+| Procedural Heartbeat | Core health pulse (speed up as core takes damage) |
+| Free Crowd Cheering Sounds | Possible surface-town reaction; otherwise poor fit |
+| Free City Ambiences | Poor fit (modern) |
+
+### Audio gaps
+
+Crystal / glass resonance (core pulse, Prism Beam, Resonance Plate), stone digging and wall breaking, water and dripping (Sunken Ruins), spider skitter, fungal squelch.
+
+---
+
 ## Maintenance
 
 - **Full Fab catalog:** Export or scroll entire Fab library (256+ items) and append to this file, or drop a CSV export into `reference/` and merge.
