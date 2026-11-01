@@ -19,7 +19,8 @@ Creature picks by family. **Worker** = digs and builds (non-combat or barely), *
 | **Evil Fairies** | Worker | TBD |
 | | Minion | Cutie Goddess (retexture to dark palette) |
 | | Elite | TBD — Hi3D |
-| | Boss | Harpy Assassin (review fit) |
+| | Boss | **Dark Fairy Queen** — Hi3D from [Reference Images/Fairy_Boss.png](./Reference%20Images/Fairy_Boss.png). Purple fabric and hair OK; wing glow must not be violet (reserved for Will)—shift to magenta/rose or silver-black, or make wings reflective, not emissive |
+| | Backup boss | Harpy Assassin (review fit) |
 | **Fungal** | Worker | TBD |
 | | Minion | Candidate: **Cyclostome Agaricus**; else TBD — Hi3D |
 | | Elite | Mushroom Demon; candidate: **Female_Elegance_Root** |
