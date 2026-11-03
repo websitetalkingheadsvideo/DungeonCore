@@ -1,0 +1,12 @@
+---
+description: Versioning rules for Design reference images and Hi3D downloads
+globs: Design/Reference Images/**,imports/hi3d/**,tmp/**/*manifest*.json
+alwaysApply: true
+---
+
+# Reference images — never overwrite
+
+- **Hard rule:** never save a new image over an existing file path. Always create a **new versioned filename** (`-v2`, `-v3`, or `-<descriptor>-vN`).
+- **Hi3D / MCP / CLI:** download edits and GLBs to a **new** path under `Design/Reference Images/` or `imports/hi3d/<slug>/`; append version in the name and record `task_id` in a manifest under `tmp/` or next to the asset.
+- **Docs:** point `Design/Monsters.md` (and similar) at the **current** version; link older files as archived refs, do not imply the canonical basename was replaced in place.
+- **Mistake recovery:** restore from git or an explicit `-Original` / archive copy; do not overwrite again when fixing.

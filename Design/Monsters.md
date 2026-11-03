@@ -16,10 +16,10 @@ Creature picks by family. **Worker** = digs and builds (non-combat or barely), *
 | | Minion | MetaGoblin or 3dGoblin (check fidelity) |
 | | Elite | Warrior Orc |
 | | Boss | Paragon: Narbash |
-| **Evil Fairies** | Worker | **Dark Fairy Worker** — Hi3D bald head (facial anim): ref [Dark Fairy-Worker-NoHair.png](./Reference%20Images/Dark%20Fairy-Worker-NoHair.png) (2D edit from [Dark Fairy-Worker.png](./Reference%20Images/Dark%20Fairy-Worker.png)); GLB `imports/hi3d/dark-fairy-worker/Dark_Fairy_Worker.glb` (task `7b80057401c247e89baf8dfd013d57ea`) |
+| **Evil Fairies** | Worker | **Dark Fairy Worker** — Hi3D `imports/hi3d/dark-fairy-worker/Dark_Fairy_Worker.glb` → CC import (no HD Rewrap) → **AccuRIG** (max **600k tris / 300k quads**); wings split or socketed. Ref [Dark Fairy-Worker.png](./Reference%20Images/Dark%20Fairy/Dark%20Fairy-Worker.png) |
 | | Minion | Cutie Goddess (retexture to dark palette) |
 | | Elite | TBD — Hi3D |
-| | Boss | **Dark Fairy Queen** — Hi3D from [Reference Images/Fairy_Boss.png](./Reference%20Images/Fairy_Boss.png). Purple fabric and hair OK; wing glow must not be violet (reserved for Will)—shift to magenta/rose or silver-black, or make wings reflective, not emissive |
+| | Boss | **Dark Fairy Queen** — Hi3D from [Fairy_Boss-Ankle-Dress.png](./Reference%20Images/Dark%20Fairy/Fairy_Boss-Ankle-Dress.png) (short skirt, no floor train; v2 edit task `9be5cc08…`). Original ref: [Fairy_Boss.png](./Reference%20Images/Dark%20Fairy/Fairy_Boss.png); archive copy: [Fairy_Boss-Floor-Train-Original.png](./Reference%20Images/Dark%20Fairy/Fairy_Boss-Floor-Train-Original.png). Purple fabric and hair OK; wing glow must not be violet (reserved for Will)—shift to magenta/rose or silver-black, or make wings reflective, not emissive |
 | | Backup boss | Harpy Assassin (review fit) |
 | **Fungal** | Worker | TBD |
 | | Minion | Candidate: **Cyclostome Agaricus**; else TBD — Hi3D |
