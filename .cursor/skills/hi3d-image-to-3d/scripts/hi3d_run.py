@@ -67,19 +67,20 @@ def quote_generation(
     generation_type: str,
     license_name: str,
     pbr: bool,
+    face: int | None,
 ) -> dict[str, object]:
-    return client.call_tool(
-        "quote_generation",
-        {
-            "prompt": prompt,
-            "file_tokens": [file_token],
-            "version": version,
-            "model_type": model_type,
-            "generation_type": generation_type,
-            "license": license_name,
-            "pbr": pbr,
-        },
-    )
+    payload: dict[str, object] = {
+        "prompt": prompt,
+        "file_tokens": [file_token],
+        "version": version,
+        "model_type": model_type,
+        "generation_type": generation_type,
+        "license": license_name,
+        "pbr": pbr,
+    }
+    if face is not None:
+        payload["face"] = face
+    return client.call_tool("quote_generation", payload)
 
 
 def create_generation(client, quote_id: str) -> dict[str, object]:
@@ -172,8 +173,15 @@ def cmd_quote(args: argparse.Namespace) -> int:
         args.generation_type,
         args.license,
         args.pbr,
+        args.face,
     )
     print(json.dumps({"upload": meta, "quote": quote}, indent=2))
+    if args.face is not None and quote.get("parameters", {}).get("face") != args.face:
+        print(
+            f"WARNING: requested face={args.face} but quote parameters omit it; "
+            "Cursor Hi3D MCP likely defaults to 2000000. Use web Advanced or Open API --face.",
+            file=sys.stderr,
+        )
     return 0
 
 
@@ -230,7 +238,13 @@ def cmd_run(args: argparse.Namespace) -> int:
         args.generation_type,
         args.license,
         args.pbr,
+        args.face,
     )
+    if args.face is not None and quote.get("parameters", {}).get("face") != args.face:
+        raise RuntimeError(
+            f"Hi3D MCP ignored face={args.face} (not in quote parameters); "
+            "aborting before spend. Set face in hi3d.ai UI Advanced or use Open API hi3d-cli --face."
+        )
     if not quote.get("can_submit"):
         raise RuntimeError(json.dumps(quote, ensure_ascii=False))
     quote_id = str(quote["quote_id"])
@@ -286,6 +300,7 @@ def build_parser() -> argparse.ArgumentParser:
     quote.add_argument("--generation-type", default=DEFAULT_GENERATION_TYPE)
     quote.add_argument("--license", default="private")
     quote.add_argument("--pbr", action="store_true", default=True)
+    quote.add_argument("--face", type=int, default=None, help="OpenAPI face 100000-5000000 (Advanced in web UI)")
     quote.set_defaults(func=cmd_quote)
 
     gen = sub.add_parser("generate", help="create_generation from existing quote_id")
@@ -320,6 +335,7 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--generation-type", default=DEFAULT_GENERATION_TYPE)
     run.add_argument("--license", default="private")
     run.add_argument("--pbr", action="store_true", default=True)
+    run.add_argument("--face", type=int, default=None, help="OpenAPI face 100000-5000000 (Advanced in web UI)")
     run.set_defaults(func=cmd_run)
 
     return parser

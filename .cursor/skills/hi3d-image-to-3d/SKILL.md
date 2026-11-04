@@ -36,7 +36,7 @@ After download, next step is usually **`fab-asset-migration`** (GLB → Unreal) 
 1. **`GetDynamicTools`** / **`CallDynamicTool`** on namespace **`user-hi3d`**.
 2. **`upload_input`**: `image_base64` + `mime_type` (`image/png` | `image/jpeg` | `image/webp`). Returns **`file_token`** (24h). Do **not** pass local paths or public URLs in tool args.
 3. Large Firefly PNGs: convert to **lossless WebP** at full resolution before upload (see upload-limits). If inline base64 is too large for the tool, use Path B.
-4. **`quote_generation`**: `prompt`, `file_tokens`, defaults — `version: v3.0`, `model_type: high_quality`, `generation_type: model_with_texture`, `license: private`, `pbr: true`. For prior Hi3D 2D tasks use **`source_images`** (not stale `file_tokens`).
+4. **`quote_generation`**: `prompt`, `file_tokens`, defaults — `version: v3.0`, `model_type: high_quality`, `generation_type: model_with_texture`, `license: private`, `pbr: true`. **`face`** (100000–5000000) = web UI **Advanced → face count** / OpenAPI `face`; pass via `hi3d_run.py --face` (forwarded to MCP; **currently ignored by `agent.hi3d.ai` — verify `parameters.face` in quote response**). For prior Hi3D 2D tasks use **`source_images`** (not stale `file_tokens`).
 5. Stop and show quote. On confirm → **`create_generation`** with `{ "quote_id": "...", "confirmed": true }`.
 6. **`get_task`** loop until `succeeded` | `failed`.
 7. **`get_task_outputs`**: prefer asset URL containing **`/target/model/original/`** and format **GLB**. Download with shell (`urllib`, `curl`, or **`hi3d_run.py download`**).
@@ -94,6 +94,7 @@ Character prompts should match **`Design/Monsters.md`** and creature docs (T-pos
 
 | Rule | Why |
 |------|-----|
+| **`face` for Advanced poly count** | Open API / web UI **Advanced → face count** = field **`face`** (100k–5M). Cursor MCP omits it — use `hi3d_open_api_run.py` + `HI3D_ACCESS_KEY`/`HI3D_SECRET_KEY`, or web UI. `hi3d_run.py run --face` aborts if quote does not echo `face`. |
 | One quote → one `create_generation` | Quote IDs are single-use |
 | No auto-retry on failed generation | Server policy; diagnose and re-quote if needed |
 | Prefer **`source_images`** over re-upload | Avoids expired tokens |

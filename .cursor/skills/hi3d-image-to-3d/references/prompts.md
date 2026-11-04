@@ -35,7 +35,7 @@ Two Hi3D generations (do **not** model the glaive on the character mesh). Ref im
 | Sentinel body | `Design/Reference Images/Dark Fairy/Dark Fairy-Elite_v2.png` (hands fixed; v1: `Dark Fairy-Elite.png`) |
 | Glaive prop | `Design/Reference Images/Dark Fairy/Firefly_Gemini Flash_Isolated crystal glaive game weapon prop, dark celestial fairy sentinel weapon, long  694797.png` |
 
-**Mesh budget (per GLB):** ≤ **1,000,000 faces**. Hi3D has no face-cap API — if the export exceeds 1M, decimate in Character Creator or Blender before merge/socket. AccuRIG humanoid step still requires ≤ **600k tris / 300k quads** on the rigged body.
+**Mesh budget (per GLB):** user target via Hi3D **Advanced → face count** (OpenAPI field **`face`**, 100000–5000000). v3.0 **2048quality** UI/MCP default when unset is **2000000**. **Cursor MCP `quote_generation` schema omits `face` as of 2026-11 — values are stripped server-side; use hi3d.ai UI Advanced, Open Platform `hi3d-cli --face`, or post-decimate until MCP exposes it.** AccuRIG humanoid step still requires ≤ **600k tris / 300k quads** on the rigged body.
 
 **Silhouette:** Four tattered galaxy wings (accepted — distinct from queen via circlet vs crown, lighter pauldrons, mid-calf skirt, no floor train).
 
@@ -98,3 +98,5 @@ Unless the user asks otherwise:
 - **`generation_type`**: `model_with_texture`
 - **`pbr`**: `true`
 - **`license`**: `private`
+
+**Aesthetic:** Prompt for **stylized realism**—weathered materials, readable silhouette—not mobile toon or chibi. Hi3D meshes usually land **less cartoon** than legacy stylized Fab humanoids; still avoid photoreal mud per [General.md](../../../Design/General.md).
