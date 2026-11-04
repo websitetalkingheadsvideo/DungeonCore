@@ -23,3 +23,22 @@ Packaged/
 *.uatbuildrecord
 DungeonCore/
 __pycache__/
+
+# Local Hi3D upload / OAuth debug (not for repo)
+tmp/*.b64
+tmp/*b64*.txt
+tmp/*upload*.json
+tmp/hi3d_*.py
+tmp/find_hi3d_token.py
+tmp/list_mcp_keys.py
+tmp/read_hi3d_oauth_keys.py
+tmp/scan_oauth_tokens.py
+tmp/hi3d_local_test.py
+tmp/hi3d_upload_full_png.py
+
+# CC restore blobs (keep ccProject under imports/hi3d)
+Models/
+
+# Character Creator saves (large; local only — GLB + manifests stay in repo)
+imports/**/*.ccProject
+imports/**/*.ccRestore

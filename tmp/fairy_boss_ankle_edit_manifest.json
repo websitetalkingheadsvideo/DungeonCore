@@ -1,0 +1,8 @@
+{
+  "task_id": "9be5cc08d79843f1a51851da736c0d25",
+  "source": "E:\\Dungeon Core\\Design\\Reference Images\\Dark Fairy\\Fairy_Boss-Ankle-Dress.png",
+  "output": "E:\\Dungeon Core\\Design\\Reference Images\\Dark Fairy\\Fairy_Boss-Ankle-Dress.png",
+  "prompt": "Edit this dark fairy queen reference. CRITICAL dress length fix: Raise ALL skirt fabric so NOTHING touches the floor. The lowest dress hem and every tattered strip must end at the ankles only, with a visible clear gap of empty floor between the dress and the ground. Full boots and feet visible standing on the floor; no fabric pooling, dragging, trailing, or overlapping the ground. Shorter layered tattered skirt that stops above the boot tops. Keep same pose, face, hair, crown, wings, bodice, colors, and white background. Full body front view. No text.",
+  "actual_points": 4,
+  "revision": "v2_no_floor_contact"
+}

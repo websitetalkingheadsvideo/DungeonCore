@@ -12,7 +12,8 @@
 
 | File | Use |
 | --- | --- |
-| `Dark_Fairy_Worker.glb` | **Full dressed worker** (bald, one mesh) — primary CC/AccuRIG source (task `7b800574…`). |
+| `dark-fairy-worker_v2.ccProject` | **Saved Character Creator project** (rigging/edits complete). |
+| `Dark_Fairy_Worker.glb` | **Full dressed worker** (bald, one mesh) — Hi3D source for CC import (task `7b800574…`). |
 | `Dark_Fairy_Worker_Body.glb` | Bald + wings base (task `84e246f3…`); optional face-only path. |
 | `Dark_Fairy_Worker_Skirt.glb` | Experimental skirt-only gen (task `0faea5b9…`); optional. |
 
