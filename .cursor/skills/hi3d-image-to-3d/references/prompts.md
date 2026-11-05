@@ -4,7 +4,7 @@ Keep prompts under **2000** characters. Align with **`Design/Monsters.md`** and 
 
 ## Image requirements
 
-- **T-pose** or neutral A-pose for humanoids; arms visible, not occluded by wings/cape unless folded.
+- **T-pose** for humanoids (arms horizontal at shoulder height); use **palms facing forward toward camera** when finger/hand read matters—not palms down. Do not mix “A-pose” and “T-pose” in one prompt.
 - **Single subject**, simple or dark gradient background (model reads silhouette).
 - **Front-facing** hero shot; multi-view sets use Hi3D **`source_images`** in view order (not one collage).
 
@@ -100,3 +100,61 @@ Unless the user asks otherwise:
 - **`license`**: `private`
 
 **Aesthetic:** Prompt for **stylized realism**—weathered materials, readable silhouette—not mobile toon or chibi. Hi3D meshes usually land **less cartoon** than legacy stylized Fab humanoids; still avoid photoreal mud per [General.md](../../../Design/General.md).
+
+## Mutant Worker — digger base (Hi3D 2D ref)
+
+**Mutants family only** — raw flesh mutant, **no mushrooms, no fungal growth, no spore glow.** Not Fungal Warren.
+
+Blend: **large subterranean eyes**, **normal-sized hands with sharp claws**, **elephant-like padded feet**, **dark mottled raw-flesh skin**, **lean athletic humanoid**. Worker tier: **no circular tooth maw**.
+
+**Style refs:** Fab flesh mutant preview; in-engine bloated maw mutant (skin palette only—drop the mouth); prior featureless claw-hand base (drop oversized hands + sealed face).
+
+**Primary (Firefly / Hi3D input):**
+
+```
+T-pose mutant dungeon worker, full body front view, lean muscular humanoid male proportions,
+arms straight horizontal at shoulder height, palms facing the camera forward not downward, empty clawed hands fingers together clearly visible,
+large pale subterranean eyes wide on face adapted for darkness, no nose small closed mouth slit no teeth visible,
+dark reddish-brown mottled raw flesh texture with subtle pores and healed scars not glossy,
+normal human arm length and normal sized hands with sharp dark claws not oversized,
+elephant-like feet thick padded toes splayed for digging weight, sturdy subterranean digger stance,
+compact athletic torso not bloated, no open mouth no ring of teeth no tongue,
+no mushrooms no fungal growth on body,
+no weapons no props,
+game character reference, neutral white background, stylized realism not cartoon not chibi,
+dramatic studio lighting, no text, no watermark
+```
+
+**Negative / avoid:** palms facing down, back of hands toward camera, open circular maw, rows of teeth, tongue, tiny pin eyes, cute chibi, bright saturated colors, human bare feet, oversized hulk hands, extreme obesity, gore splatter, photoreal horror movie lighting.
+
+**Output slug:** `mutant-worker` → `imports/hi3d/Mutant/` · **Current 2D ref:** [Mutant-Worker_v2.png](../../../Design/Reference%20Images/Mutants/Mutant-Worker_v2.png) · **Complete:** `Mutant-Worker_v2.glb`, `mutant-worker_v3.ccProject`, [mutant-worker.jpg](../../../imports/hi3d/Mutant/mutant-worker.jpg).
+
+**Hi3D 3D:** web Advanced **300000** faces; same pipeline as undead (CC → AccuRIG). No 3D Wrap unless face opens later.
+
+## Fungal Worker — spore digger (Hi3D 2D ref)
+
+**Style refs (mood board):** slug-beast with mushroom colony + gore moisture; gnarled dragon covered in glowing caps; sepia knight with mushrooms in armor cracks; biped fungal humanoid with shoulder caps and sickly purple-tan skin. **Worker read:** lean biped digger like Mutant Worker, not limbless slug, not winged boss, no plate armor.
+
+Blend: **fungal humanoid worker** (Fungal family) + mushrooms on body — **not** Mutants raw-flesh worker. Same digger silhouette as Mutant Worker (eyes, claw hands, elephant feet) but **skin is overtaken by fungus**, not red meat mutant.
+
+**Primary (Firefly / Hi3D input):**
+
+```
+T-pose fungal dungeon worker creature, full body front view, lean muscular humanoid male proportions,
+arms straight horizontal at shoulder height, palms facing the camera forward not downward, empty clawed hands fingers together clearly visible,
+large pale subterranean eyes, small closed mouth no teeth no open maw,
+sickly pale tan and muted purple mottled skin with fibrous bark-like fungal patches and moist pores,
+clusters of brown and ochre mushrooms sprouting from shoulders upper back and spine,
+smaller mushroom caps and thin mycelium veins growing from cracks in torso and arms,
+soft bioluminescent pale green and cream glow on mushroom gills and cap spots not bright neon,
+normal sized hands with dark claws, elephant-like padded feet for digging,
+no armor no weapons no props,
+game character reference, neutral white background, dark fantasy stylized realism not cartoon not chibi,
+dramatic studio lighting, no text, no watermark
+```
+
+**Negative / avoid:** palms facing down, back of hands toward camera, slug body no legs, dragon wings, knight armor, circular tooth maw, blood waterfalls, cute toadstool mascot, chibi, violet glow, oversized hands, human bare feet, photoreal gore.
+
+**Output slug:** `fungal-worker` → `imports/hi3d/fungal-worker/` · **2D ref target:** `Design/Reference Images/Fungal/Fungal-Worker-v1.png`.
+
+**Hi3D 3D:** web Advanced **300000** faces; CC → AccuRIG. Keep cap glow as emissive in UE, not Will violet.
