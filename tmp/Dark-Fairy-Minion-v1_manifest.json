@@ -1,0 +1,14 @@
+{
+  "output": "E:\\Dungeon Core\\Design\\Reference Images\\Dark Fairy\\Dark-Fairy-Minion-v1.png",
+  "model": "fal-ai/nano-banana-2",
+  "resolution": "2K",
+  "aspect_ratio": "9:16",
+  "refs": [
+    "E:\\Dungeon Core\\Design\\Reference Images\\Dark Fairy\\Dark Fairy-Worker.png",
+    "E:\\Dungeon Core\\Design\\Reference Images\\Dark Fairy\\Dark Fairy-Elite_v2.png",
+    "E:\\Dungeon Core\\Design\\Reference Images\\Dark Fairy\\Fairy_Boss.png"
+  ],
+  "image_url": "https://v3b.fal.media/files/b/0ab19178/8fIejt0k9cQkfwAkOXIAq_9I8OZwuM.png",
+  "request_id": null,
+  "seed": null
+}

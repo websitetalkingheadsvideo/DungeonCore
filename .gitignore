@@ -23,6 +23,7 @@ Packaged/
 *.uatbuildrecord
 DungeonCore/
 __pycache__/
+.env
 
 # Local Hi3D upload / OAuth debug (not for repo)
 tmp/*.b64

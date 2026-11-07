@@ -89,6 +89,29 @@ no character no hands, product reference on white background, stylized fantasy r
 
 Socket the glaive to the rig in CC or Unreal after AccuRIG; wings still split or socketed per worker pipeline.
 
+## Evil Fairy Minion — Dark Fairy fodder
+
+**Approved 2D ref:** `Design/Reference Images/Dark Fairy/Dark-Fairy-Minion-v1.png` (2026-11-07, fal `nano-banana-2` 2K).
+
+Tier between worker and elite: pixie-cut dark blue-purple hair, smoky eye makeup, forest-green tunic under black leather corset,
+small dark shoulder caps and bracers with purple gems, knee-length tattered green and purple lace skirt, combat boots,
+hip dagger in sheath (mesh prop or socket — do not model glaive). Four tattered iridescent wings green-to-purple, not cosmic-elite scale.
+No crown, circlet, or scale-mail pauldrons.
+
+**Hi3D ref hand pose:** same as elite — T-pose, exactly five fingers, hands empty for rigging.
+
+```
+T-pose dark celestial fairy minion fodder, full body front view, empty hands,
+short messy pixie-cut dark blue hair purple highlights, pale skin dark smoky eye makeup,
+black leather corset over forest green tunic, small dark metal shoulder caps and forearm bracers purple gems,
+knee-length tattered green skirt purple lace layers, black combat boots, dagger in hip sheath not in hands,
+four dragonfly wings iridescent green and purple with small tears, no crown no circlet no scale pauldrons,
+anatomically correct hands, exactly five fingers on each hand, no extra digits,
+game character reference, white background, stylized fantasy realism, no text
+```
+
+**Output slug:** `dark-fairy-minion` → `imports/hi3d/dark-fairy-minion/`
+
 ## Version / quality defaults
 
 Unless the user asks otherwise:
