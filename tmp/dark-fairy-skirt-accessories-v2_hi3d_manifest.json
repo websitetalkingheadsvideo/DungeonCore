@@ -1,0 +1,10 @@
+{
+  "task_id": "6aec1a5773814fe4b95235f11bee650a",
+  "source_image": "Design/Reference Images/Dark Fairy/Dark Fairy-Worker-Skirt-Accessories.png",
+  "output_image": "Design/Reference Images/Dark Fairy/Dark-Fairy-Worker-Skirt-Accessories-v2.png",
+  "prompt": "Edit game asset sheet: fix both brown lace-up combat boots top-right to matching side profile pair; keep all other items unchanged.",
+  "operation": "edit",
+  "model_name": "Nano-Banana 2",
+  "actual_points": 4,
+  "preview_url": "https://hitem3dstatic.zaohaowu.net/image-edit/target/c_9435252ce093423a9e1c7e28df846be7/20261105/6aec1a5773814fe4b95235f11bee650a/0.png"
+}

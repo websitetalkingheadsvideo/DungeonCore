@@ -48,3 +48,34 @@ Possible effects:
 
 - Asset candidate: **Enchanted Dual-Core Fantasy Sword**.
 - Ties to the deferred tutorial beat "first loot placed as bait" ([Tutorial.md](./Tutorial.md)).
+
+## Found locations
+
+**Idea:** Rare pre-existing places the dungeon breaks into while digging. Self-contained pockets, so they don't have to match the surrounding biome.
+
+- Asset candidates (Humble Ultimate Cyber November Game Dev Bundle, not yet bought): **Demonic Village Environment**, **Forgotten Echoes Environment**. Possible extras from the same bundle: **The Grand Ossuary**, **Merlin's Cave**, **Sorcerer's Hut**.
+- Carve a pocket a few grid cubes wide (300 uu cubes), not the whole environment.
+- Retint lights and emissives away from reserved colors (teal, emerald, white-hot, red, violet); Demonic Village likely glows red.
+- Open question: what a find does (reward such as mana, a relic, or a new creature type; a hazard that wakes up; lore). This decides how often they appear.
+## New creature families: Plants, Demons, Gargoyles
+
+**Idea:** Possible future families beyond the current six. All candidates are in the Fab library (added Nov 2026), not yet in the project. Check fidelity against the art direction ([Monsters.md](./Monsters.md)); stylized or low-poly picks need retexturing or get rejected.
+
+| Family | Candidates |
+| --- | --- |
+| **Plants** | Thornvine Pouncer, Helianthus Stalker, Bramble Thornweaver |
+| **Demons** | Indian Monster Demon (Rakshasa), Abyssal Reaper (free demonic wraith boss, idle anim), Giang Demon_19 |
+| **Gargoyles / constructs** | Gargoyle Statue (already downloaded to `F:\Epic`, OBJ; could be dressing or a statue that wakes as an elite), Cobblestone Golem, Amethyst Geode Beast, Amethyst_Guardian, Free Stylized Elementals (low poly) |
+
+**Status:** try these when there's time.
+
+- **Crystal family (Andy likes this one):** **Amethyst Geode Beast** as boss, **Amethyst_Guardian** as elite. Worker and minion still needed: much smaller crystal creatures (scaled-down versions or separate assets). Tint TBD, since violet is reserved for Will; candidates are smoky quartz or blue-grey.
+- **Fungi Infested Knight:** Andy's pick for the **Fungal** family elite (added to [Monsters.md](./Monsters.md)).
+
+### Other new library items worth a look
+- **Spiders - characters with animations:** may fill the Spiders family in one pack (worker/minion/elite gap).
+- **Mermaid Warrior:** Sunken Ruins resident or found-location guardian.
+- **Armored Troll (free, with sword)**, **Mossy Swamp Troll:** Orcs-family brute or a future Trolls family.
+- **Warrior Queen (rigged)**, **Fantasy RPG Humanoid Pack:** intruder heroes.
+- **Loot for [Invader rewards](#invader-rewards):** Leather Treasure Chest, Vintage Wooden Treasure Chest, Realistic PBR Treasure Chest, Hoard: coin stack, Chalice, Bottled Wonders, Free Stylized Dark Sword, 20 Unique Textures Vol.8 Fantasy Treasure.
+- **Audio:** Fantasy RPG & Dungeon Crawler, 200 free SFX (magic, blades, loot).

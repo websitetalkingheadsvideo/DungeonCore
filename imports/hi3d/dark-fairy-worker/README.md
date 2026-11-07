@@ -19,4 +19,4 @@
 
 Abandoned: flat outfit-sheet img2model (one welded mesh).
 
-2D refs: `Design/Reference Images/Dark Fairy/`
+2D refs: `Design/Reference Images/Dark Fairy/` — outfit props sheet **`Dark-Fairy-Worker-Skirt-Accessories-v3.png`** (both boots side profile; original sheet unchanged).

@@ -1,0 +1,8 @@
+{
+  "task_id": "68eead93128540379a740d504f1f1266",
+  "source_image": "E:\\Dungeon Core\\Design\\Reference Images\\Dark Fairy\\Dark Fairy-Worker-Skirt-Accessories.png",
+  "output_image": "E:\\Dungeon Core\\Design\\Reference Images\\Dark Fairy\\Dark-Fairy-Worker-Skirt-Accessories-v3.png",
+  "prompt": "Minimal edit of this exact reference sheet. Do NOT rearrange, resize, or restyle any item. Keep pixel-identical positions: green tattered skirt upper-left, black leather vest center, brown belt with two pouches lower-center, pickaxe lower-left, tool holster lower-right. At upper-right there are two brown lace-up work boots side by side. Replace ONLY the boot on the right (currently top-down) so it matches the LEFT boot's side-profile angle \u2014 both boots side view facing the same direction, same height, same spacing as original sheet. White background, same gritty textures everywhere else.",
+  "model_name": "Nano-Banana-Pro",
+  "actual_points": 6
+}
