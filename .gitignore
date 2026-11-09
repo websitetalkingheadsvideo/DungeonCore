@@ -37,9 +37,7 @@ tmp/scan_oauth_tokens.py
 tmp/hi3d_local_test.py
 tmp/hi3d_upload_full_png.py
 
-# CC restore blobs (keep ccProject under imports/hi3d)
-Models/
+# Local pipeline output (Hi3D GLB, Fab staging, CC) — paths cited in Design/Monsters.md stay on disk only
+imports/
 
-# Character Creator saves (large; local only — GLB + manifests stay in repo)
-imports/**/*.ccProject
-imports/**/*.ccRestore
+Models/
