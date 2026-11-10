@@ -6,7 +6,7 @@ On launch: dead silent, deep graphic shadows.
 
 **Nexus core**
 
-- Massive unpolished geode in the **center cube of the real 3×3×1 core chamber** (`ADungeonShowcaseActor`, same room as [New Game.md](./New%20Game.md); see [General.md](./General.md) "Grid and scale")
+- Small unpolished geode at **level-1 core size** (see [General.md](./General.md) "Grid and scale") in the **center cube of the real 3×3×1 core chamber** (`ADungeonShowcaseActor`, same room as [New Game.md](./New%20Game.md))
 - **No save:** chamber in plain dark basalt
 - **Save exists:** chamber shows the most recent save's biome kit and `CoreColor`—Continue feels like returning home
 - Slow continuous spin on vertical axis

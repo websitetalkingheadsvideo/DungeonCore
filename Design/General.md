@@ -8,6 +8,7 @@ The art pillar shifts the classic dungeon core away from mud and torches into a 
 - **Cube size: 300 UU** (~10 ft) on every side. Room meshes, walls, floors, and dig blocks all snap to this grid.
 - **Starting room (core chamber):** 3×3 cubes (900 × 900 UU floor), one cube tall (300 UU).
 - **Core placement:** the core sits in the **center cube** (1, 1); the eight surrounding cubes form the rest of the chamber.
+- **Core size grows with core level** (draft): the core starts small at level 1 and grows as it levels up. Exact sizes TBD. See [Dungeon Core Levels.md](./Dungeon%20Core%20Levels.md).
 
 ## Room tiles and environmental textures
 

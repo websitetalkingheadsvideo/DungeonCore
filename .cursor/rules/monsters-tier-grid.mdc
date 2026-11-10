@@ -1,0 +1,27 @@
+---
+description: Monsters.md — each family has exactly Worker, Minion, Elite, Boss (four tier rows)
+globs: Design/Monsters.md
+alwaysApply: false
+---
+
+# Creature tier rows (Monsters.md)
+
+## Rule
+
+In **`## Creature families`**, each dungeon family has **exactly four tier rows**, in order: **Worker → Minion → Elite → Boss**. No fifth tier row (e.g. no separate “Backup boss” row).
+
+**Asset / note cells may list anything:** multiple Fab candidates, Hi3D + Fab options, backup bosses, rejected picks, UE paths, pipeline detail — unrestricted.
+
+**Intruders** stay in their own section; not part of the family tier grid.
+
+## Table style
+
+- **`## In UE`** — full tier grid (6 families × 4 tiers); `/Game/Monsters/` paths only; `—` = missing import.
+- **`## Not in UE yet`** — pending Fab / Hi3D / CC picks **only for tiers not in the first table** (and alternates). Do **not** duplicate rows that are already in UE.
+- Normal column widths; pipeline detail under **Art direction**.
+
+## Do not
+
+- Bloat rows with full CC/AccuRIG prose duplicated per creature unless the user asks.
+- Overwrite the file from git without merging local edits.
+- Overwrite reference image paths; version per `reference-images-versioning.mdc`.
