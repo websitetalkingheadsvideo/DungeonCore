@@ -6,12 +6,13 @@ Reached from [Start Screen.md](./Start%20Screen.md) → **New**. The player pick
 
 ## Camera and layout
 
-Concept mockup: [Reference Images/New_Game_Reference.png](./Reference%20Images/New_Game_Reference.png) (Firefly; mood and core/Will look only—room scale and card are not final).
+Concept mockup: [Reference Images/New Game - v4 smaller core.png](./Reference%20Images/New%20Game%20-%20v4%20smaller%20core.png) (Firefly; level-1 core size, Will, and selected monster family shown in the room). Earlier: [New_Game_Reference.png](./Reference%20Images/New_Game_Reference.png) (oversized core; superseded).
 
-- Hero shot: real 3×3×1 core chamber (`ADungeonShowcaseActor`), core in the center cube—see [General.md](./General.md) "Grid and scale"
+- Hero shot: real 3×3×1 core chamber (`ADungeonShowcaseActor`), core in the center cube at **level-1 size (~150 UU)**—see [General.md](./General.md) "Grid and scale"
 - Camera: pitch −28°, yaw 0, arm 1300 UU, target offset (0, −340, +60) from chamber centre—core ~63% across frame
 - Camera-side (min-X) wall open as cutaway
-- Card: left-anchored, 56 px inset, ≤ ~30% of 1920 frame; tiles 2×2 grid, 190×54
+- Card: left-anchored, 56 px inset, ≤ ~30% of 1920 frame. **Three stacked panels, all options visible at once** (no click-through): **Theme** (4 rows), **Monsters** (6 rows), **Random Events** (3 rows). Each row = icon + label; selected row highlighted. Ref: v4 mockup above.
+- **Start Game** button: bottom-right, same stone-plate style as the panel headers. Confirms the card and starts the New Game chain reaction.
 - Scrim: 55% alpha, left 30% of frame only
 
 ## Interaction defaults
