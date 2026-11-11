@@ -1,0 +1,31 @@
+---
+description: When creating files for the user to review, always include a clickable markdown link (full path).
+alwaysApply: true
+---
+
+# Deliverable links
+
+When you **create or save a new file** (or a **new versioned filename**) that the user should **open, review, or run**, you **must** include at least one **clickable markdown link** to it in the same response.
+
+## Required
+
+- Use markdown link form: `[short label](full path)`.
+- **Full path:** workspace-absolute (e.g. `e:\Dungeon Core\Design\Monsters.md`) — no shortened or elided paths.
+- **Label:** filename or a few words (e.g. `DungeonCore-small-v2-no-hand.png`, `geode-remove-hand.py`).
+- **Multiple deliverables:** one link per file the user should look at (not only the “main” one).
+- Put links **near the top** of the response (first paragraph or a **Files** line), not buried at the end.
+
+## Applies to
+
+- Design docs, reference images, plans under `tmp/`, scripts written for one-off tasks, exports, manifests, new `.mdc` rules, canvas artifacts saved to disk.
+
+## Does not require links for
+
+- Files the user did not ask you to produce and you only touched in passing (small edits they already have open).
+- Code cited **only** inside navigation citation blocks `` ```startLine:endLine:path `` `` (those are already clickable in the IDE).
+
+## Example
+
+**Files:** [DungeonCore-small-v2-no-hand.png](e:\Dungeon Core\Design\Reference Images\Core\DungeonCore-small-v2-no-hand.png) · [geode-remove-hand.py](e:\Dungeon Core\tmp\geode-remove-hand.py)
+
+Hand removed; original unchanged at [DungeonCore-small.png](e:\Dungeon Core\Design\Reference Images\Core\DungeonCore-small.png).
