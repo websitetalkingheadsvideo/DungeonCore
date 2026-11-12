@@ -88,7 +88,9 @@ Subcommands: **`quote`**, **`generate`** (quote_id only), **`poll`**, **`downloa
 
 ## Prompts
 
-Character prompts should match **`Design/Monsters.md`** and creature docs (T-pose, clear silhouette, no busy background). See **`references/prompts.md`**.
+Firefly character prompts (the image this skill consumes) are written by **`firefly-character-prompt`**: under 1024 characters, T-pose, palms toward camera, and the finger block that names thumb, index, middle, ring, and pinky. Do not reuse "fingers together like a mannequin."
+
+Sheet content still matches **`Design/Monsters.md`**. Creature examples: **`references/prompts.md`**.
 
 ## Rules
 

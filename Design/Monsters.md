@@ -50,7 +50,7 @@ Orc worker retexture + **Handheld Torch**; MetaGoblin / catalog **3dGoblin** as 
 
 ## Intruders (adventurers)
 
-Surface heroes — not dungeon families. Fab / Paragon catalog; `—` = not under `/Game/` yet.
+Surface heroes — not dungeon families. Fab / Paragon catalog, plus one custom Firefly party. `—` = not under `/Game/` yet.
 
 | Role | Primary asset | Named / alternates |
 | --- | --- | --- |
@@ -62,6 +62,12 @@ Surface heroes — not dungeon families. Fab / Paragon catalog; `—` = not unde
 | **Bruiser** | Paragon: **Kwang** | Gothic Knight |
 | **Mage** | Paragon: **Aurora** | — |
 | **Archer** | **Robin** | — |
+| **Dwarf Fighter** | Firefly / Hi3D TBD | Intruder party |
+| **Elf Bowman** | Firefly / Hi3D TBD | Intruder party |
+| **Old Wizard** | Firefly / Hi3D TBD | Intruder party |
+| **Female Human Cleric** | Firefly / Hi3D TBD | Intruder party |
+
+**Intruder party** (custom, not in UE): one shared kit — charcoal wool, ivory linen, dark leather, brushed steel, muted navy trim. Clean stylized realism, white T-pose sheets. Dwarf is the scale fighter: iron cap on his head, shield on the back, axe on the hip.
 
 **Knight / paladin variants (Fab):** **Gothic Knight**, **Paladin RPG Set** — retexture to match art pillar; assign to Hero or Tank spawn tables.
 

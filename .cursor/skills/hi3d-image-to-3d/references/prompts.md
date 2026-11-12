@@ -1,6 +1,6 @@
 # Hi3D prompts (Dungeon Core)
 
-Keep prompts under **2000** characters. Align with **`Design/Monsters.md`** and faction rows in **`Design/Creatures and style.md`**.
+Keep Hi3D prompts under **2000** characters. **Firefly image prompts must be under 1024 characters.** Align with **`Design/Monsters.md`** and faction rows in **`Design/Creatures and style.md`**.
 
 ## Image requirements
 
@@ -41,22 +41,15 @@ Two Hi3D generations (do **not** model the glaive on the character mesh). Ref im
 
 **Known Hi3D issue (sentinel):** Two body gens both produced **extra/split fingers** (6-ish or bifurcated digits) on both hands. **Root cause (v1 ref):** … **v2:** `Dark Fairy-Elite_v2.png` — correct finger count; use for any future Hi3D regen.
 
-**Hi3D ref hand pose (match worker / boss sheets):**
-
-- Arms horizontal T-pose; palms down or slightly forward.
-- **Fingers together or slightly relaxed — not splayed.** No wide vertical gaps between digits; pinky **not** dropped below the hand plane.
-- **Exactly five fingers** visible per hand; no overlapping duplicates in the illustration.
-
-**Hand guardrails (append to any humanoid Hi3D prompt):**
+**Hands:** new Firefly sheets use the `firefly-character-prompt` skill. Arms horizontal, palms facing the camera. Required block (this is what worked on Invader-Dward_v2; cone fingers came from "fingers together like a mannequin"):
 
 ```
-anatomically correct hands, exactly five fingers on each hand, clearly separated fingers,
-no extra digits, no fused or split fingers, visible knuckles
+Each hand has exactly five real human fingers: one shorter thumb set apart, plus index, middle, ring, and pinky. Fingers have knuckles, joints, fingernails, and skin creases, slightly separated so each digit reads clearly. No fused fingers, no cone shapes, no mittens, no extra digits, no missing thumbs.
 ```
 
 **Regen ref tip:** Save as **new file** (e.g. `Dark-Fairy-Elite-HandsFix-v1.png`); do not overwrite `Dark Fairy-Elite.png`. Optional hand close-up inset as second Hi3D view via `source_images`.
 
-**Firefly / 2D fix prompt (same outfit, fix hands only):**
+**Historical Firefly hand fix (Dark Fairy elite v2 only — do not reuse):**
 
 ```
 Same dark celestial fairy elite sentinel character and costume as reference, T-pose arms horizontal,
