@@ -17,7 +17,7 @@ Every skin has its own lighting palette, but all skins share a **dramatic** trea
 
 Natural fit is a suggestion, not a lock. Creature families: [Monsters.md](./Monsters.md).
 
-Concrete mesh and material paths for each theme kit: [Start Screen.md](./Start%20Screen.md) (New Game setup).
+Concrete mesh and material paths for each theme: [Theme.md](./Theme.md). Showcase targets that are not all in the project yet: [New Game.md](./New%20Game.md).
 
 ## Core loop: encountering factions
 

@@ -1,6 +1,6 @@
 # New Game Setup Screen
 
-**Status:** implemented (2026-10-29).
+**Status:** partly built in UE (2026-11-12) as `WBP_NewGame` on `L_NewGame`. Working: three panels with moving highlight, theme re-skin, creature swap. Not built: Start Game chain reaction (the button only prints the choices), Random Events effect, Will's intro and FAQ.
 
 Reached from [Start Screen.md](./Start%20Screen.md) → **New**. The player picks a theme (biome) and creature family on a card over the real core chamber. Confirming the card triggers the New Game chain reaction (core flare, wall shatter, camera through the breach into the first-room dig UI), then the [Tutorial](./Tutorial.md) begins.
 
@@ -17,9 +17,9 @@ Concept mockup: [Reference Images/New Game - v4 smaller core.png](./Reference%20
 
 ## Interaction defaults
 
-- Defaults: theme **Gothic**, family **Orcs**
-- Theme tile click: re-skins floor/wall materials, four corner accent meshes, fill-light colour in place
-- Family tile click: swaps creature on block (1, 2)
+- Defaults: theme **Gothic**, family **Orcs**, random events **Medium**
+- Theme row click: re-skins the chamber's wall, floor and ceiling materials and recolors the torch lights in place (see "Theme kits")
+- Family row click: swaps the creature beside the core. Shown per family: Orcs `elite_orc`, Evil Fairies `dark_fairy_elite_v1`, Fungal `Fungal_Elegance_v1`, Undead `mummy_v1`, Mutants `mutant_worker_v2`. Spiders shows nothing until a spider mesh is in the project. The creatures are level actors under **NewGame > Creatures** in the Outliner.
 
 ## Random events
 
@@ -32,14 +32,16 @@ Card option: **Random Events — Low / Medium / High**. Default **Medium**. Save
 
 ## Theme kits
 
-| Theme | Floor | Wall | Accent | Fill light |
-| --- | --- | --- | --- | --- |
-| **Gothic** | GothicCathedral `MI_Floor_Tile_B` | `MI_Stone_Tile_A` | `SM_Pillar_A` | Oil-lamp gold (1.0, 0.78, 0.45) |
-| **Goblin Tunnels** | FantasyDungeon `MI_Dirt_Floor_v01` | GreenCave `MI_LargeWall_b` | `SM_SupportBeam` | Torch amber (1.0, 0.55, 0.2) |
-| **Fungal Warren** | GreenCave `MI_FlatStone_a` | `MI_LargeWall_b` | Crystal_Cave `SM_CrystalCluster_D_01` @ 160 UU | Spore green (0.35, 1.0, 0.45) |
-| **Sunken Ruins** | `MI_FlatStone_a` | `MI_Stone_Tile_A` | CavernMahal `SM_ColosseumPillar_01` (circular) | Teal (0.2, 0.9, 0.8) |
+Materials and light colors as wired in `WBP_NewGame` (2026-11-12). Full kit, paths and per-theme dressing: [Theme.md](./Theme.md).
 
-Accents default **250 UU** unless noted.
+| Theme | Wall | Floor | Ceiling | Torch light |
+| --- | --- | --- | --- | --- |
+| **Gothic** | `MI_NG_Wall` | `MI_NG_Floor` | `MI_NG_Wall` | Oil-lamp gold (1.0, 0.78, 0.45) |
+| **Goblin Tunnels** | `MI_Wall_Mine_Rock_01_A` | `MI_Floor_Mine_Coal_01` | `MI_Wall_Mine_Rock_01_B` | Torch amber (1.0, 0.55, 0.2) |
+| **Fungal Warren** | `M_WA_Inst2` | `M_TileableAsset_Irregularstone` | `M_TileableAsset_Inst7` | Spore green (0.35, 1.0, 0.45) |
+| **Sunken Ruins** | `MI_blind_Arch_1` | `MI_Water_Inst` (on the flat floor blocks) | `M_WA_Inst` | Teal (0.2, 0.9, 0.8) |
+
+Not swapped per theme yet: corner pillars, wall torches and their flames, and the Theme.md dressing (candles, cobwebs, ivy, godray shaft, mud edge).
 
 ## Will (first contact)
 

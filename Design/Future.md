@@ -41,6 +41,7 @@ Possible effects:
 - Asset candidates (Fab library): **FREE Stylized Glowing Stones** or **Enchanted Crystal 02**.
 - Retexture the stones toward the grounded look; retint emissive so the glow avoids reserved colors (teal, emerald, white-hot, red, violet).
 - Gives invaders a secondary target besides the core.
+- Theme shells (reliquary, ore crib, spore pod, drowned font): [Theme.md](./Theme.md).
 
 ## Invader rewards
 

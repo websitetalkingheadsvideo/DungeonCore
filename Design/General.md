@@ -6,7 +6,7 @@ The art pillar shifts the classic dungeon core away from mud and torches into a 
 
 - The dungeon is built from **cubes**: one cube = one grid cell = one dig block.
 - **Cube size: 300 UU** (~10 ft) on every side. Room meshes, walls, floors, and dig blocks all snap to this grid.
-- **Starting room (core chamber):** 3×3 cubes (900 × 900 UU floor), one cube tall (300 UU).
+- **Starting room (core chamber):** 3×3 cubes (900 × 900 UU floor), one cube tall (300 UU). It wears the theme chosen on the New Game screen, like any other room; it has no fixed skin of its own ([Theme.md](./Theme.md)).
 - **Core placement:** the core sits in the **center cube** (1, 1); the eight surrounding cubes form the rest of the chamber.
 - **Core size grows with core level** (draft): the core starts small at level 1 (**~150 UU**, about half a cube; ref [New Game - v4 smaller core.png](./Reference%20Images/New%20Game%20-%20v4%20smaller%20core.png)) and grows as it levels up. Later sizes TBD. See [Dungeon Core Levels.md](./Dungeon%20Core%20Levels.md).
 
@@ -28,7 +28,7 @@ Digging a new room **exposes** glowing crystal clusters in the cut face, regardl
 
 ### Doors and thresholds
 
-Floating vertical stone monoliths carved with interlocking celestial rings. When open, segments drift apart and a thin sheet of shimmering translucent energy fills the gap.
+Shared open behavior: the leaves part and a thin sheet of shimmering translucent energy fills the gap. The leaf mesh is per theme ([Theme.md](./Theme.md)).
 
 ## Core crystal
 
