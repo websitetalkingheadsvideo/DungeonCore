@@ -41,7 +41,25 @@ Materials and light colors as wired in `WBP_NewGame` (2026-11-12). Full kit, pat
 | **Fungal Warren** | `M_WA_Inst2` | `M_TileableAsset_Irregularstone` | `M_TileableAsset_Inst7` | Spore green (0.35, 1.0, 0.45) |
 | **Sunken Ruins** | `MI_blind_Arch_1` | `MI_Water_Inst` (on the flat floor blocks) | `M_WA_Inst` | Teal (0.2, 0.9, 0.8) |
 
-Not swapped per theme yet: corner pillars, wall torches and their flames, and the Theme.md dressing (candles, cobwebs, ivy, godray shaft, mud edge).
+Dressing swaps per theme too (2026-11-12, `ApplyDressing` in `WBP_NewGame`). Every dressing actor is tagged `Dress` plus `Dress_0`–`Dress_3`; the function hides all of them, then shows the chosen theme's set. They sit in the Outliner under **NewGame > Dressing**.
+
+| Theme | Fixtures at the nine light points | Pillars | Extras |
+| --- | --- | --- | --- |
+| **Gothic** | Wall lantern `SM_LanternWall` + flame card `SM_CandleFire_Plane_B` inside it | `SM_Column_01` on `M_Pillar1` | — |
+| **Goblin Tunnels** | `SM_Torch_01` + `NS_TorchFire` | Timber posts (`SM_Ind_Min_Beam_Round_Wood_Worn_01` stood upright) | — |
+| **Fungal Warren** | `SM_LargeMushrooms_a` on the floor, on `MI_NG_MushroomGlow` | `SM_Column_01` on `M_WA_Inst2` | Four `SM_Cobweb_01a` on the ceiling, small and ground mushrooms |
+| **Sunken Ruins** | none (teal lights only) | `SM_Column_01` on `M_WA_Inst` | `SM_Godray_Cone` over the core on `MI_NG_Godray`, nine `SM_Dungeon_Mud_01a` along the walls |
+
+Monster generator sits on the far-right cell (the plan's top-right, `Floor_22`, world `(300, 300)`). **Dressing** actors use `Dress` + `Dress_0`–`Dress_3`. **Monster generators** use `MonsterGen` + `Dress_N` only (no base `Dress` tag), so the global hide pass does not swallow them before the theme show pass. `ApplyDressing` hides all `MonsterGen`, then all `Dress`, then unhides the active `Dress_N` set (generators are in that set). Gothic starts visible in game via `SetActorHiddenInGame`, not actor-level **Hidden** (`bHidden`). Switch case **3** is required for Sunken Ruins (not only Default).
+
+| Theme | Actor | Mesh |
+| --- | --- | --- |
+| **Gothic** | `MonsterGen_Gothic` | `SM_Tomb_Crypt_Damage_Var_01`, native, on the floor |
+| **Goblin Tunnels** | `MonsterGen_Goblin` | `SM_Cage01`, native, about 242 UU tall |
+| **Fungal Warren** | `MonsterGen_Fungal_0` (showcase) | **Showcase:** single floor `SM_LargeMushrooms_a` at `(300, 300)` so the generator reads on the card. **Target:** four `SM_Cobweb_01a` cocoon (pitch 90, scale 1.5); `MonsterGen_Fungal_1`–`3` stay hidden until cocoon art is visible from the camera |
+| **Sunken Ruins** | `MonsterGen_Sunken` | **Showcase (2026-11-13):** same sarcophagus mesh as Gothic (`SM_Tomb_Crypt_Damage_Var_01` at `(300, 300, Z≈8)`) until `SM_WaterFloor_01` reads on teal floor. Sunken-only silt (`Mud_Back_2`, `Mud_Right_8`) was stacked on that cell — nudged to **(380, 300)** / **(300, 380)** so they do not bury the gen. No `SM_Column_01` on the gen (pillars already dress the corner). |
+
+Not done: wall ivy (`SM_Ivy_Wall_A`), `MI_Torch_Emissive` on the torch, and a green tint on the mushroom glow (the material has an emission strength but no emissive colour).
 
 ## Will (first contact)
 

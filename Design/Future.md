@@ -74,7 +74,7 @@ Possible effects:
 - **Fungi Infested Knight:** Andy's pick for the **Fungal** family elite (added to [Monsters.md](./Monsters.md)).
 
 ### Other new library items worth a look
-- **Spiders - characters with animations:** may fill the Spiders family in one pack (worker/minion/elite gap).
+- **Spiders:** imported under `/Game/Monsters/Spiders/` ([Monsters.md](./Monsters.md)). `attack_1` and `attack_2` missed the 60 fps frame grid.
 - **Mermaid Warrior:** Sunken Ruins resident or found-location guardian.
 - **Armored Troll (free, with sword)**, **Mossy Swamp Troll:** Orcs-family brute or a future Trolls family.
 - **Warrior Queen (rigged)**, **Fantasy RPG Humanoid Pack:** intruder heroes.

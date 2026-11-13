@@ -20,13 +20,13 @@ Skeletal mesh or primary rig per tier. `—` = tier not imported yet.
 | **Orcs** | `Orcs/StylizedGoblinMinion/SK_StylizedGoblinMinion` | `Orcs/3dGoblin/SM_3dGoblin` (static) | `Orcs/elite_orc` | `Orcs/ParagonNarbash/Characters/Heroes/Narbash/Meshes/Narbash` |
 | **Evil Fairies** | `EvilFairies/dark_fairy_worker_1` | `EvilFairies/dark_fairy_Minion_v1` | `EvilFairies/dark_fairy_elite_v1` | `EvilFairies/dark_fairy_boss_v1` |
 | **Fungal** | — | — | `Fungal/SK_FungiInfestedKnight` | `Fungal/SK_FungalMyconidGolem` |
-| **Spiders** | — | — | — | — |
+| **Spiders** | `Spiders/Argiope_v3` | `Spiders/Blue_Tarantula_v3` | `Spiders/Karakurt` | `Spiders/Tarantula` |
 | **Undead** | — | `Undead/skeleton_v1` | `Undead/mummy_v1` | `Undead/litch_v1` |
 | **Mutants** | `Mutants/mutant_worker_v2` | `Mutants/Character_001/Meshes/Monster_001` | `Mutants/FleshMutantMonster/Meshes/SK_FleshMutantMonster` | — |
 
 **Orc Elite** (`elite_orc`): ref [Orc-Elite-v3-closed-mouth.png](./Reference%20Images/Orcs/Orc-Elite-v3-closed-mouth.png); Hi3D `Orc-Elite_v2.glb`; CC `orc-elite_v1.ccProject`.
 
-**Also in project (not tier-assigned):** `Fungal/Fungal_Elegance_v1` (alternate elite).
+**Also in project (not tier-assigned):** `Fungal/Fungal_Elegance_v1` (alternate elite). `Spiders/Peacock`, `Spiders/Spider-Yellow` (alternate spiders).
 
 ## Not in UE yet
 
@@ -37,16 +37,14 @@ Fab library / pipeline only — **no row** for tiers already listed above.
 | **Fungal** | Worker | TBD ref `Fungal-Worker-v1.png` — [Hi3D prompt](../../../.cursor/skills/hi3d-image-to-3d/references/prompts.md#fungal-worker--spore-digger-hi3d-2d-ref) |
 | | Minion | **Cyclostome Agaricus** (Fab) or Hi3D TBD |
 | | Elite | Alternates: Mushroom Demon (Fab); `Fungal_Elegance_v1` already in project |
-| **Spiders** | Worker | TBD |
-| | Minion | Spider (Fab) |
-| | Elite | Theraphosa blondi (Fab) |
-| | Boss | Spider Tarantula (Fab) |
 | **Undead** | Worker | Zombie (Fab) |
 | | Boss | Alternate: Grave Keeper (Fab) |
 | **Mutants** | Boss | **The Hollow Walker** (Fab) |
 | **Evil Fairies** | Boss | Alternate: Harpy Assassin (Fab, review fit) |
 
 Orc worker retexture + **Handheld Torch**; MetaGoblin / catalog **3dGoblin** as minion alternates; Fab **Warrior Orc** as elite alternate (not imported). Evil Fairies minion: rejected Fab **Cutie Goddess**.
+
+Spider tier is by role, not mesh size. Minion source is `imports/blender/Blue Tarantula_v3.fbx`. Source FBX is 25 fps. `attack_1` is 0.96s and `attack_2` is 0.76s, so those two clips miss the 60 fps frame grid and did not import. Every spider mesh has `dead`, `idle`, `idle_2`, `walk`. The original `Blue Tarantula.fbx` did not import — its armature node is named `Armature`, UE drops that node, and `Bone` plus `body` are then two roots. `Blue_Tarantula-v2` is still in the folder; that export holds the last attack frame one extra 25 fps frame, so it has `attack_1` and `attack_2`. Peacock, Spider-Yellow, and Tarantula share one body mesh and differ by diffuse. Karakurt's body is its own. Blue Tarantula is a separate mesh. Fab alternate for the elite: Theraphosa blondi. Diffuses imported beside the meshes (`Argiope_difuse`, `blue_tarantula_difuse`, `karakurt_difuse`, `tarantula_difuse`, `spider_peacock`, `yellow_floral_spider_difuse`). Karakurt has no physics asset (bones too small).
 
 ## Intruders (adventurers)
 

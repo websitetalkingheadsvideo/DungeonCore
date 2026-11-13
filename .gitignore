@@ -26,6 +26,7 @@ __pycache__/
 .env
 
 # Local Hi3D upload / OAuth debug (not for repo)
+tmp/mcp-sid.txt
 tmp/*.b64
 tmp/*b64*.txt
 tmp/*upload*.json
