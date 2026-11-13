@@ -20,6 +20,7 @@ Concept mockup: [Reference Images/New Game - v4 smaller core.png](./Reference%20
 - Defaults: theme **Gothic**, family **Orcs**, random events **Medium**
 - Theme row click: re-skins the chamber's wall, floor and ceiling materials and recolors the torch lights in place (see "Theme kits")
 - Family row click: swaps the creature beside the core. Shown per family: Orcs `elite_orc`, Evil Fairies `dark_fairy_elite_v1`, Fungal `Fungal_Elegance_v1`, Undead `mummy_v1`, Mutants `mutant_worker_v2`. Spiders shows nothing until a spider mesh is in the project. The creatures are level actors under **NewGame > Creatures** in the Outliner.
+- **Orc idle (2026-11-13):** `elite_orc` on `L_NewGame` plays **`elite_orc0_Open_A_UE5`** in **Animation Single Node** (looping), same pattern as the spider idle on `Creature_Spiders`.
 
 ## Random events
 
@@ -56,8 +57,8 @@ Monster generator sits on the far-right cell (the plan's top-right, `Floor_22`, 
 | --- | --- | --- |
 | **Gothic** | `MonsterGen_Gothic` | `SM_Tomb_Crypt_Damage_Var_01`, native, on the floor |
 | **Goblin Tunnels** | `MonsterGen_Goblin` | `SM_Cage01`, native, about 242 UU tall |
-| **Fungal Warren** | `MonsterGen_Fungal_0` (showcase) | **Showcase:** single floor `SM_LargeMushrooms_a` at `(300, 300)` so the generator reads on the card. **Target:** four `SM_Cobweb_01a` cocoon (pitch 90, scale 1.5); `MonsterGen_Fungal_1`–`3` stay hidden until cocoon art is visible from the camera |
-| **Sunken Ruins** | `MonsterGen_Sunken` | **Showcase (2026-11-13):** same sarcophagus mesh as Gothic (`SM_Tomb_Crypt_Damage_Var_01` at `(300, 300, Z≈8)`) until `SM_WaterFloor_01` reads on teal floor. Sunken-only silt (`Mud_Back_2`, `Mud_Right_8`) was stacked on that cell — nudged to **(380, 300)** / **(300, 380)** so they do not bury the gen. No `SM_Column_01` on the gen (pillars already dress the corner). |
+| **Fungal Warren** | `MonsterGen_Fungal_0` (showcase) | **Showcase:** single floor `SM_LargeMushrooms_a` at `(300, 300)` so the generator reads on the card. **Target:** four `SM_Cobweb_01a` cocoon (pitch 90, scale 1.5). `MonsterGen_Fungal_1`–`3` are three of those cobwebs and show with the mushroom when Fungal Warren is picked |
+| **Sunken Ruins** | `MonsterGen_Sunken` (rim) + `MonsterGen_Sunken_Water` | **Raised pool (2026-11-13), placeholder shapes:** stone rim is the engine `Cylinder` on `M_WA_Inst`, 220 UU wide, 44 UU tall. Water is a second `Cylinder` on `MI_Water_Inst`, 180 UU wide, standing 4 UU proud of the rim. Raised because a flush pool does not read on the teal water floor. Not checked in play yet. Sunken-only silt (`Mud_Back_2`, `Mud_Right_8`) sits at **(380, 300)** / **(300, 380)**, now partly under the rim. |
 
 Not done: wall ivy (`SM_Ivy_Wall_A`), `MI_Torch_Emissive` on the torch, and a green tint on the mushroom glow (the material has an emission strength but no emissive colour).
 
