@@ -1,0 +1,7 @@
+(fn GetPressedItem ()
+  (bind _pc (Game|GetPlayerController 0))
+  (bind _pressed (select (Button|IsPressed (Variables|WBP_DungeonHUD|GetBtn_0)) 0 (select (Button|IsPressed (Variables|WBP_DungeonHUD|GetBtn_1)) 1 (select (Button|IsPressed (Variables|WBP_DungeonHUD|GetBtn_2)) 2 (select (Button|IsPressed (Variables|WBP_DungeonHUD|GetBtn_3)) 3 (select (Button|IsPressed (Variables|WBP_DungeonHUD|GetBtn_4)) 4 (select (Button|IsPressed (Variables|WBP_DungeonHUD|GetBtn_5)) 5 (select (Button|IsPressed (Variables|WBP_DungeonHUD|GetBtn_6)) 6 (select (Button|IsPressed (Variables|WBP_DungeonHUD|GetBtn_7)) 7 (select (Button|IsPressed (Variables|WBP_DungeonHUD|GetBtn_8)) 8 -1))))))))))
+  (bind _latched (Variables|Default|GetDragLatch))
+  (bind _updated (select (>= _pressed 0) _pressed (select (Game|Player|WasInputKeyJustReleased _pc "LeftMouseButton") -1 _latched)))
+  (Variables|Default|SetDragLatch _updated)
+  (return _updated))

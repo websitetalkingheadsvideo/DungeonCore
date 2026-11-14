@@ -1,0 +1,72 @@
+{
+  "ImportGroups": [
+    {
+      "GroupName": "StoreIcons",
+      "Files": [
+        {
+          "FilePath": "E:/Dungeon Core/DungeonCore/Content/UI/Icons/monster_generator.png",
+          "DestinationPath": "/Game/UI/Icons",
+          "bReplaceExisting": true,
+          "FactoryName": "TextureFactory",
+          "Save": true
+        },
+        {
+          "FilePath": "E:/Dungeon Core/DungeonCore/Content/UI/Icons/mana_generator.png",
+          "DestinationPath": "/Game/UI/Icons",
+          "bReplaceExisting": true,
+          "FactoryName": "TextureFactory",
+          "Save": true
+        },
+        {
+          "FilePath": "E:/Dungeon Core/DungeonCore/Content/UI/Icons/prism_beam_trap.png",
+          "DestinationPath": "/Game/UI/Icons",
+          "bReplaceExisting": true,
+          "FactoryName": "TextureFactory",
+          "Save": true
+        },
+        {
+          "FilePath": "E:/Dungeon Core/DungeonCore/Content/UI/Icons/resonance_plate_trap.png",
+          "DestinationPath": "/Game/UI/Icons",
+          "bReplaceExisting": true,
+          "FactoryName": "TextureFactory",
+          "Save": true
+        },
+        {
+          "FilePath": "E:/Dungeon Core/DungeonCore/Content/UI/Icons/gravity_well_trap.png",
+          "DestinationPath": "/Game/UI/Icons",
+          "bReplaceExisting": true,
+          "FactoryName": "TextureFactory",
+          "Save": true
+        },
+        {
+          "FilePath": "E:/Dungeon Core/DungeonCore/Content/UI/Icons/runaway_cart_trap.png",
+          "DestinationPath": "/Game/UI/Icons",
+          "bReplaceExisting": true,
+          "FactoryName": "TextureFactory",
+          "Save": true
+        },
+        {
+          "FilePath": "E:/Dungeon Core/DungeonCore/Content/UI/Icons/loot_bait.png",
+          "DestinationPath": "/Game/UI/Icons",
+          "bReplaceExisting": true,
+          "FactoryName": "TextureFactory",
+          "Save": true
+        },
+        {
+          "FilePath": "E:/Dungeon Core/DungeonCore/Content/UI/Icons/unshackled_golem.png",
+          "DestinationPath": "/Game/UI/Icons",
+          "bReplaceExisting": true,
+          "FactoryName": "TextureFactory",
+          "Save": true
+        },
+        {
+          "FilePath": "E:/Dungeon Core/DungeonCore/Content/UI/Icons/shard_sentinel.png",
+          "DestinationPath": "/Game/UI/Icons",
+          "bReplaceExisting": true,
+          "FactoryName": "TextureFactory",
+          "Save": true
+        }
+      ]
+    }
+  ]
+}

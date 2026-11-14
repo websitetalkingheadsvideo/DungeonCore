@@ -1,0 +1,362 @@
+[
+  {
+    "output_pins": [
+      {
+        "value": "",
+        "connected_pins": [
+          {
+            "direction": "EGPD_Input",
+            "index_id": 0,
+            "node": {
+              "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:TryDig.K2Node_IfThenElse_5"
+            }
+          }
+        ],
+        "pin_id": {
+          "direction": "EGPD_Output",
+          "index_id": 0,
+          "node": {
+            "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:TryDig.K2Node_IfThenElse_4"
+          }
+        },
+        "type_id": "Exec",
+        "name": "then"
+      },
+      {
+        "value": "",
+        "connected_pins": [],
+        "pin_id": {
+          "direction": "EGPD_Output",
+          "index_id": 1,
+          "node": {
+            "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:TryDig.K2Node_IfThenElse_4"
+          }
+        },
+        "type_id": "Exec",
+        "name": "else"
+      }
+    ],
+    "input_pins": [
+      {
+        "value": "",
+        "connected_pins": [
+          {
+            "direction": "EGPD_Output",
+            "index_id": 0,
+            "node": {
+              "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:TryDig.K2Node_FunctionEntry_0"
+            }
+          }
+        ],
+        "pin_id": {
+          "direction": "EGPD_Input",
+          "index_id": 0,
+          "node": {
+            "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:TryDig.K2Node_IfThenElse_4"
+          }
+        },
+        "type_id": "Exec",
+        "name": "execute"
+      },
+      {
+        "value": "true",
+        "connected_pins": [
+          {
+            "direction": "EGPD_Output",
+            "index_id": 0,
+            "node": {
+              "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:TryDig.K2Node_CommutativeAssociativeBinaryOperator_9"
+            }
+          }
+        ],
+        "pin_id": {
+          "direction": "EGPD_Input",
+          "index_id": 1,
+          "node": {
+            "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:TryDig.K2Node_IfThenElse_4"
+          }
+        },
+        "type_id": "Boolean",
+        "name": "Condition"
+      }
+    ],
+    "position": {
+      "x": 5040,
+      "y": 0
+    },
+    "node": {
+      "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:TryDig.K2Node_IfThenElse_4"
+    },
+    "type_id": "Utilities|FlowControl|Branch"
+  },
+  {
+    "output_pins": [
+      {
+        "value": "",
+        "connected_pins": [
+          {
+            "direction": "EGPD_Input",
+            "index_id": 0,
+            "node": {
+              "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:TryDig.K2Node_IfThenElse_6"
+            }
+          }
+        ],
+        "pin_id": {
+          "direction": "EGPD_Output",
+          "index_id": 0,
+          "node": {
+            "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:TryDig.K2Node_IfThenElse_5"
+          }
+        },
+        "type_id": "Exec",
+        "name": "then"
+      },
+      {
+        "value": "",
+        "connected_pins": [],
+        "pin_id": {
+          "direction": "EGPD_Output",
+          "index_id": 1,
+          "node": {
+            "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:TryDig.K2Node_IfThenElse_5"
+          }
+        },
+        "type_id": "Exec",
+        "name": "else"
+      }
+    ],
+    "input_pins": [
+      {
+        "value": "",
+        "connected_pins": [
+          {
+            "direction": "EGPD_Output",
+            "index_id": 0,
+            "node": {
+              "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:TryDig.K2Node_IfThenElse_4"
+            }
+          }
+        ],
+        "pin_id": {
+          "direction": "EGPD_Input",
+          "index_id": 0,
+          "node": {
+            "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:TryDig.K2Node_IfThenElse_5"
+          }
+        },
+        "type_id": "Exec",
+        "name": "execute"
+      },
+      {
+        "value": "true",
+        "connected_pins": [
+          {
+            "direction": "EGPD_Output",
+            "index_id": 0,
+            "node": {
+              "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:TryDig.K2Node_CommutativeAssociativeBinaryOperator_10"
+            }
+          }
+        ],
+        "pin_id": {
+          "direction": "EGPD_Input",
+          "index_id": 1,
+          "node": {
+            "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:TryDig.K2Node_IfThenElse_5"
+          }
+        },
+        "type_id": "Boolean",
+        "name": "Condition"
+      }
+    ],
+    "position": {
+      "x": 7000,
+      "y": 0
+    },
+    "node": {
+      "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:TryDig.K2Node_IfThenElse_5"
+    },
+    "type_id": "Utilities|FlowControl|Branch"
+  },
+  {
+    "output_pins": [
+      {
+        "value": "",
+        "connected_pins": [
+          {
+            "direction": "EGPD_Input",
+            "index_id": 0,
+            "node": {
+              "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:TryDig.K2Node_IfThenElse_7"
+            }
+          }
+        ],
+        "pin_id": {
+          "direction": "EGPD_Output",
+          "index_id": 0,
+          "node": {
+            "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:TryDig.K2Node_IfThenElse_6"
+          }
+        },
+        "type_id": "Exec",
+        "name": "then"
+      },
+      {
+        "value": "",
+        "connected_pins": [],
+        "pin_id": {
+          "direction": "EGPD_Output",
+          "index_id": 1,
+          "node": {
+            "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:TryDig.K2Node_IfThenElse_6"
+          }
+        },
+        "type_id": "Exec",
+        "name": "else"
+      }
+    ],
+    "input_pins": [
+      {
+        "value": "",
+        "connected_pins": [
+          {
+            "direction": "EGPD_Output",
+            "index_id": 0,
+            "node": {
+              "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:TryDig.K2Node_IfThenElse_5"
+            }
+          }
+        ],
+        "pin_id": {
+          "direction": "EGPD_Input",
+          "index_id": 0,
+          "node": {
+            "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:TryDig.K2Node_IfThenElse_6"
+          }
+        },
+        "type_id": "Exec",
+        "name": "execute"
+      },
+      {
+        "value": "true",
+        "connected_pins": [
+          {
+            "direction": "EGPD_Output",
+            "index_id": 0,
+            "node": {
+              "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:TryDig.K2Node_CommutativeAssociativeBinaryOperator_13"
+            }
+          }
+        ],
+        "pin_id": {
+          "direction": "EGPD_Input",
+          "index_id": 1,
+          "node": {
+            "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:TryDig.K2Node_IfThenElse_6"
+          }
+        },
+        "type_id": "Boolean",
+        "name": "Condition"
+      }
+    ],
+    "position": {
+      "x": 13160,
+      "y": 0
+    },
+    "node": {
+      "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:TryDig.K2Node_IfThenElse_6"
+    },
+    "type_id": "Utilities|FlowControl|Branch"
+  },
+  {
+    "output_pins": [
+      {
+        "value": "",
+        "connected_pins": [
+          {
+            "direction": "EGPD_Input",
+            "index_id": 0,
+            "node": {
+              "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:TryDig.K2Node_VariableSet_1"
+            }
+          }
+        ],
+        "pin_id": {
+          "direction": "EGPD_Output",
+          "index_id": 0,
+          "node": {
+            "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:TryDig.K2Node_IfThenElse_7"
+          }
+        },
+        "type_id": "Exec",
+        "name": "then"
+      },
+      {
+        "value": "",
+        "connected_pins": [],
+        "pin_id": {
+          "direction": "EGPD_Output",
+          "index_id": 1,
+          "node": {
+            "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:TryDig.K2Node_IfThenElse_7"
+          }
+        },
+        "type_id": "Exec",
+        "name": "else"
+      }
+    ],
+    "input_pins": [
+      {
+        "value": "",
+        "connected_pins": [
+          {
+            "direction": "EGPD_Output",
+            "index_id": 0,
+            "node": {
+              "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:TryDig.K2Node_IfThenElse_6"
+            }
+          }
+        ],
+        "pin_id": {
+          "direction": "EGPD_Input",
+          "index_id": 0,
+          "node": {
+            "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:TryDig.K2Node_IfThenElse_7"
+          }
+        },
+        "type_id": "Exec",
+        "name": "execute"
+      },
+      {
+        "value": "true",
+        "connected_pins": [
+          {
+            "direction": "EGPD_Output",
+            "index_id": 0,
+            "node": {
+              "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:TryDig.K2Node_PromotableOperator_36"
+            }
+          }
+        ],
+        "pin_id": {
+          "direction": "EGPD_Input",
+          "index_id": 1,
+          "node": {
+            "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:TryDig.K2Node_IfThenElse_7"
+          }
+        },
+        "type_id": "Boolean",
+        "name": "Condition"
+      }
+    ],
+    "position": {
+      "x": 14280,
+      "y": 0
+    },
+    "node": {
+      "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:TryDig.K2Node_IfThenElse_7"
+    },
+    "type_id": "Utilities|FlowControl|Branch"
+  }
+]

@@ -1,0 +1,15 @@
+---
+description: If a required MCP is down or unreachable, tell the user immediately and stop—no workarounds or continued work.
+alwaysApply: true
+---
+
+# MCP unavailable — stop immediately
+
+When a task **depends on** an MCP namespace or tool (Unreal MCP, Hi3D, browser automation, etc.) and that dependency is **down, unreachable, needs auth that cannot be completed, or repeatedly fails** after a minimal probe:
+
+1. **Tell the user immediately** in the first reply: which MCP, what error or status you saw, and that you are **stopped**.
+2. **Do nothing else** — no alternate tooling, no hours of shell/code workaround, no “I'll try without MCP,” no partial deliverables unless the user explicitly opts into a non-MCP path in a **new** message.
+3. **Do not retry in a loop** — one clear failure (or two only if the first error is ambiguous) is enough to declare MCP down.
+4. **Resume only** when the user confirms MCP is back or explicitly authorizes a different approach.
+
+User directive (hard rule): wasting time while MCP is down is forbidden.

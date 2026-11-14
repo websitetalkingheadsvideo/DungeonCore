@@ -1,0 +1,312 @@
+{
+  "returnValue": [
+    {
+      "output_pins": [
+        {
+          "value": "false",
+          "connected_pins": [
+            {
+              "direction": "EGPD_Input",
+              "index_id": 1,
+              "node": {
+                "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:UpdateDrag.K2Node_IfThenElse_7"
+              }
+            }
+          ],
+          "pin_id": {
+            "direction": "EGPD_Output",
+            "index_id": 0,
+            "node": {
+              "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:UpdateDrag.K2Node_CommutativeAssociativeBinaryOperator_13"
+            }
+          },
+          "type_id": "Boolean",
+          "name": "ReturnValue"
+        }
+      ],
+      "input_pins": [
+        {
+          "value": "false",
+          "connected_pins": [
+            {
+              "direction": "EGPD_Output",
+              "index_id": 0,
+              "node": {
+                "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:UpdateDrag.K2Node_PromotableOperator_21"
+              }
+            }
+          ],
+          "pin_id": {
+            "direction": "EGPD_Input",
+            "index_id": 0,
+            "node": {
+              "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:UpdateDrag.K2Node_CommutativeAssociativeBinaryOperator_13"
+            }
+          },
+          "type_id": "Boolean",
+          "name": "A"
+        },
+        {
+          "value": "false",
+          "connected_pins": [
+            {
+              "direction": "EGPD_Output",
+              "index_id": 0,
+              "node": {
+                "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:UpdateDrag.K2Node_PromotableOperator_22"
+              }
+            }
+          ],
+          "pin_id": {
+            "direction": "EGPD_Input",
+            "index_id": 1,
+            "node": {
+              "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:UpdateDrag.K2Node_CommutativeAssociativeBinaryOperator_13"
+            }
+          },
+          "type_id": "Boolean",
+          "name": "B"
+        }
+      ],
+      "position": {
+        "x": 8680,
+        "y": 200
+      },
+      "node": {
+        "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:UpdateDrag.K2Node_CommutativeAssociativeBinaryOperator_13"
+      },
+      "type_id": "Math|Boolean|ANDBoolean"
+    },
+    {
+      "output_pins": [
+        {
+          "value": "",
+          "connected_pins": [
+            {
+              "direction": "EGPD_Input",
+              "index_id": 1,
+              "node": {
+                "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:UpdateDrag.K2Node_CommutativeAssociativeBinaryOperator_8"
+              }
+            }
+          ],
+          "pin_id": {
+            "direction": "EGPD_Output",
+            "index_id": 0,
+            "node": {
+              "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:UpdateDrag.K2Node_PromotableOperator_19"
+            }
+          },
+          "type_id": "Boolean",
+          "name": "ReturnValue"
+        }
+      ],
+      "input_pins": [
+        {
+          "value": "",
+          "connected_pins": [
+            {
+              "direction": "EGPD_Output",
+              "index_id": 0,
+              "node": {
+                "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:UpdateDrag.K2Node_VariableGet_14"
+              }
+            }
+          ],
+          "pin_id": {
+            "direction": "EGPD_Input",
+            "index_id": 0,
+            "node": {
+              "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:UpdateDrag.K2Node_PromotableOperator_19"
+            }
+          },
+          "type_id": "Integer",
+          "name": "A"
+        },
+        {
+          "value": "",
+          "connected_pins": [
+            {
+              "direction": "EGPD_Output",
+              "index_id": 0,
+              "node": {
+                "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:UpdateDrag.K2Node_CallFunction_28"
+              }
+            }
+          ],
+          "pin_id": {
+            "direction": "EGPD_Input",
+            "index_id": 1,
+            "node": {
+              "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:UpdateDrag.K2Node_PromotableOperator_19"
+            }
+          },
+          "type_id": "Integer",
+          "name": "B"
+        }
+      ],
+      "position": {
+        "x": 6440,
+        "y": 0
+      },
+      "node": {
+        "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:UpdateDrag.K2Node_PromotableOperator_19"
+      },
+      "type_id": "Math|Integer|integer<integer"
+    },
+    {
+      "output_pins": [
+        {
+          "value": "",
+          "connected_pins": [
+            {
+              "direction": "EGPD_Input",
+              "index_id": 0,
+              "node": {
+                "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:UpdateDrag.K2Node_CommutativeAssociativeBinaryOperator_13"
+              }
+            }
+          ],
+          "pin_id": {
+            "direction": "EGPD_Output",
+            "index_id": 0,
+            "node": {
+              "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:UpdateDrag.K2Node_PromotableOperator_21"
+            }
+          },
+          "type_id": "Boolean",
+          "name": "ReturnValue"
+        }
+      ],
+      "input_pins": [
+        {
+          "value": "",
+          "connected_pins": [
+            {
+              "direction": "EGPD_Output",
+              "index_id": 1,
+              "node": {
+                "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:UpdateDrag.K2Node_FunctionEntry_0"
+              }
+            }
+          ],
+          "pin_id": {
+            "direction": "EGPD_Input",
+            "index_id": 0,
+            "node": {
+              "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:UpdateDrag.K2Node_PromotableOperator_21"
+            }
+          },
+          "type_id": "Integer",
+          "name": "A"
+        },
+        {
+          "value": "",
+          "connected_pins": [
+            {
+              "direction": "EGPD_Output",
+              "index_id": 0,
+              "node": {
+                "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:UpdateDrag.K2Node_CallFunction_31"
+              }
+            }
+          ],
+          "pin_id": {
+            "direction": "EGPD_Input",
+            "index_id": 1,
+            "node": {
+              "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:UpdateDrag.K2Node_PromotableOperator_21"
+            }
+          },
+          "type_id": "Integer",
+          "name": "B"
+        }
+      ],
+      "position": {
+        "x": 7560,
+        "y": 200
+      },
+      "node": {
+        "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:UpdateDrag.K2Node_PromotableOperator_21"
+      },
+      "type_id": "Math|Integer|integer<integer"
+    },
+    {
+      "output_pins": [
+        {
+          "value": "",
+          "connected_pins": [
+            {
+              "direction": "EGPD_Input",
+              "index_id": 1,
+              "node": {
+                "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:UpdateDrag.K2Node_IfThenElse_9"
+              }
+            }
+          ],
+          "pin_id": {
+            "direction": "EGPD_Output",
+            "index_id": 0,
+            "node": {
+              "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:UpdateDrag.K2Node_PromotableOperator_23"
+            }
+          },
+          "type_id": "Boolean",
+          "name": "ReturnValue"
+        }
+      ],
+      "input_pins": [
+        {
+          "value": "",
+          "connected_pins": [
+            {
+              "direction": "EGPD_Output",
+              "index_id": 0,
+              "node": {
+                "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:UpdateDrag.K2Node_VariableGet_14"
+              }
+            }
+          ],
+          "pin_id": {
+            "direction": "EGPD_Input",
+            "index_id": 0,
+            "node": {
+              "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:UpdateDrag.K2Node_PromotableOperator_23"
+            }
+          },
+          "type_id": "Integer",
+          "name": "A"
+        },
+        {
+          "value": "",
+          "connected_pins": [
+            {
+              "direction": "EGPD_Output",
+              "index_id": 0,
+              "node": {
+                "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:UpdateDrag.K2Node_CallFunction_36"
+              }
+            }
+          ],
+          "pin_id": {
+            "direction": "EGPD_Input",
+            "index_id": 1,
+            "node": {
+              "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:UpdateDrag.K2Node_PromotableOperator_23"
+            }
+          },
+          "type_id": "Integer",
+          "name": "B"
+        }
+      ],
+      "position": {
+        "x": 9240,
+        "y": 400
+      },
+      "node": {
+        "refPath": "/Game/Core/BP_DungeonGrid.BP_DungeonGrid:UpdateDrag.K2Node_PromotableOperator_23"
+      },
+      "type_id": "Math|Integer|integer>=integer"
+    }
+  ]
+}

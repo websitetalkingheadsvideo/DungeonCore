@@ -14,12 +14,13 @@ Typical workflow:
   5. StopTests() to abort if needed.
 - ConfigSettingsToolset.ConfigSettingsToolset: Tools for listing, inspecting, and editing Config Settings sections
 - DataRegistryToolset.DataRegistryTools: Provides tools for querying and inspecting Data Registries.
-- GameFeaturesToolset.GameFeaturesToolset: Provides tools for listing, activating, and deactivating Game Feature Plugins.
+- DataflowAgent.DataflowAgentToolset: Dataflow Agent Toolset - exposes Dataflow graph editing operations as AI agent tools.
 - EditorToolset.EditorAppToolset: Tools for querying and modifying Unreal Editor state: console variables, asset imaging,
 actor and asset selection, viewport camera, content browser navigation, and Play-In-Editor
 session control.
 - EditorToolset.LogsToolset: Provides tools for reading the Unreal Engine output log and controlling
 log category verbosity.
+- GameFeaturesToolset.GameFeaturesToolset: Provides tools for listing, activating, and deactivating Game Feature Plugins.
 - GameplayTagsToolset.GameplayTagsToolset: Provides tools for reading and managing gameplay tags in the project's GameplayTagsManager.
 - GASToolsets.GameplayCueToolset: Provides tools for inspecting, executing, and managing gameplay cues and their notify assets.
 - GASToolsets.AttributeSetToolset: Provides tools for discovering AttributeSet classes and their gameplay attributes.
@@ -72,14 +73,12 @@ NiagaraToolset_System.AddModule to drop discovered modules into a stack.
 Note: FAssetData JSON serialization does not include the TagsAndValues map (it
 is not a UPROPERTY), so callers wanting decoded metadata for a result row from
 FindNiagaraScripts must round-trip through GetNiagaraScriptDigest.
-- DataflowAgent.DataflowAgentToolset: Dataflow Agent Toolset - exposes Dataflow graph editing operations as AI agent tools.
+- PhysicsToolsets.PhysicsAssetToolset: Provides tools for creating and managing Physics Assets.
 - PCGToolset.PCGToolset: Toolset for building and modifying PCG graphs
 - PCGToolset.PCGSpatialToolset: PCGSpatial Toolset
+- PluginToolset.PluginToolset: Tools for creating, editing, enabling, and querying Unreal plugins
 - SemanticSearchToolset.SemanticSearchToolset: Toolset exposing the SemanticSearch plugin's hybrid vector + BM25 asset search
 to the AI Toolset Registry.
-- PluginToolset.PluginToolset: Tools for creating, editing, enabling, and querying Unreal plugins
-- PhysicsToolsets.PhysicsAssetToolset: Provides tools for creating and managing Physics Assets.
-- WorldConditionsToolset.WorldConditionTools: Inspect WorldCondition (FWorldConditionQueryDefinition, FWorldConditionBase) structs.
 - SlateInspectorToolset.SlateInspectorToolset: Playwright-style Slate UI automation toolset.
 
 Exposes snapshot, screenshot, and interaction tools for driving the
@@ -96,6 +95,7 @@ Input simulation uses direct Slate event APIs (ProcessKeyCharEvent,
 ProcessMouseButtonDownEvent, etc.) rather than the AutomationDriver,
 because AutomationDriver's synchronous API deadlocks when called from
 the game thread (which is where MCP tool calls execute).
+- WorldConditionsToolset.WorldConditionTools: Inspect WorldCondition (FWorldConditionQueryDefinition, FWorldConditionBase) structs.
 - UMGToolSet.UMGToolSet: UMG widget toolset for AI-driven widget creation and tree manipulation.
 
 IMPORTANT WORKFLOW - for every widget and slot returned by this toolset:
@@ -108,7 +108,6 @@ Skipping step 1 causes set_properties to silently fail or set wrong properties.
 Returns UObject pointers - ToolsetRegistry serializes them as {"refPath": "..."} automatically.
 Pass returned Widget, Slot, and Parent pointers directly to ObjectTools or back to this toolset.
 - state_tree_toolset.toolsets.state_tree.StateTreeTools: Inspect StateTree (ST) assets.
-- conversation_toolset.toolsets.conversation.ConversationTools: Inspect Conversation Graph (UConversationDatabase) dialogue assets.
 - editor_toolset.toolsets.actor.ActorTools: Provides tools for inspecting and modifying actors, including
     their transforms, labels, parent-child relationships, and components.
 - editor_toolset.toolsets.asset.AssetTools: Provides tools for interacting with assets in the Unreal project and files on disk.
@@ -179,4 +178,5 @@ Pass returned Widget, Slot, and Parent pointers directly to ObjectTools or back 
     importing FBX animation onto bindings or Control Rig tracks, exporting
     animation to AnimSequence assets, or linking AnimSequences for
     auto-updates.
+- conversation_toolset.toolsets.conversation.ConversationTools: Inspect Conversation Graph (UConversationDatabase) dialogue assets.
 - aimodule_toolset.toolsets.behavior_tree.BehaviorTreeTools: Inspect BehaviorTree (BT) assets.
