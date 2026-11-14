@@ -1,15 +1,26 @@
 ---
-description: If a required MCP is down or unreachable, tell the user immediately and stop—no workarounds or continued work.
+description: If a required MCP is down or unreachable, report it in the first reply and stop—no workarounds.
 alwaysApply: true
 ---
 
-# MCP unavailable — stop immediately
+# MCP unavailable — report and stop (no workarounds)
 
 When a task **depends on** an MCP namespace or tool (Unreal MCP, Hi3D, browser automation, etc.) and that dependency is **down, unreachable, needs auth that cannot be completed, or repeatedly fails** after a minimal probe:
 
-1. **Tell the user immediately** in the first reply: which MCP, what error or status you saw, and that you are **stopped**.
-2. **Do nothing else** — no alternate tooling, no hours of shell/code workaround, no “I'll try without MCP,” no partial deliverables unless the user explicitly opts into a non-MCP path in a **new** message.
-3. **Do not retry in a loop** — one clear failure (or two only if the first error is ambiguous) is enough to declare MCP down.
-4. **Resume only** when the user confirms MCP is back or explicitly authorizes a different approach.
+## First reply (required)
 
-User directive (hard rule): wasting time while MCP is down is forbidden.
+1. **Report MCP down in the first paragraph** — name the namespace(s), paste or summarize the error/status (`namespaceStatus: error`, `needsAuth`, connection refused, etc.), and state **you are stopped**.
+2. Do **not** bury this under “let me try…” or partial progress.
+3. Do **not** proceed with the task in that turn.
+
+## Forbidden while MCP is down
+
+- **No workarounds** — including but not limited to: hand-rolled `urllib`/`tmp/*.py` scripts that call MCP HTTP anyway, hours of blueprint/graph edits without a working MCP, “I'll use C++ only,” browser automation substitutes, or asking the user to manually wire graphs the agent was supposed to do via MCP.
+- **No partial deliverables** framed as progress (DSL files, `tmp/` patch scripts, “run this when MCP is back”) unless the user **explicitly** opts into a non-MCP path in a **new** message.
+- **No retry loops** — one clear failure (two only if the first error is ambiguous) is enough to declare MCP down.
+
+## Resume
+
+Only when the user confirms MCP is back **or** explicitly authorizes a different approach in a new message.
+
+**User directive (hard rule):** MCP down must be **reported**. Workarounds while MCP is down waste the user's time and money and are **forbidden**.

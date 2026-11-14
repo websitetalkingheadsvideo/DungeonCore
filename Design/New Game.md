@@ -19,7 +19,7 @@ Concept mockup: [Reference Images/New Game - v4 smaller core.png](./Reference%20
 
 - Defaults: theme **Gothic**, family **Orcs**, random events **Medium**
 - Theme row click: re-skins the chamber's wall, floor and ceiling materials and recolors the torch lights in place (see "Theme kits")
-- Family row click: swaps the creature beside the core. Shown per family: Orcs `elite_orc`, Evil Fairies `dark_fairy_elite_v1`, Fungal `Fungal_Elegance_v1`, Undead `mummy_v1`, Mutants `mutant_worker_v2`. Spiders shows nothing until a spider mesh is in the project. The creatures are level actors under **NewGame > Creatures** in the Outliner.
+- Family row click: swaps the creature beside the core. Shown per family: Orcs `elite_orc`, Evil Fairies `dark_fairy_elite_v1`, Fungal `Fungal_Elegance_v1`, Undead `mummy_v1`, Mutants `mutant_worker_v2`, Spiders `Karakurt` (elite; other tiers in `/Game/Monsters/Spiders/` per [Monsters.md](./Monsters.md)). The creatures are level actors under **NewGame > Creatures** in the Outliner.
 - **Orc idle (2026-11-13):** `elite_orc` on `L_NewGame` plays **`elite_orc0_Open_A_UE5`** in **Animation Single Node** (looping), same pattern as the spider idle on `Creature_Spiders`.
 
 ## Random events

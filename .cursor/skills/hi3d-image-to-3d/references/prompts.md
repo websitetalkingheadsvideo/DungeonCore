@@ -171,6 +171,6 @@ dramatic studio lighting, no text, no watermark
 
 **Negative / avoid:** palms facing down, back of hands toward camera, slug body no legs, dragon wings, knight armor, circular tooth maw, blood waterfalls, cute toadstool mascot, chibi, violet glow, oversized hands, human bare feet, photoreal gore.
 
-**Output slug:** `fungal-worker` → `imports/hi3d/fungal-worker/` · **2D ref target:** `Design/Reference Images/Fungal/Fungal-Worker-v1.png`.
+**Output:** `imports/hi3d/Fungus/Fungal-Worker.glb`, `Fungal-Worker.ccProject` · **2D ref:** [Fungal-Worker.png](../../../Design/Reference%20Images/Fungal/Fungal-Worker.png) (see [Monsters.md](../../../Design/Monsters.md)).
 
 **Hi3D 3D:** web Advanced **300000** faces; CC → AccuRIG. Keep cap glow as emissive in UE, not Will violet.

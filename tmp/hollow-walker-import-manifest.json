@@ -1,0 +1,25 @@
+{
+  "attempts": [
+    {
+      "label": "glb",
+      "error": "FbxFactory does not support \".glb\" files. Allowed: ['fbx', 'obj']."
+    },
+    {
+      "label": "fbx",
+      "imported": [
+        {
+          "refPath": "/Game/Monsters/Mutants/Hollow_Walker/SK_Hollow_Walker.SK_Hollow_Walker"
+        }
+      ]
+    }
+  ],
+  "folder_assets": [
+    "/Game/Monsters/Mutants/Hollow_Walker/SK_Hollow_Walker_PhysicsAsset",
+    "/Game/Monsters/Mutants/Hollow_Walker/SK_Hollow_Walker_Skeleton",
+    "/Game/Monsters/Mutants/Hollow_Walker/Image_2",
+    "/Game/Monsters/Mutants/Hollow_Walker/texture_0_roughness",
+    "/Game/Monsters/Mutants/Hollow_Walker/Image_0",
+    "/Game/Monsters/Mutants/Hollow_Walker/Material_001",
+    "/Game/Monsters/Mutants/Hollow_Walker/SK_Hollow_Walker"
+  ]
+}

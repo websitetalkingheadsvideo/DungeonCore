@@ -31,7 +31,7 @@ player-visible work (UI, menus, environment, creatures, traps, VFX, fonts, audio
 - **`Design/Monsters.md`:** four tier **rows** per family (Worker / Minion / Elite / Boss) — see `monsters-tier-grid.mdc`; alternates go in the note cells.
 - Implement what the doc says; if a doc is silent on the point you need, say so and state the assumption
   you are making rather than inventing direction silently.
-- When a design decision is made in conversation, append it to the relevant `Design/*.md` in the same
-  short, concrete style (colors, timings, asset ids, scale in UU).
+- **Do not edit `Design/*.md`** unless the user gives **express written permission** in chat — see
+  [design-docs-write-permission.mdc](e:\Dungeon Core\.cursor\rules\design-docs-write-permission.mdc). Propose doc changes in chat; wait for approval.
 - Translate described moods into `search_library.py` queries per `asset-library-first.mdc`
   (e.g. "basalt + geode" → `Crystal_Cave`, `Lost_Cave`; "ruined cathedral pillars" → `Gothic_Cathedral_5.4`).

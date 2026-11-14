@@ -1,0 +1,22 @@
+---
+description: Never edit Design/*.md without the user's express written permission
+alwaysApply: true
+---
+
+# Design docs — read-only for the agent
+
+**Hard rule:** Do **not** create, edit, rename, or delete any file under `Design/` (including `Design/*.md`) unless the user **explicitly gives written permission in that chat** (e.g. "update Store.md", "append this to the design doc", "you may edit Design docs for this task").
+
+## Required behavior
+
+- **Read** `Design/*.md` for direction before player-visible work.
+- If a conversation implies a design change, **propose the exact text** in chat and **wait for permission** — do not apply it to disk.
+- If you believe a design doc is wrong or outdated, **say so in chat** with the path and quote; do not "fix" the doc silently.
+- Before any permitted edit, **tell the user in the same message** which file(s) you will change and why, then edit only what they allowed.
+
+## Does not apply
+
+- `tmp/` plans, manifests, or implementation notes (unless the user forbids those separately).
+- Code, blueprints, and content assets — governed by other rules.
+
+This rule overrides any older instruction to "append design decisions" to `Design/*.md` without permission.
