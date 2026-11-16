@@ -2,6 +2,8 @@
 
 Keep Hi3D prompts under **2000** characters. **Firefly image prompts must be under 1024 characters.** Align with **`Design/Monsters.md`** and faction rows in **`Design/Creatures and style.md`**.
 
+**Store props (generators, traps, loot, constructs):** Firefly + Hi3D text from **`firefly-store-item-prompt`**. Full-res 2D ref under `Design/Reference Images/Dungeon Items/`; menu style lock in `Design/Reference Images/icons/`. See `Design/Store.md`.
+
 ## Image requirements
 
 - **T-pose** for humanoids (arms horizontal at shoulder height); use **palms facing forward toward camera** when finger/hand read matters—not palms down. Do not mix “A-pose” and “T-pose” in one prompt.

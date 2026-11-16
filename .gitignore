@@ -40,5 +40,6 @@ tmp/hi3d_upload_full_png.py
 
 # Local pipeline output (Hi3D GLB, Fab staging, CC) — paths cited in Design/Monsters.md stay on disk only
 imports/
+imports/mixamo/
 
 Models/
