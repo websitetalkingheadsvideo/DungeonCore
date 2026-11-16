@@ -1,4 +1,4 @@
-# Random Events (draft)
+# Random Events (locations)
 
 Scratch event concepts. Main doc: [Random Events](../Random Events.md).
 

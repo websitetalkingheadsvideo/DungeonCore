@@ -18,6 +18,7 @@ NAMES = [
     "loot_bait",
     "unshackled_golem",
     "shard_sentinel",
+    "spore_generator",
 ]
 TARGET_SIZE = 512
 

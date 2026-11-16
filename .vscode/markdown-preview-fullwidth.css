@@ -1,0 +1,6 @@
+body {
+  max-width: none !important;
+  width: 100% !important;
+  margin: 0 !important;
+  box-sizing: border-box;
+}

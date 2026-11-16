@@ -38,7 +38,7 @@ Related: trap behavior in [General.md](./General.md), generator and chest shells
 - **Models:** each item with a model has its own instanced mesh component on the grid (`MonsterGens`, `ManaGens`, `BeamTraps`, `PlateTraps`, `GravTraps`, `LootBaits`, `SporeGens`). Items without one share `Items`, the placeholder block.
 - **Rotation:** `ItemInst` and `ItemYaw` remember each square's model and facing. `EditTick` reads the button, the click and the arrow keys; `RotateItemTo` turns the model; `ToggleEdit` switches the mode and the button's look.
 - **Theme color:** `ApplyTheme` calls `TintItems`, which sets `EmissiveTint` on every themed model.
-- **Icons:** textures in `/Game/UI/Icons/`, made from [Reference Images/icons/](e:\Dungeon Core\Design\Reference Images\icons). Do not leave `.png` files inside `DungeonCore/Content/UI/Icons/` next to the `.uasset` textures; Unreal will keep asking to re-import them.
+- **Icons:** textures in `/Game/UI/Icons/`, made from [Reference Images/icons/](Design/Reference%20Images/icons). Do not leave `.png` files inside `DungeonCore/Content/UI/Icons/` next to the `.uasset` textures; Unreal will keep asking to re-import them.
 - **Stop Play** before changing either blueprint through MCP.
 - **Model folders:** `/Game/Props/StoreItems/`, one folder per item. Each import also brought a backdrop mesh and material (`*_Backdrop`, `Backdrop_001`) that the game does not use.
 - **Adding a model for an item:** turn on "Used with Instanced Static Meshes" on its material (without it the model renders plain grey), add an instanced mesh component to the grid, and add the item to `TryPlace` and `RotateItemTo`. If it has a grey emission map, also add the tint to its material and the component to `TintItems`.
@@ -53,16 +53,16 @@ Prices are placeholders. "Needs to open" has two columns on purpose: what the bu
 
 | # | Done | Item | Price (mana) | What it does today | Model in the build | Needs to open: design docs | Icon file |
 | --- | --- | --- | ---: | --- | --- | --- | --- |
-| 0 | [ ] | **Monster Generator** | 40 | Click it to open the monster menu and buy creatures | `Monster_Generator_v2`, theme glow | Creature menu appears at tutorial beat 8 (first defender), after the first trap | `monster_generator.png` |
-| 1 | [ ] | **Mana Generator** | 30 | +1 mana per second each | `mana_generator/Mana_Generator_mana_generator`, theme glow | Works only inside a **powered** room ([Future.md](./Future.md)). No unlock step written | `mana_generator.png` |
-| 2 | [ ] | **Prism Beam Trap** | 35 | Nothing yet | `beam_trap/Prism_Beam_Trap_PrismBeamTrap`, theme glow | Needs wall mirrors and sightlines to work (see Mirror Pillar below). No unlock step written | `prism_beam_trap.png` |
-| 3 | [ ] | **Resonance Plate Trap** | 20 | Nothing yet | `PlateTrap/Plate_Trap_Plate_Trap`, theme glow | First trap the player gets: trap menu appears at tutorial beat 7, once the first dug room is powered | `resonance_plate_trap.png` |
-| 4 | [ ] | **Gravity Well Trap** | 45 | Nothing yet | `gravity_well_trap/Gravity_Well_Trap_tmpq61u_eep_obj`, own white and purple glow | No unlock step written | `gravity_well_trap.png` |
+| 0 | [x] | **Monster Generator** | 40 | Click it to open the monster menu and buy creatures | `Monster_Generator_v2`, theme glow | Creature menu appears at tutorial beat 8 (first defender), after the first trap | `monster_generator.png` |
+| 1 | [x] | **Mana Generator** | 30 | +1 mana per second each | `mana_generator/Mana_Generator_mana_generator`, theme glow | Works only inside a **powered** room ([Future.md](./Future.md)). No unlock step written | `mana_generator.png` |
+| 2 | [x] | **Prism Beam Trap** | 35 | Nothing yet | `beam_trap/Prism_Beam_Trap_PrismBeamTrap`, theme glow | Needs wall mirrors and sightlines to work (see Mirror Pillar below). No unlock step written | `prism_beam_trap.png` |
+| 3 | [x] | **Resonance Plate Trap** | 20 | Nothing yet | `PlateTrap/Plate_Trap_Plate_Trap`, theme glow | First trap the player gets: trap menu appears at tutorial beat 7, once the first dug room is powered | `resonance_plate_trap.png` |
+| 4 | [x] | **Gravity Well Trap** | 45 | Nothing yet | `gravity_well_trap/Gravity_Well_Trap_tmpq61u_eep_obj`, own white and purple glow | No unlock step written | `gravity_well_trap.png` |
 | 5 | [ ] | **Runaway Cart Trap** | 30 | Nothing yet | None, placeholder block | Needs a **built rail line** to run on. Rails are a parked idea ([Future.md](./Future.md)) | `runaway_cart_trap.png` |
-| 6 | [ ] | **Loot Bait** | 15 | Nothing yet | `LootBait/Loot_Bait_Loot_Bait`, no glow | Taught in free play, after the tutorial ("first loot placed as bait"). No unlock step written | `loot_bait.png` |
+| 6 | [x] | **Loot Bait** | 15 | Nothing yet | `LootBait/Loot_Bait_Loot_Bait`, no glow | Taught in free play, after the tutorial ("first loot placed as bait"). No unlock step written | `loot_bait.png` |
 | 7 | [ ] | **Unshackled Golem** | 50 | Nothing yet | None, placeholder block | No unlock step written | `unshackled_golem.png` |
 | 8 | [ ] | **Shard Sentinel** | 25 | Nothing yet | None, placeholder block | No unlock step written | `shard_sentinel.png` |
-| 9 | [ ] | **Spore Generator** | 30 | Nothing yet | `spore_generator/Spore_Generator_Spore_Generator`, no glow | Emits a **crowd of spores**; invaders in the **same powered room** fall **asleep** while the generator is active. **Neutral shell for now:** round fungal cap on a stalk rooted to the floor. **Per-theme shells** later (see [Theme.md](./Theme.md) pattern used for mana/monster generators). | `spore_generator.png` (not made yet, so the row has no icon) |
+| 9 | [ ] | **Spore Generator** | 30 | Nothing yet | `spore_generator/Spore_Generator_Spore_Generator`, no glow | Emits a **crowd of spores**; invaders in the **same powered room** fall **asleep** while the generator is active. **Neutral shell for now:** round fungal cap on a stalk rooted to the floor. **Per-theme shells** later (see [Theme.md](./Theme.md) pattern used for mana/monster generators). | `spore_generator.png` |
 | 10 | [ ] | **Map Table** | 25 | **+1 fog-of-war reveal** (stacking; see below) | TBD — add mesh + `TryPlace` when wired | **Base reveal 2**, **max 4**, **max two tables** per dungeon. **5 ft × 5 ft** table with rolled maps and compass tools; one room square placement. | `map_table.png` |
 
 **Fog-of-war reveal (Map Table):** beyond dug floor, fog stays clear for a number of **grid squares**. **Base: 2.** Each Map Table **+1**, capped at **4** (two tables).
@@ -70,7 +70,7 @@ Prices are placeholders. "Needs to open" has two columns on purpose: what the bu
 ### Still to do on the current eleven
 
 - [ ] Models for the Runaway Cart Trap, Unshackled Golem and Shard Sentinel.
-- [ ] Icon for the Spore Generator.
+- [x] Icon for the Spore Generator (reference art in [Reference Images/icons/spore_generator.png](Design/Reference%20Images/icons/spore_generator.png); wire `/Game/UI/Icons/spore_generator` in HUD when row 9 imports).
 - [ ] Map Table: model, icon, fog reveal logic, HUD row 10.
 - [ ] A matching ghost while dragging, instead of the plain block.
 - [ ] Behavior for every item except the two generators and Map Table reveal (when implemented).

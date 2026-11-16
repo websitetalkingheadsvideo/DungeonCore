@@ -1,0 +1,69 @@
+---
+description: In-repo file links in Agent chat must be repo-root-relative markdown + backtick path; no drive letters, UNC, or file:// hacks.
+alwaysApply: true
+---
+
+# In-repo file links in Agent chat (CRITICAL)
+
+Cursor resolves file links from the **open workspace / repository root**, not from drive letters, UNC (`\\server\share\...`), or invented `file://` URLs.
+
+## Required format (every file you ask the user to open)
+
+1. **Markdown link** — repo-root-relative, **no leading slash**:
+   - `[Store brief](Design/Store.md)`
+   - `[Rule](.cursor/rules/deliverable-links.mdc)`
+   - Paths with spaces: `[spore icon](<Design/Reference Images/icons/spore_generator.png>)` (angle brackets around target)
+
+2. **Same path in backticks** (Agent chat often hides link targets on hover):
+   - Link: [Store.md](Design/Store.md)
+   - Path: `Design/Store.md`
+
+**Both are mandatory.** Link-only or backtick-only is insufficient.
+
+## When you create or reference a deliverable
+
+- Verify the file exists before linking.
+- Prefer **zero spaces** in path segments for **new** files opened from chat (`tmp/spore_generator-v1.png` not only under `Reference Images/` if chat breaks on spaces).
+- If a spaced path won't open, put the artifact at a no-space path and link that — do not punt to the user. See [deliverable-links.mdc](.cursor/rules/deliverable-links.mdc).
+
+## Forbidden
+
+- UNC / absolute OS paths for in-repo files in chat (`e:\...`, `C:\Users\...`)
+- `file:///`, `vscode://file/`, invented `cursor://` unless the project documents a supported scheme
+- Leading-slash repo paths: `(/Source/foo.cpp)` — use `Source/foo.cpp`
+- Bare filename with no directory: `(foo.png)` in chat — always repo-relative
+- "Paste into Quick Open / Ctrl+P", "if the link fails copy the path", fenced path as the only deliverable
+- Marking work done with only a backtick path and no clickable markdown link
+
+## Examples (Dungeon Core)
+
+✅ [spore icon](<Design/Reference Images/icons/spore_generator.png>) — `Design/Reference Images/icons/spore_generator.png`
+
+✅ [wire-store-icons.py](tmp/wire-store-icons.py) — `tmp/wire-store-icons.py`
+
+❌ `e:\Dungeon Core\Design\Store.md`
+
+❌ `\\nas\share\project\tmp\foo.py`
+
+❌ [Store](Store.md) (no path from repo root)
+
+❌ "Open `Design/Store.md` in Quick Open"
+
+## Code citations in chat
+
+Use Cursor's citation form for existing code: fenced block with `startLine:endLine:repo/relative/path` (path under workspace root, no drive letter).
+
+## When editing an existing `.md` file
+
+- **Match the file:** If nearby links use `./…` or `../…`, keep that style for new links in that file.
+- Do not rewrite working links to another convention unless the user asked.
+
+## Before you finish a response that adds links
+
+1. Repo-root-relative targets; prefer zero-space paths for new chat deliverables.
+2. Every file: **markdown link + backtick path** (see Required format).
+3. Do not replace existing working links without user request.
+
+## Cross-rule
+
+[deliverable-links.mdc](.cursor/rules/deliverable-links.mdc) — still link every created file the user should open; use **this** link shape, not workspace-absolute paths.

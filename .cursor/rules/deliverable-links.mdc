@@ -1,23 +1,26 @@
 ---
-description: When creating files for the user to review, always include a clickable markdown link (full path).
+description: When creating files for the user to review, always include a clickable markdown link (repo-relative) plus backtick path.
 alwaysApply: true
 ---
 
 # Deliverable links
 
-When you **create or save a new file** (or a **new versioned filename**) that the user should **open, review, or run**, you **must** include at least one **clickable markdown link** to it in the same response.
+When you **create or save a new file** (or a **new versioned filename**) that the user should **open, review, or run**, you **must** include at least one way to open it in the same response — per [markdown-local-links.mdc](.cursor/rules/markdown-local-links.mdc):
+
+1. **Markdown link** with repo-root-relative target (angle brackets if the path has spaces).
+2. **Same path in backticks.**
+
+Put them **near the top** (first paragraph or a **Files** line), not buried at the end.
 
 ## Required
 
-- Use markdown link form: `[short label](full path)`.
-- **Full path:** workspace-absolute (e.g. `e:\Dungeon Core\Design\Monsters.md`) — no shortened or elided paths.
-- **Label:** filename or a few words (e.g. `DungeonCore-small-v2-no-hand.png`, `geode-remove-hand.py`).
-- **Multiple deliverables:** one link per file the user should look at (not only the “main” one).
-- Put links **near the top** of the response (first paragraph or a **Files** line), not buried at the end.
+- **Do not** use `e:\Dungeon Core\...`, `C:\Users\...`, or `file:///` for in-repo files in Agent chat.
+- **Label:** filename or a few words (e.g. `spore_generator-v1.png`, `wire-store-icons.py`).
+- **Multiple deliverables:** each file gets its own **link + backtick path**.
 
 ## Applies to
 
-- Design docs, reference images, plans under `tmp/`, scripts written for one-off tasks, exports, manifests, new `.mdc` rules, canvas artifacts saved to disk.
+- Design docs, reference images, plans under `tmp/`, scripts, exports, manifests, new `.mdc` rules, canvas artifacts saved to disk.
 
 ## Does not require links for
 
@@ -26,6 +29,4 @@ When you **create or save a new file** (or a **new versioned filename**) that th
 
 ## Example
 
-**Files:** [DungeonCore-small-v2-no-hand.png](e:\Dungeon Core\Design\Reference Images\Core\DungeonCore-small-v2-no-hand.png) · [geode-remove-hand.py](e:\Dungeon Core\tmp\geode-remove-hand.py)
-
-Hand removed; original unchanged at [DungeonCore-small.png](e:\Dungeon Core\Design\Reference Images\Core\DungeonCore-small.png).
+**Files:** [spore_generator.png](<Design/Reference Images/icons/spore_generator.png>) — `Design/Reference Images/icons/spore_generator.png` · [icons-checkerboard-to-png.py](tmp/icons-checkerboard-to-png.py) — `tmp/icons-checkerboard-to-png.py`
