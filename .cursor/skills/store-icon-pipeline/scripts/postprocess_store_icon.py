@@ -10,6 +10,17 @@ from PIL import Image
 TARGET_SIZE = 512
 
 
+def center_crop_square(im: Image.Image) -> Image.Image:
+    """Center-crop to 1:1 when Firefly hides aspect ratio (e.g. 1408×768)."""
+    w, h = im.size
+    if w == h:
+        return im
+    side = min(w, h)
+    left = (w - side) // 2
+    top = (h - side) // 2
+    return im.crop((left, top, left + side, top + side))
+
+
 def is_neutral_light(rgb: tuple[int, int, int], min_channel: int) -> bool:
     r, g, b = rgb
     if abs(r - g) > 15 or abs(g - b) > 15 or abs(r - b) > 15:
@@ -69,7 +80,7 @@ def to_transparent_png(
     white_threshold: int,
     black_threshold: int,
 ) -> Image.Image:
-    rgb = im.convert("RGB")
+    rgb = center_crop_square(im).convert("RGB")
     w, h = rgb.size
     px = rgb.load()
 
@@ -217,7 +228,7 @@ def grow_void_into_transparent(
 
 def firefly_rgba_to_icon(im: Image.Image, target: int = TARGET_SIZE, fill: float = 0.80) -> Image.Image:
     """Fit a Firefly remove-background PNG into a square HUD icon."""
-    rgba = im.convert("RGBA")
+    rgba = center_crop_square(im).convert("RGBA")
     alpha = rgba.getchannel("A")
     bbox = alpha.getbbox()
     if bbox is None:

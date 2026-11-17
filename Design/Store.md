@@ -83,9 +83,9 @@ Approved 2026-11-16 as the next items for the store. None are built, none have a
 
 | Done | Item | Price (mana) | What it would do | Why a dungeon wants it |
 | --- | --- | ---: | --- | --- |
-| [ ] | **Ley Conduit** | 25 | A crystal pylon that powers the room it stands in, so the room counts as **powered** without touching the core's own reach. | Mana Generators and Spore Generators are meant to work only in powered rooms. Without this, every working room has to sit next to the core. |
-| [ ] | **Mana Reservoir** | 35 | Raises the mana cap by 25 each. Invaders who break one spill its share of stored mana. | The cap is 100 and the dearest item is 50. A deeper dungeon needs somewhere to bank mana between waves, and it gives invaders a second thing worth attacking. |
-| [ ] | **Siphon Font** | 40 | Invaders who fall in this room give extra essence. | Rewards the player for choosing *where* the fight happens, which is the core loop of the genre ([Overall.md](./Overall.md)). |
+| [x] | **Ley Conduit** | 25 | A crystal pylon that powers the room it stands in, so the room counts as **powered** without touching the core's own reach. | Mana Generators and Spore Generators are meant to work only in powered rooms. Without this, every working room has to sit next to the core. |
+| [x] | **Mana Reservoir** | 35 | Raises the mana cap by 25 each. Invaders who break one spill its share of stored mana. | The cap is 100 and the dearest item is 50. A deeper dungeon needs somewhere to bank mana between waves, and it gives invaders a second thing worth attacking. |
+| [x] | **Siphon Font** | 40 | Invaders who fall in this room give extra essence. | Rewards the player for choosing *where* the fight happens, which is the core loop of the genre ([Overall.md](./Overall.md)). |
 
 ### Traps and control
 

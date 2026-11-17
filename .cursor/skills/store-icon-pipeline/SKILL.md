@@ -88,7 +88,8 @@ python .cursor/skills/store-icon-pipeline/scripts/postprocess_store_icon.py `
   --out-dir "Design/Reference Images/icons"
 ```
 
-- **`--from-firefly`:** RGBA with alpha → center fit **~80%** of 512, premultiplied resize (no white/black key).
+- **`--from-firefly`:** RGBA with alpha → **center square-crop** (Firefly often exports non-1:1) → fit **~80%** of 512, premultiplied resize (no white/black key).
+- Non-square sources without alpha: same **center square-crop**, then `--backdrop legacy` if matte is black.
 - **`--fill`** optional (default `0.80`).
 - Output: new **`{basename}-vN.png`** only (never overwrite prior `-vN` or canonical).
 - **Do not** pass `--write-canonical` until step 5 approval.
