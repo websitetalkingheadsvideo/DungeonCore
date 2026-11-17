@@ -1,6 +1,6 @@
 # Store
 
-The in-game shop where the core spends mana on things to place in rooms. First built 2026-11-13. This page was brought up to date with the build on 2026-11-16: **eleven** store items (Map Table added as #10), seven of the original ten with their own models, and an edit mode for turning placed items. Most items still do nothing once placed.
+The in-game shop where the core spends mana on things to place in rooms. First built 2026-11-13. This page was brought up to date with the build on 2026-11-16: **eleven** store rows (`StoreItem_0` to `StoreItem_10`), eight of them with their own models, and an edit mode for turning placed items. Map Table is now fully wired: mesh, icon and stacking fog reveal. The three **power and economy** items (Ley Conduit, Mana Reservoir, Siphon Font) have been **added to the project** as icons and models, but are not store rows yet. Most items still do nothing once placed.
 
 Related: trap behavior in [General.md](./General.md), generator and chest shells in [Theme.md](./Theme.md), unlock order in [Tutorial.md](./Tutorial.md), parked ideas in [Future.md](./Future.md).
 
@@ -8,7 +8,7 @@ Related: trap behavior in [General.md](./General.md), generator and chest shells
 
 ### Buying and placing
 
-- The store is a list of **eleven** rows on the left of the dungeon view, under the mana bar (add `StoreItem_10` / `ItemIndex` 10 when the HUD is extended). Each row shows an icon, the item name and its price.
+- The store is a list of **eleven** rows on the left of the dungeon view, under the mana bar, `StoreItem_0` to `StoreItem_10`. Each row shows an icon, the item name and its price.
 - **One gesture:** drag a store row onto the grid and release on a valid room square to place it.
 - **Rooms only:** an item goes on an empty square of a room, never on a corridor, a single dug square, or the core square. A room is at least 2x2. A bad drop shows "Items can only go on an empty room square" and spends nothing.
 - **Not enough mana:** pressing a row the player can't afford shows the NOT ENOUGH MANA alert and no drag starts.
@@ -35,7 +35,7 @@ Related: trap behavior in [General.md](./General.md), generator and chest shells
 
 - **HUD:** `WBP_DungeonHUD` (a plain User Widget). The rows are `WBP_StoreItem` widgets, `StoreItem_0` to `StoreItem_10`, each with an `ItemIndex`, a `Label` and an `IconTex`. A full-screen `WBP_DropZone` behind them takes the drop. `Btn_Edit`, `Txt_Edit` and `Txt_EditHint` are the edit-mode widgets.
 - **Grid:** `BP_DungeonGrid` holds the item list in `ItemNames` and `ItemCosts`. `StoreDragStart` checks mana, `StoreDragOver` moves the ghost, `StoreDragDrop` calls `TryPlace`. `TryPlace` checks the rules, spends the mana and adds the model.
-- **Models:** each item with a model has its own instanced mesh component on the grid (`MonsterGens`, `ManaGens`, `BeamTraps`, `PlateTraps`, `GravTraps`, `LootBaits`, `SporeGens`). Items without one share `Items`, the placeholder block.
+- **Models:** each item with a model has its own instanced mesh component on the grid (`MonsterGens`, `ManaGens`, `BeamTraps`, `PlateTraps`, `GravTraps`, `LootBaits`, `SporeGens`, `MapTables`). Items without one share `Items`, the placeholder block.
 - **Rotation:** `ItemInst` and `ItemYaw` remember each square's model and facing. `EditTick` reads the button, the click and the arrow keys; `RotateItemTo` turns the model; `ToggleEdit` switches the mode and the button's look.
 - **Theme color:** `ApplyTheme` calls `TintItems`, which sets `EmissiveTint` on every themed model.
 - **Icons:** textures in `/Game/UI/Icons/`, made from [Reference Images/icons/](Design/Reference%20Images/icons). Do not leave `.png` files inside `DungeonCore/Content/UI/Icons/` next to the `.uasset` textures; Unreal will keep asking to re-import them.
@@ -63,7 +63,7 @@ Prices are placeholders. "Needs to open" has two columns on purpose: what the bu
 | 7 | [ ] | **Unshackled Golem** | 50 | Nothing yet | None, placeholder block | No unlock step written | `unshackled_golem.png` |
 | 8 | [ ] | **Shard Sentinel** | 25 | Nothing yet | None, placeholder block | No unlock step written | `shard_sentinel.png` |
 | 9 | [ ] | **Spore Generator** | 30 | Nothing yet | `spore_generator/Spore_Generator_Spore_Generator`, no glow | Emits a **crowd of spores**; invaders in the **same powered room** fall **asleep** while the generator is active. **Neutral shell for now:** round fungal cap on a stalk rooted to the floor. **Per-theme shells** later (see [Theme.md](./Theme.md) pattern used for mana/monster generators). | `spore_generator.png` |
-| 10 | [ ] | **Map Table** | 25 | **+1 fog-of-war reveal** (stacking; see below) | TBD — add mesh + `TryPlace` when wired | **Base reveal 2**, **max 4**, **max two tables** per dungeon. **5 ft × 5 ft** table with rolled maps and compass tools; one room square placement. | `map_table.png` |
+| 10 | [x] | **Map Table** | 25 | **+1 fog-of-war reveal** each, stacking (see below) | `map_table/map_table_v5_SM`, static mesh | **Base reveal 2**, **max 4**, **max two tables** per dungeon. **5 ft × 5 ft** table with rolled maps and compass tools; one room square placement. | `map_table.png` |
 
 **Fog-of-war reveal (Map Table):** beyond dug floor, fog stays clear for a number of **grid squares**. **Base: 2.** Each Map Table **+1**, capped at **4** (two tables).
 
@@ -71,21 +71,38 @@ Prices are placeholders. "Needs to open" has two columns on purpose: what the bu
 
 - [ ] Models for the Runaway Cart Trap, Unshackled Golem and Shard Sentinel.
 - [x] Icon for the Spore Generator (reference art in [Reference Images/icons/spore_generator.png](Design/Reference%20Images/icons/spore_generator.png); wire `/Game/UI/Icons/spore_generator` in HUD when row 9 imports).
-- [ ] Map Table: model, icon, fog reveal logic, HUD row 10.
+- [x] Map Table: model, icon, HUD row 10 and reveal logic are in (`MapTables`, `MapTableCount`, `UpdateMapTableReveal`).
 - [ ] A matching ghost while dragging, instead of the plain block.
-- [ ] Behavior for every item except the two generators and Map Table reveal (when implemented).
+- [ ] Behavior for every item except the two generators and the Map Table reveal.
+- [ ] Wire the three power and economy items as rows 11 to 13 (next section).
+
+## Added to the project, not yet in the store
+
+Added 2026-11-16. The three power and economy items approved earlier the same day now have art and models **in the Unreal project**: icons imported as textures in `/Game/UI/Icons/`, models under `/Game/Props/StoreItems/`. None of them has a HUD row, an entry in `ItemNames` / `ItemCosts`, a `TryPlace` case or any behavior yet, so the store still shows eleven rows.
+
+| Assets | In store | # when wired | Item | Price (mana) | What it would do | Model in the project | Icon file |
+| --- | --- | --- | --- | ---: | --- | --- | --- |
+| [x] | [ ] | 11 | **Ley Conduit** | 25 | A crystal pylon that powers the room it stands in, so the room counts as **powered** without touching the core's own reach | `ley_conduit/ley_conduit_v2` | `ley_conduit.png` |
+| [x] | [ ] | 12 | **Mana Reservoir** | 35 | Raises the mana cap by 25 each. Invaders who break one spill its share of stored mana | `mana_reservoir/mana_reservoir_unreal` | `mana_reservoir.png` |
+| [x] | [ ] | 13 | **Siphon Font** | 40 | Invaders who fall in this room give extra essence | `siphon_font/siphon_font_unreal` | `siphon_font.png` |
+
+Why each one is here: the Ley Conduit is what lets Mana Generators and Spore Generators work away from the core, since both are meant to need a **powered** room ([Future.md](./Future.md)). The Mana Reservoir gives a deeper dungeon somewhere to bank mana between waves (the cap is 100 and the dearest item is 50) and gives invaders a second thing worth attacking. The Siphon Font pays the player for choosing *where* the fight happens, which is the core loop of the genre ([Overall.md](./Overall.md)).
+
+### To wire each of them
+
+- **Static mesh first.** All three imported as **skeletal** meshes (each folder carries a `_Skeleton`, a `_Blueprint_LiveLink` and `Rigs/`, `Post_Process/`). Instanced mesh components take static meshes, so each needs a static mesh version first, the way `map_table_v5_SM` was done.
+- Then the usual route: turn on "Used with Instanced Static Meshes" on its material, add an instanced mesh component to `BP_DungeonGrid` (`LeyConduits`, `ManaReservoirs`, `SiphonFonts`), add the item to `ItemNames` / `ItemCosts`, `TryPlace` and `RotateItemTo`, and add the row to `WBP_DungeonHUD` with its `ItemIndex`, `Label` and `IconTex`.
+- If a model has a grey emission map, add `EmissiveTint` / `EmissiveStrength` to its material and the component to `TintItems`. The Ley Conduit glows, so it must stay off the reserved colors in [General.md](./General.md).
+- Icon art left spare versions in [Reference Images/icons/](Design/Reference%20Images/icons): `ley_conduit-v1` to `-v4` plus `ley_conuit_v4`, `mana_reservoir-v1` / `-v2`, `siphon_font-v1` / `-v2` / `siphon_font_v2` and `Siphon Font.png`. The plain `<name>.png` is the one of record; the rest are history.
+
 
 ## Proposed items
 
-Approved 2026-11-16 as the next items for the store. None are built, none have art or icons, and prices are guesses set against the current list. Each one is here because it fills a gap the ten items above leave open.
+Approved 2026-11-16 as the next items for the store. Nothing still listed below is built and none of them has art or icons; prices are guesses set against the current list. Each one is here because it fills a gap the items above leave open.
 
 ### Power and economy
 
-| Done | Item | Price (mana) | What it would do | Why a dungeon wants it |
-| --- | --- | ---: | --- | --- |
-| [x] | **Ley Conduit** | 25 | A crystal pylon that powers the room it stands in, so the room counts as **powered** without touching the core's own reach. | Mana Generators and Spore Generators are meant to work only in powered rooms. Without this, every working room has to sit next to the core. |
-| [x] | **Mana Reservoir** | 35 | Raises the mana cap by 25 each. Invaders who break one spill its share of stored mana. | The cap is 100 and the dearest item is 50. A deeper dungeon needs somewhere to bank mana between waves, and it gives invaders a second thing worth attacking. |
-| [x] | **Siphon Font** | 40 | Invaders who fall in this room give extra essence. | Rewards the player for choosing *where* the fight happens, which is the core loop of the genre ([Overall.md](./Overall.md)). |
+Done: Ley Conduit, Mana Reservoir and Siphon Font are in the project now. They moved up to [Added to the project, not yet in the store](#added-to-the-project-not-yet-in-the-store), with their models, icons and what is left to wire.
 
 ### Traps and control
 
