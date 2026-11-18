@@ -18,16 +18,16 @@ Each family has **at most one** named special in the **Random** column (working 
 | Medium (default) | 1% |
 | High | 5% |
 
-Not built in UE yet; independent of Random Events frequency ([New Game.md](./New%20Game.md)).
+**Spawn logic** (roll + replace) is **not built in UE yet** — independent of [Random Events](./Random%20Events.md) and [New Game](./New%20Game.md) **Randomness**. **Meshes** below are in the project unless noted.
 
-| Family           | Random name                   | Role (draft)                             |
-| ---------------- | ----------------------------- | ---------------------------------------- |
-| **Evil Fairies** | **Fey**                       | —                                        |
-| **Undead**       | Sevarog                       | —                                        |
-| **Orcs**         | **Narbash** (moved from Boss) | Paragon drum boss; new **Boss** pick TBD |
-| **Fungal**       | Fungal Elegance               | TBD                                      |
-| **Spiders**      | —                             | TBD                                      |
-| **Mutants**      | —                             | TBD                                      |
+| Family           | Random name                   | In UE (mesh) | Role (draft) |
+| ---------------- | ----------------------------- | ------------ | ------------ |
+| **Evil Fairies** | **Fey** (Paragon) | Yes — full `ParagonFey` pack; **default skin Opaline** (`Fey_Opaline`) | Choose-a-fairy encounter ([TODO.md](../TODO.md)) |
+| **Undead**       | **Sevarog** (Paragon) | Yes — `ParagonSevarog/.../Meshes/Sevarog` | — |
+| **Orcs**         | **Narbash** (moved from Boss) | Yes — `ParagonNarbash/.../Meshes/Narbash` | Paragon drum; new **Boss** pick TBD; hide drum? ([TODO.md](../TODO.md)) |
+| **Fungal**       | **Fungal Queen** | Yes — `FungalQueen/Fungal_Queen` | — |
+| **Spiders**      | **Peacock** | Yes — `Spiders/Peacock` (+ anims) | — |
+| **Mutants**      | — | **No** — name + asset TBD | — |
 
 ## Art direction
 
@@ -43,10 +43,10 @@ Skeletal mesh or primary rig per tier. `—` = tier not imported yet.
 | Family           | Worker                                              | Minion                                     | Elite                                                     | Boss                                                              | Random                                                                       |
 | ---------------- | --------------------------------------------------- | ------------------------------------------ | --------------------------------------------------------- | ----------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | **Orcs**         | `Orcs/StylizedGoblinMinion/SK_StylizedGoblinMinion` | `Orcs/3dGoblin/SM_3dGoblin` (static)       | `Orcs/elite_orc`                                          | — (new boss TBD)                                                  | **Narbash** — `Orcs/ParagonNarbash/Characters/Heroes/Narbash/Meshes/Narbash` |
-| **Evil Fairies** | `EvilFairies/dark_fairy_worker_1`                   | `EvilFairies/dark_fairy_Minion_v1`         | `EvilFairies/dark_fairy_elite_v1`                         | `EvilFairies/dark_fairy_boss_v1`                                  | **Paragon: Fey**                                                             |
-| **Fungal**       | `Fungal/Fungal_Worker_v2`                           | `Fungal/Fungal_Minion`                     | `Fungal/SK_FungiInfestedKnight`                           | `Fungal/SK_FungalMyconidGolem`                                    | Fungal Queen                                                                 |
-| **Spiders**      | `Spiders/Argiope_v3`                                | `Spiders/Blue_Tarantula_v3`                | `Spiders/Karakurt`                                        | `Spiders/Tarantula`                                               | Peacock                                                                     |
-| **Undead**       | `Undead/Zombie`                                     | `Undead/skeleton_v1`                       | `Undead/mummy_v1`                                         | `Undead/litch_v1`                                                 | ## Paragon: Sevarog                                                          |
+| **Evil Fairies** | `EvilFairies/dark_fairy_worker_1`                   | `EvilFairies/dark_fairy_Minion_v1`         | `EvilFairies/dark_fairy_elite_v1`                         | `EvilFairies/dark_fairy_boss_v1`                                  | **Fey (Opaline)** — `EvilFairies/ParagonFey/Characters/Heroes/Fey/Skins/Opaline/Meshes/Fey_Opaline` |
+| **Fungal**       | `Fungal/Fungal_Worker_v2`                           | `Fungal/Fungal_Minion`                     | `Fungal/SK_FungiInfestedKnight`                           | `Fungal/SK_FungalMyconidGolem`                                    | **Fungal Queen** — `Fungal/FungalQueen/Fungal_Queen` |
+| **Spiders**      | `Spiders/Argiope_v3`                                | `Spiders/Blue_Tarantula_v3`                | `Spiders/Karakurt`                                        | `Spiders/Tarantula`                                               | **Peacock** — `Spiders/Peacock` |
+| **Undead**       | `Undead/Zombie`                                     | `Undead/skeleton_v1`                       | `Undead/mummy_v1`                                         | `Undead/litch_v1`                                                 | **Sevarog** — `Undead/ParagonSevarog/Characters/Heroes/Sevarog/Meshes/Sevarog` |
 | **Mutants**      | `Mutants/mutant_worker_v2`                          | `Mutants/Character_001/Meshes/Monster_001` | `Mutants/FleshMutantMonster/Meshes/SK_FleshMutantMonster` | `Mutants/Hollow_Walker/Meshy_AI_The_Hollow_Walker_All_Animations` | —                                                                            |
 
 **Orc Elite** (`elite_orc`): ref [Orc-Elite-v3-closed-mouth.png](./Reference%20Images/Orcs/Orc-Elite-v3-closed-mouth.png); Hi3D `Orc-Elite_v2.glb`; CC `orc-elite_v1.ccProject`.
@@ -55,9 +55,18 @@ Skeletal mesh or primary rig per tier. `—` = tier not imported yet.
 
 **Fungal Boss** (`SK_FungalMyconidGolem`): ref [Fungal-Myconid-Golem.png](./Reference%20Images/Fungal/Fungal-Myconid-Golem.png); Hi3D `Fungal-Myconid-Golem.glb`; CC `Fungal-Myconid-Golem.ccProject`.
 
-**Mutants Boss** (Hollow Walker): Fab / Meshy. **Canonical import:** Interchange GLB `01_Animated_GLB/Meshy_AI_The_Hollow_Walker_All_Animations.glb` → skeletal `Meshy_AI_The_Hollow_Walker_All_Animations` + skeleton; **anims:** `...Running`, `...Walking`, `...BeHit_FlyUp`, `...Run_03`, `...Skill_01` (same folder). Reimport: [import_hollow_walker_interchange.py](e:\Dungeon Core\DungeonCore\Content\Python\import_hollow_walker_interchange.py) via `UnrealEditor-Cmd -ExecutePythonScript` (MCP `SkeletalMeshTools.import_file` cannot load `.glb`). **Cleanup:** orphan FBX mesh `SK_Hollow_Walker` from an earlier bad pass — delete when you rename/retarget. Fab preview: [thumbnail.jpg](../imports/fab/Mutants/Hollow_Walker/glb/thumbnail.jpg).
+**Mutants Boss** (Hollow Walker): Fab / Meshy. **Canonical import:** Interchange GLB `01_Animated_GLB/Meshy_AI_The_Hollow_Walker_All_Animations.glb` → skeletal `Meshy_AI_The_Hollow_Walker_All_Animations` + skeleton; **anims:** `...Running`, `...Walking`, `...BeHit_FlyUp`, `...Run_03`, `...Skill_01` (same folder). Reimport: [import_hollow_walker_interchange.py](../DungeonCore/Content/Python/import_hollow_walker_interchange.py) via `UnrealEditor-Cmd -ExecutePythonScript` (MCP `SkeletalMeshTools.import_file` cannot load `.glb`). Stale `SK_Hollow_Walker` orphan removed 2026-11-18. Fab preview: [thumbnail.jpg](../imports/fab/Mutants/Hollow_Walker/glb/thumbnail.jpg).
 
-**Also in project (not tier-assigned):** `Fungal/Fungal_Elegance_v1` (alternate elite). `Spiders/Peacock`, `Spiders/Spider-Yellow` (alternate spiders).
+**Paragon Fey — skin meshes** (no shared `Meshes/Fey`; each skin is its own skeletal mesh under `.../Fey/Skins/<Skin>/Meshes/`):
+
+| Paragon skin id | UE mesh |
+| --- | --- |
+| **Opaline** (default) | `Fey_Opaline` |
+| **AutumnKeeper** | `Fey_AutumnKeeper` |
+| **Frostbloom** | `Fey_Frostbloom` |
+| **Nightshade** | `Fey_Nightshade` |
+
+**Also in project (not tier-assigned):** `Fungal/Fungal_Elegance_v1` (alternate elite; **not** the Random pick). `Spiders/Spider-Yellow` (alternate spider).
 
 ## Not in UE yet
 
@@ -66,9 +75,9 @@ Fab library / pipeline only — **no row** for tiers already listed above.
 | Family | Tier | Asset / note |
 | --- | --- | --- |
 | **Orcs** | Boss | New boss after Narbash moved to **Random**; drum on Narbash still open ([TODO.md](../TODO.md)) |
-| | Random | **Narbash** (in UE at old Boss path) |
-| **Evil Fairies** | Random | **Fey** — asset TBD (Fab/Paragon: The Fey per [library.md](../library.md)) |
-| **Undead** | Random | **Wraith** — asset TBD |
+| **Mutants** | Random | Name + asset TBD |
+| **Evil Fairies** | Random | **Gameplay** — choose-a-fairy picker not wired; design default mesh **Opaline** ([TODO.md](../TODO.md)) |
+| **Undead** | Random | Alternate (not tier pick): **Wraith** — Fab TBD |
 | **Fungal** | Elite | Alternates: Mushroom Demon (Fab); `Fungal_Elegance_v1` already in project |
 | | Minion | Alternate (rejected for tier): **Cyclostome Agaricus** (Fab) |
 | **Undead** | Boss | Alternate: Grave Keeper (Fab) |
@@ -89,15 +98,15 @@ Surface heroes — not dungeon families. Fab / Paragon catalog, plus one custom 
 | **Wanderer** | Wanderer | — |
 | **Assassin** | Free Medieval Assassin Girl | — |
 | **Hero** | Heroic Warrior | — |
-| **Champion** | Paragon: **Terra** (`/Game/ParagonTerra`) | Warrior Queen (rigged) — alternate |
+| **Champion** | Paragon: **Terra** (`/Game/Invaders/ParagonTerra`) | Warrior Queen (rigged) — alternate |
 | **Tank** | Paragon: **Greystone** | Paladin RPG Set (knight skins) |
-| **Bruiser** | Paragon: **Kwang** (`/Game/ParagonKwang`) | Gothic Knight |
-| **Mage** | Paragon: **Phase** | Aurora (`/Game/ParagonAurora`) - alternate |
+| **Bruiser** | Paragon: **Kwang** (`/Game/Invaders/ParagonKwang`) | Gothic Knight |
+| **Mage** | Paragon: **Phase** | Aurora (`/Game/Invaders/ParagonAurora`) - alternate |
 | **Archer** | Paragon: **Sparrow** (`/Game/Invaders/ParagonSparrow`) | — |
 | **Dwarf Fighter** | Firefly / Hi3D TBD | Intruder party |
 | **Elf Bowman** | Firefly / Hi3D TBD | Intruder party |
 | **Old Wizard** | Firefly / Hi3D TBD | Intruder party |
-| **Female Human Cleric** | Paragon: **Zinx** (`/Game/ParagonZinx`) | Firefly / Hi3D TBD - Zinx has a non-sci-fi skin, so she is the Cleric unless the skin does not fit, in which case drop her |
+| **Female Human Cleric** | Paragon: **Zinx** (`/Game/Invaders/ParagonZinx`) | Firefly / Hi3D TBD - Zinx has a non-sci-fi skin, so she is the Cleric unless the skin does not fit, in which case drop her |
 
 **Intruder party** (custom, not in UE): one shared kit — charcoal wool, ivory linen, dark leather, brushed steel, muted navy trim. Clean stylized realism, white T-pose sheets. Dwarf is the scale fighter: iron cap on his head, shield on the back, axe on the hip.
 
