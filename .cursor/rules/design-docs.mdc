@@ -16,6 +16,7 @@ player-visible work (UI, menus, environment, creatures, traps, VFX, fonts, audio
 | Fonts: titles (Friz Quadrata / Cinzel / Percolator), telemetry (Orbitron / Rajdhani / Exo 2), body (Goudy Old Style / Palatino) | `Design/fonts.md` |
 | LitRPG genre conventions and game-design takeaways (essence loop, reputation, companion, core stakes) | `Design/Overall.md` |
 | Per-faction creature asset picks (base / medium / boss) and intruder heroes | `Design/Monsters.md` |
+| Invader party AI, trap literacy tags, character-sheet fields for raids | `Design/Invaders.md` |
 
 ## Pillars to hold in mind
 
@@ -28,7 +29,7 @@ player-visible work (UI, menus, environment, creatures, traps, VFX, fonts, audio
 
 ## Rules
 
-- **`Design/Monsters.md`:** four tier **rows** per family (Worker / Minion / Elite / Boss) — see `monsters-tier-grid.mdc`; alternates go in the note cells.
+- **`Design/Monsters.md`:** tier grid per family (Worker / Minion / Elite / Boss / **Random**) — see `monsters-tier-grid.mdc`; alternates go in the note cells.
 - Implement what the doc says; if a doc is silent on the point you need, say so and state the assumption
   you are making rather than inventing direction silently.
 - **Do not edit `Design/*.md`** unless the user gives **express written permission** in chat — see

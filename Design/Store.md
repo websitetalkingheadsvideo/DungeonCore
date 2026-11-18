@@ -1,6 +1,6 @@
 # Store
 
-The in-game shop where the core spends mana on things to place in rooms. First built 2026-11-13. This page was brought up to date with the build on 2026-11-16: **eleven** store rows (`StoreItem_0` to `StoreItem_10`), eight of them with their own models, and an edit mode for turning placed items. Map Table is now fully wired: mesh, icon and stacking fog reveal. The three **power and economy** items (Ley Conduit, Mana Reservoir, Siphon Font) have been **added to the project** as icons and models, but are not store rows yet. Most items still do nothing once placed.
+The in-game shop where the core spends mana on things to place in rooms. First built 2026-11-13. This page was brought up to date with the build on 2026-11-17: **fifteen** store rows (`StoreItem_0` to `StoreItem_14`), twelve of them with their own models, grouped into an accordion by category, plus an edit mode for turning placed items. Ley Conduit, Mana Reservoir, Siphon Font and Mirror Pillar were wired as rows 11 to 14 on 2026-11-17. Most items still do nothing once placed.
 
 Related: trap behavior in [General.md](./General.md), generator and chest shells in [Theme.md](./Theme.md), unlock order in [Tutorial.md](./Tutorial.md), parked ideas in [Future.md](./Future.md).
 
@@ -8,7 +8,7 @@ Related: trap behavior in [General.md](./General.md), generator and chest shells
 
 ### Buying and placing
 
-- The store is a list of **eleven** rows on the left of the dungeon view, under the mana bar, `StoreItem_0` to `StoreItem_10`. Each row shows an icon, the item name and its price.
+- The store is a list of **fifteen** rows on the left of the dungeon view, under the mana bar, `StoreItem_0` to `StoreItem_14`, grouped into collapsible category sections (`Btn_Cat_*` / `Box_Cat_*`). Each row shows an icon, the item name and its price.
 - **One gesture:** drag a store row onto the grid and release on a valid room square to place it.
 - **Rooms only:** an item goes on an empty square of a room, never on a corridor, a single dug square, or the core square. A room is at least 2x2. A bad drop shows "Items can only go on an empty room square" and spends nothing.
 - **Not enough mana:** pressing a row the player can't afford shows the NOT ENOUGH MANA alert and no drag starts.
@@ -23,7 +23,7 @@ Related: trap behavior in [General.md](./General.md), generator and chest shells
 - Click a placed item to select it. A ring appears on its square.
 - Turn the selected item in 90 degree steps: left click it again or press the right arrow for clockwise, the left arrow for the other way.
 - Click the button again to leave. The ring goes away.
-- Works on all **eleven** items. While edit mode is on, clicks do not dig and do not open the monster menu.
+- Works on all **fifteen** items. While edit mode is on, clicks do not dig and do not open the monster menu.
 
 ### Glow and theme
 
@@ -35,9 +35,9 @@ Related: trap behavior in [General.md](./General.md), generator and chest shells
 
 - **HUD:** `WBP_DungeonHUD` (a plain User Widget). The rows are `WBP_StoreItem` widgets, `StoreItem_0` to `StoreItem_10`, each with an `ItemIndex`, a `Label` and an `IconTex`. A full-screen `WBP_DropZone` behind them takes the drop. `Btn_Edit`, `Txt_Edit` and `Txt_EditHint` are the edit-mode widgets.
 - **Grid:** `BP_DungeonGrid` holds the item list in `ItemNames` and `ItemCosts`. `StoreDragStart` checks mana, `StoreDragOver` moves the ghost, `StoreDragDrop` calls `TryPlace`. `TryPlace` checks the rules, spends the mana and adds the model.
-- **Models:** each item with a model has its own instanced mesh component on the grid (`MonsterGens`, `ManaGens`, `BeamTraps`, `PlateTraps`, `GravTraps`, `LootBaits`, `SporeGens`, `MapTables`). Items without one share `Items`, the placeholder block.
+- **Models:** each item with a model has its own instanced mesh component on the grid (`MonsterGens`, `ManaGens`, `BeamTraps`, `PlateTraps`, `GravTraps`, `LootBaits`, `SporeGens`, `MapTables`, `LeyConduits`, `ManaReservoirs`, `SiphonFonts`, `MirrorPillars`). Items without one share `Items`, the placeholder block.
 - **Rotation:** `ItemInst` and `ItemYaw` remember each square's model and facing. `EditTick` reads the button, the click and the arrow keys; `RotateItemTo` turns the model; `ToggleEdit` switches the mode and the button's look.
-- **Theme color:** `ApplyTheme` calls `TintItems`, which sets `EmissiveTint` on every themed model.
+- **Theme color:** `ApplyTheme` calls `TintItems`, which calls `TintOne` once per themed component. `TintOne` sets both `EmissiveTint` (props authored in Blender) and `Glow Color Tint` (props round-tripped through Character Creator, whose `RL_Standard` shader renames the emissive channel to Glow). Setting a parameter a material does not have is a no-op, so adding a themed item is one `TintOne` line regardless of pipeline. The Gravity Well Trap, Loot Bait, Spore Generator and Map Table are deliberately not in `TintItems`.
 - **Icons:** textures in `/Game/UI/Icons/`, made from [Reference Images/icons/](Design/Reference%20Images/icons). Do not leave `.png` files inside `DungeonCore/Content/UI/Icons/` next to the `.uasset` textures; Unreal will keep asking to re-import them.
 - **Stop Play** before changing either blueprint through MCP.
 - **Model folders:** `/Game/Props/StoreItems/`, one folder per item. Each import also brought a backdrop mesh and material (`*_Backdrop`, `Backdrop_001`) that the game does not use.
@@ -64,37 +64,37 @@ Prices are placeholders. "Needs to open" has two columns on purpose: what the bu
 | 8 | [ ] | **Shard Sentinel** | 25 | Nothing yet | None, placeholder block | No unlock step written | `shard_sentinel.png` |
 | 9 | [ ] | **Spore Generator** | 30 | Nothing yet | `spore_generator/Spore_Generator_Spore_Generator`, no glow | Emits a **crowd of spores**; invaders in the **same powered room** fall **asleep** while the generator is active. **Neutral shell for now:** round fungal cap on a stalk rooted to the floor. **Per-theme shells** later (see [Theme.md](./Theme.md) pattern used for mana/monster generators). | `spore_generator.png` |
 | 10 | [x] | **Map Table** | 25 | **+1 fog-of-war reveal** each, stacking (see below) | `map_table/map_table_v5_SM`, static mesh | **Base reveal 2**, **max 4**, **max two tables** per dungeon. **5 ft × 5 ft** table with rolled maps and compass tools; one room square placement. | `map_table.png` |
+| 11 | [ ] | **Ley Conduit** | 25 | Nothing yet | `ley_conduit/ley_conduit_v2_SM`, theme glow | Powers the room it stands in, so Mana and Spore Generators can run away from the core ([Future.md](./Future.md)). No unlock step written | `ley_conduit.png` |
+| 12 | [ ] | **Mana Reservoir** | 35 | Nothing yet | `mana_reservoir/mana_reservoir_unreal_SM`, theme glow | Raises the mana cap by 25 each; invaders who break one spill its share. No unlock step written | `mana_reservoir.png` |
+| 13 | [ ] | **Siphon Font** | 40 | Nothing yet | `siphon_font/siphon_font_unreal_SM`, theme glow | Invaders who fall in this room give extra essence ([Overall.md](./Overall.md)). No unlock step written | `siphon_font.png` |
+| 14 | [ ] | **Mirror Pillar** | 15 | Nothing yet | `mirror_pillar/Mirror_Pillar_v2`, theme glow | Turns a Prism Beam 90 degrees; facing set in edit mode. Needs the beam to exist first. No unlock step written | `mirror_pillar.png` |
 
 **Fog-of-war reveal (Map Table):** beyond dug floor, fog stays clear for a number of **grid squares**. **Base: 2.** Each Map Table **+1**, capped at **4** (two tables).
 
-### Still to do on the current eleven
+### Still to do on the current fifteen
 
 - [ ] Models for the Runaway Cart Trap, Unshackled Golem and Shard Sentinel.
 - [x] Icon for the Spore Generator (reference art in [Reference Images/icons/spore_generator.png](Design/Reference%20Images/icons/spore_generator.png); wire `/Game/UI/Icons/spore_generator` in HUD when row 9 imports).
 - [x] Map Table: model, icon, HUD row 10 and reveal logic are in (`MapTables`, `MapTableCount`, `UpdateMapTableReveal`).
 - [ ] A matching ghost while dragging, instead of the plain block.
 - [ ] Behavior for every item except the two generators and the Map Table reveal.
-- [ ] Wire the three power and economy items as rows 11 to 13 (next section).
+- [x] Ley Conduit, Mana Reservoir, Siphon Font and Mirror Pillar wired as rows 11 to 14 (2026-11-17). Behavior for all four is still unbuilt.
 
-## Added to the project, not yet in the store
+## Shipped 2026-11-17: power and economy, plus Mirror Pillar
 
-Added 2026-11-16. The three power and economy items approved earlier the same day now have art and models **in the Unreal project**: icons imported as textures in `/Game/UI/Icons/`, models under `/Game/Props/StoreItems/`. None of them has a HUD row, an entry in `ItemNames` / `ItemCosts`, a `TryPlace` case or any behavior yet, so the store still shows eleven rows.
-
-| Assets | In store | # when wired | Item | Price (mana) | What it would do | Model in the project | Icon file |
-| --- | --- | --- | --- | ---: | --- | --- | --- |
-| [x] | [ ] | 11 | **Ley Conduit** | 25 | A crystal pylon that powers the room it stands in, so the room counts as **powered** without touching the core's own reach | `ley_conduit/ley_conduit_v2` | `ley_conduit.png` |
-| [x] | [ ] | 12 | **Mana Reservoir** | 35 | Raises the mana cap by 25 each. Invaders who break one spill its share of stored mana | `mana_reservoir/mana_reservoir_unreal` | `mana_reservoir.png` |
-| [x] | [ ] | 13 | **Siphon Font** | 40 | Invaders who fall in this room give extra essence | `siphon_font/siphon_font_unreal` | `siphon_font.png` |
-
-Why each one is here: the Ley Conduit is what lets Mana Generators and Spore Generators work away from the core, since both are meant to need a **powered** room ([Future.md](./Future.md)). The Mana Reservoir gives a deeper dungeon somewhere to bank mana between waves (the cap is 100 and the dearest item is 50) and gives invaders a second thing worth attacking. The Siphon Font pays the player for choosing *where* the fight happens, which is the core loop of the genre ([Overall.md](./Overall.md)).
+Ley Conduit, Mana Reservoir, Siphon Font and Mirror Pillar are **store rows 11 to 14**. Each has a static mesh, an instanced mesh component on `BP_DungeonGrid`, entries in `ItemNames` / `ItemCosts` / `TryPlace` / `RotateItemTo`, an accordion HUD row with its icon, and theme tinting through `TintOne`. None of them does anything once placed yet; see the Items table above.
 
 ### To wire each of them
 
-- **Static mesh first.** All three imported as **skeletal** meshes (each folder carries a `_Skeleton`, a `_Blueprint_LiveLink` and `Rigs/`, `Post_Process/`). Instanced mesh components take static meshes, so each needs a static mesh version first, the way `map_table_v5_SM` was done.
-- Then the usual route: turn on "Used with Instanced Static Meshes" on its material, add an instanced mesh component to `BP_DungeonGrid` (`LeyConduits`, `ManaReservoirs`, `SiphonFonts`), add the item to `ItemNames` / `ItemCosts`, `TryPlace` and `RotateItemTo`, and add the row to `WBP_DungeonHUD` with its `ItemIndex`, `Label` and `IconTex`.
-- If a model has a grey emission map, add `EmissiveTint` / `EmissiveStrength` to its material and the component to `TintItems`. The Ley Conduit glows, so it must stay off the reserved colors in [General.md](./General.md).
-- Icon art left spare versions in [Reference Images/icons/](Design/Reference%20Images/icons): `ley_conduit-v1` to `-v4` plus `ley_conuit_v4`, `mana_reservoir-v1` / `-v2`, `siphon_font-v1` / `-v2` / `siphon_font_v2` and `Siphon Font.png`. The plain `<name>.png` is the one of record; the rest are history.
+This is the route for any new store item, and the first step only applies to Character Creator props.
 
+- **Static mesh first, for CC props.** Anything routed Hi3D -> Blender (face decimation) -> Character Creator -> Unreal arrives as a **skeletal** mesh (its folder carries a `_Skeleton`, a `_Blueprint_LiveLink` and `Rigs/`, `Post_Process/`). Instanced mesh components take static meshes only, so re-import the same FBX from `imports/blender/<item>/` with materials off, then point its slots at the existing CC material instances. That is how `ley_conduit_v2_SM`, `mana_reservoir_unreal_SM` and `siphon_font_unreal_SM` were made; the geometry is identical to the skeletal version. Props authored straight in Blender (Mirror Pillar, Map Table, the traps) import as static already.
+- Turn on "Used with Instanced Static Meshes" on the material. CC props inherit `/Game/CC_Shaders/StandardShader/RL_Standard`, which already has it; a standalone `pbr_material` usually does not.
+- Add an instanced mesh component to `BP_DungeonGrid`, then add the item to `ItemNames` / `ItemCosts`, `TryPlace` and `RotateItemTo`. In both functions the new item needs its own `select` branch for the component, and must be included in the has-model test so it gets Z 0 and scale 1,1,1 instead of the placeholder block's Z 20 and 0.7,0.7,0.4.
+- Add the row to `WBP_DungeonHUD` inside the right `Box_Cat_*` with its `ItemIndex`, `Label` ("Name  -  NN mana") and `IconTex`.
+- If it glows, add one `TintOne` line in `TintItems`. No need to work out which emissive parameter it uses; `TintOne` sets both.
+- **Warning:** `write_graph_dsl` through MCP **appends** a new copy of a function and re-points the entry at it, leaving the old body orphaned. After any MCP graph edit, delete every node not reachable from the function entry. `TryPlace` had nine stranded copies before this pass and `RotateItemTo` five.
+- Icon art left spare versions in [Reference Images/icons/](Design/Reference%20Images/icons): `ley_conduit-v1` to `-v4` plus `ley_conuit_v4`, `mana_reservoir-v1` / `-v2`, `siphon_font-v1` / `-v2` / `siphon_font_v2` and `Siphon Font.png`. The plain `<name>.png` is the one of record; the rest are history.
 
 ## Proposed items
 
@@ -102,15 +102,16 @@ Approved 2026-11-16 as the next items for the store. Nothing still listed below 
 
 ### Power and economy
 
-Done: Ley Conduit, Mana Reservoir and Siphon Font are in the project now. They moved up to [Added to the project, not yet in the store](#added-to-the-project-not-yet-in-the-store), with their models, icons and what is left to wire.
+Done: Ley Conduit, Mana Reservoir and Siphon Font shipped as store rows 11 to 13 on 2026-11-17, and Mirror Pillar as row 14 — see [Shipped 2026-11-17](#shipped-2026-11-17-power-and-economy-plus-mirror-pillar). Behavior for all four is still unbuilt.
 
 ### Traps and control
 
+Invader reactions (party split, trap knowledge, character sheet tags): [Invaders.md](./Invaders.md).
+
 | Done | Item | Price (mana) | What it would do | Why a dungeon wants it |
 | --- | --- | ---: | --- | --- |
-| [ ] | **Mirror Pillar** | 15 | A free-standing mirror that turns a Prism Beam 90 degrees. The way it faces sets the turn, so the player aims it with edit-mode rotation. | The Prism Beam "needs wall mirrors and sightlines" and nothing in the store supplies them. This is the missing half of that trap. |
 | [ ] | **Drag Lattice** | 20 | A floor lattice of slow light. Invaders crossing it move at half speed. Does no damage. | Every other trap hurts. A cheap slow makes the beam, the plate and the cart land more often, and gives new players an obvious first combo. |
-| [ ] | **Displacement Glyph** | 45 | Bought as a linked pair. An invader who steps on one is moved to the other. | Lets the player send a party back to the entrance, split it, or drop it into the trap room. One-way, so the order placed matters. |
+| [ ] | **Displacement Glyph** | 75 | Trap/control: bought as one linked **enter** + **exit** pair (two placements, **two distinct meshes or materials** so the player can read which is which in build mode). Invader steps **enter** → appears on **exit**. One-way; first placed = enter unless the player swaps in edit mode. | Lets the player send a party back to the entrance, split it, or drop it into the trap room. Strong, but every room still has normal exits. |
 | [ ] | **Crystal Barricade** | 10 | A waist-high wall of crystal that blocks one square until invaders break it. Defenders can pass. | The cheapest way to buy time or bend a path. Nothing in the store currently changes where invaders can walk. |
 | [ ] | **Mirage Veil** | 30 | Makes one room edge look like solid rock to invaders. A scout or a party that has seen through one before ignores it. | Hides the mana room or the short way to the core. Pairs with Loot Bait: one item pulls invaders in, this one steers them away. |
 
@@ -136,7 +137,7 @@ Added 2026-11-16 at Andy's request. Based on the Dungeons & Dragons mimic: a sha
 How it would play:
 
 - **Disguise:** invaders cannot tell a Mimic from Loot Bait until one touches it. It draws them exactly as Loot Bait does.
-- **Stick:** the invader who opens it is held on that square and cannot walk away. The rest of the party has to choose between helping and moving on.
+- **Stick:** the invader who opens it is held on that square and cannot walk away. The rest of the party has to choose between helping and moving on ([Invaders.md](./Invaders.md) — `HelperWeight`, `TrustLoot`).
 - **Bite:** it bites the held invader each second, with a little acid on top that keeps hurting for a moment after.
 - **Revealed:** once it has bitten, the disguise is gone. It stays where it is, fights anyone in reach, and creeps toward the nearest invader at a crawl.
 - **Reset:** if it survives the wave, it settles back into its chest shape for the next one.
@@ -157,9 +158,9 @@ Open questions:
 
 ### Open questions for these
 
-- **Colors:** the Ley Conduit, Scrying Lens and Decoy Core all glow. They must stay off the reserved colors in [General.md](./General.md) (teal, emerald, white-hot, red, violet), and the Decoy Core must not be mistaken for the real core's `CoreColor`.
+- **Colors:** the Ley Conduit, Mana Reservoir, Siphon Font, Mirror Pillar, Scrying Lens and Decoy Core all glow. They must stay off the reserved colors in [General.md](./General.md) (teal, emerald, white-hot, red, violet), and the Decoy Core must not be mistaken for the real core's `CoreColor`. The four shipped ones follow the theme tint; CC imports also arrive with `Self Illumination` at 5, which may need turning down.
 - **Mirage Veil and Crystal Barricade** sit on a room edge or block a square. Today every item occupies one room square and never blocks movement, so both need a new placement rule.
-- **Displacement Glyph** is the only item sold as a pair. Decide whether the second glyph is a second drag or placed automatically.
+- **Displacement Glyph** is the only item sold as a pair: **enter** and **exit** must look different at a glance (e.g. intake chevron vs landing ring). Decide whether placement is enter-then-exit as two drags or enter-then auto-arm exit placement.
 - **Alarm Chime vs Spore Generator:** spores put invaders to sleep. Decide whether a chime in the same room wakes them.
 - **Map Table vs Scrying Lens:** table raises **global** reveal depth from the dug edge; lens is a **local** clear ring plus invader intel. Decide whether both stack additively with no cap beyond two tables.
 - **Decoy Core** overlaps with Loot Bait as a lure. Keep both only if the decoy is clearly the late, expensive version.

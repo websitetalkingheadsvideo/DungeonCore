@@ -31,6 +31,12 @@ Card option: **Random Events — Low / Medium / High**. Default **Medium**. Save
 - No random events fire until the [Tutorial](./Tutorial.md) ends (or is skipped).
 - Full design and event list: [Random Events.md](./Random%20Events.md).
 
+## Randomness
+
+**Randomness — Low / Medium / High** (default **Medium**). Saved with the game. **Not built** on the card yet (fourth row TBD).
+
+Controls how often a family's **Random** special replaces any creature spawn ([Monsters.md](./Monsters.md#random-tier-special-spawn)): Low **0.1%**, Medium **1%**, High **5%**. Separate from Random Events frequency above.
+
 ## Theme kits
 
 Materials and light colors as wired in `WBP_NewGame` (2026-11-12). Full kit, paths and per-theme dressing: [Theme.md](./Theme.md).

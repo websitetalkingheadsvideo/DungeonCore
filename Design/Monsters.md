@@ -1,8 +1,33 @@
 # Monsters — Asset Mapping
 
-Creature picks by family. **Worker** = digs and builds (non-combat or barely), **Minion** = cheap fodder spawned in numbers, **Elite** = tougher and fewer, holds chokepoints, **Boss** = one per chamber, the big threat. Any family can be paired with any biome ([Creatures and style.md](./Creatures%20and%20style.md)).
+Creature picks by family. **Worker** = digs and builds (non-combat or barely), **Minion** = cheap fodder spawned in numbers, **Elite** = tougher and fewer, holds chokepoints, **Boss** = one per chamber, the big threat. **Random** = a family-specific special that can replace any planned spawn (see below). Any family can be paired with any biome ([Creatures and style.md](./Creatures%20and%20style.md)).
 
-**Tier rule:** Every family has **exactly four tiers: Worker, Minion, Elite, Boss**. The UE grid always lists all four; **Not in UE yet** only documents gaps and alternates — not extra tier rows.
+**Tier rule:** Every family has **Worker, Minion, Elite, Boss** plus one **Random** column in the UE grid. **Not in UE yet** only documents gaps and alternates — not duplicate tier rows.
+
+## Random tier (special spawn)
+
+Each family has **at most one** named special in the **Random** column (working category name; not the same as [Random Events](./Random%20Events.md)).
+
+**When it rolls:** On every creature spawn, **before** resolving the intended family/tier, roll once for the family's Random special. If it succeeds, spawn the **Random** creature **instead of** whatever was scheduled — same family as the spawn context.
+
+**Chance** — controlled by the **Randomness** setting on the New Game card (saved with the run). Default **Medium**.
+
+| Randomness | Chance any Random special replaces the spawn |
+| --- | ---: |
+| Low | 0.1% |
+| Medium (default) | 1% |
+| High | 5% |
+
+Not built in UE yet; independent of Random Events frequency ([New Game.md](./New%20Game.md)).
+
+| Family           | Random name                   | Role (draft)                             |
+| ---------------- | ----------------------------- | ---------------------------------------- |
+| **Evil Fairies** | **Fey**                       | —                                        |
+| **Undead**       | Sevarog                       | —                                        |
+| **Orcs**         | **Narbash** (moved from Boss) | Paragon drum boss; new **Boss** pick TBD |
+| **Fungal**       | Fungal Elegance               | TBD                                      |
+| **Spiders**      | —                             | TBD                                      |
+| **Mutants**      | —                             | TBD                                      |
 
 ## Art direction
 
@@ -15,14 +40,14 @@ Creature picks by family. **Worker** = digs and builds (non-combat or barely), *
 
 Skeletal mesh or primary rig per tier. `—` = tier not imported yet.
 
-| Family | Worker | Minion | Elite | Boss |
-| --- | --- | --- | --- | --- |
-| **Orcs** | `Orcs/StylizedGoblinMinion/SK_StylizedGoblinMinion` | `Orcs/3dGoblin/SM_3dGoblin` (static) | `Orcs/elite_orc` | `Orcs/ParagonNarbash/Characters/Heroes/Narbash/Meshes/Narbash` |
-| **Evil Fairies** | `EvilFairies/dark_fairy_worker_1` | `EvilFairies/dark_fairy_Minion_v1` | `EvilFairies/dark_fairy_elite_v1` | `EvilFairies/dark_fairy_boss_v1` |
-| **Fungal** | `Fungal/Fungal_Worker_v2` | `Fungal/Fungal_Minion` | `Fungal/SK_FungiInfestedKnight` | `Fungal/SK_FungalMyconidGolem` |
-| **Spiders** | `Spiders/Argiope_v3` | `Spiders/Blue_Tarantula_v3` | `Spiders/Karakurt` | `Spiders/Tarantula` |
-| **Undead** | `Undead/Zombie` | `Undead/skeleton_v1` | `Undead/mummy_v1` | `Undead/litch_v1` |
-| **Mutants** | `Mutants/mutant_worker_v2` | `Mutants/Character_001/Meshes/Monster_001` | `Mutants/FleshMutantMonster/Meshes/SK_FleshMutantMonster` | `Mutants/Hollow_Walker/Meshy_AI_The_Hollow_Walker_All_Animations` |
+| Family           | Worker                                              | Minion                                     | Elite                                                     | Boss                                                              | Random                                                                       |
+| ---------------- | --------------------------------------------------- | ------------------------------------------ | --------------------------------------------------------- | ----------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| **Orcs**         | `Orcs/StylizedGoblinMinion/SK_StylizedGoblinMinion` | `Orcs/3dGoblin/SM_3dGoblin` (static)       | `Orcs/elite_orc`                                          | — (new boss TBD)                                                  | **Narbash** — `Orcs/ParagonNarbash/Characters/Heroes/Narbash/Meshes/Narbash` |
+| **Evil Fairies** | `EvilFairies/dark_fairy_worker_1`                   | `EvilFairies/dark_fairy_Minion_v1`         | `EvilFairies/dark_fairy_elite_v1`                         | `EvilFairies/dark_fairy_boss_v1`                                  | **Paragon: Fey**                                                             |
+| **Fungal**       | `Fungal/Fungal_Worker_v2`                           | `Fungal/Fungal_Minion`                     | `Fungal/SK_FungiInfestedKnight`                           | `Fungal/SK_FungalMyconidGolem`                                    | Fungal Queen                                                                 |
+| **Spiders**      | `Spiders/Argiope_v3`                                | `Spiders/Blue_Tarantula_v3`                | `Spiders/Karakurt`                                        | `Spiders/Tarantula`                                               | Peacock                                                                     |
+| **Undead**       | `Undead/Zombie`                                     | `Undead/skeleton_v1`                       | `Undead/mummy_v1`                                         | `Undead/litch_v1`                                                 | ## Paragon: Sevarog                                                          |
+| **Mutants**      | `Mutants/mutant_worker_v2`                          | `Mutants/Character_001/Meshes/Monster_001` | `Mutants/FleshMutantMonster/Meshes/SK_FleshMutantMonster` | `Mutants/Hollow_Walker/Meshy_AI_The_Hollow_Walker_All_Animations` | —                                                                            |
 
 **Orc Elite** (`elite_orc`): ref [Orc-Elite-v3-closed-mouth.png](./Reference%20Images/Orcs/Orc-Elite-v3-closed-mouth.png); Hi3D `Orc-Elite_v2.glb`; CC `orc-elite_v1.ccProject`.
 
@@ -40,6 +65,10 @@ Fab library / pipeline only — **no row** for tiers already listed above.
 
 | Family | Tier | Asset / note |
 | --- | --- | --- |
+| **Orcs** | Boss | New boss after Narbash moved to **Random**; drum on Narbash still open ([TODO.md](../TODO.md)) |
+| | Random | **Narbash** (in UE at old Boss path) |
+| **Evil Fairies** | Random | **Fey** — asset TBD (Fab/Paragon: The Fey per [library.md](../library.md)) |
+| **Undead** | Random | **Wraith** — asset TBD |
 | **Fungal** | Elite | Alternates: Mushroom Demon (Fab); `Fungal_Elegance_v1` already in project |
 | | Minion | Alternate (rejected for tier): **Cyclostome Agaricus** (Fab) |
 | **Undead** | Boss | Alternate: Grave Keeper (Fab) |
@@ -53,20 +82,22 @@ Spider tier is by role, not mesh size. Minion source is `imports/blender/Blue Ta
 
 Surface heroes — not dungeon families. Fab / Paragon catalog, plus one custom Firefly party. `—` = not under `/Game/` yet.
 
+**AI, party behavior, trap knowledge, and character-sheet fields:** [Invaders.md](./Invaders.md).
+
 | Role | Primary asset | Named / alternates |
 | --- | --- | --- |
 | **Wanderer** | Wanderer | — |
 | **Assassin** | Free Medieval Assassin Girl | — |
 | **Hero** | Heroic Warrior | — |
-| **Champion** | **Warrior Queen** (rigged) | — |
+| **Champion** | Paragon: **Terra** (`/Game/ParagonTerra`) | Warrior Queen (rigged) — alternate |
 | **Tank** | Paragon: **Greystone** | Paladin RPG Set (knight skins) |
-| **Bruiser** | Paragon: **Kwang** | Gothic Knight |
-| **Mage** | Paragon: **Aurora** | — |
-| **Archer** | **Robin** | — |
+| **Bruiser** | Paragon: **Kwang** (`/Game/ParagonKwang`) | Gothic Knight |
+| **Mage** | Paragon: **Phase** | Aurora (`/Game/ParagonAurora`) - alternate |
+| **Archer** | Paragon: **Sparrow** (`/Game/Invaders/ParagonSparrow`) | — |
 | **Dwarf Fighter** | Firefly / Hi3D TBD | Intruder party |
 | **Elf Bowman** | Firefly / Hi3D TBD | Intruder party |
 | **Old Wizard** | Firefly / Hi3D TBD | Intruder party |
-| **Female Human Cleric** | Firefly / Hi3D TBD | Intruder party |
+| **Female Human Cleric** | Paragon: **Zinx** (`/Game/ParagonZinx`) | Firefly / Hi3D TBD - Zinx has a non-sci-fi skin, so she is the Cleric unless the skin does not fit, in which case drop her |
 
 **Intruder party** (custom, not in UE): one shared kit — charcoal wool, ivory linen, dark leather, brushed steel, muted navy trim. Clean stylized realism, white T-pose sheets. Dwarf is the scale fighter: iron cap on his head, shield on the back, axe on the hip.
 
