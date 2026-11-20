@@ -226,9 +226,14 @@ def grow_void_into_transparent(
             px[x, y] = (0, 0, 0, 0)
 
 
-def firefly_rgba_to_icon(im: Image.Image, target: int = TARGET_SIZE, fill: float = 0.80) -> Image.Image:
+def firefly_rgba_to_icon(
+    im: Image.Image,
+    target: int = TARGET_SIZE,
+    fill: float = 0.80,
+    center_crop: bool = True,
+) -> Image.Image:
     """Fit a Firefly remove-background PNG into a square HUD icon."""
-    rgba = center_crop_square(im).convert("RGBA")
+    rgba = center_crop_square(im).convert("RGBA") if center_crop else im.convert("RGBA")
     alpha = rgba.getchannel("A")
     bbox = alpha.getbbox()
     if bbox is None:
@@ -304,6 +309,11 @@ def main() -> None:
         help="Firefly only: max object size as fraction of 512 (default 0.80)",
     )
     parser.add_argument(
+        "--no-center-crop",
+        action="store_true",
+        help="Firefly only: keep full frame (e.g. 1408x768); do not center-crop to 1:1 first",
+    )
+    parser.add_argument(
         "--write-canonical",
         action="store_true",
         help="Also write basename.png (after approval only)",
@@ -315,7 +325,12 @@ def main() -> None:
 
     im = Image.open(args.src)
     if args.from_firefly:
-        cut = firefly_rgba_to_icon(im, TARGET_SIZE, args.fill)
+        cut = firefly_rgba_to_icon(
+            im,
+            TARGET_SIZE,
+            args.fill,
+            center_crop=not args.no_center_crop,
+        )
     else:
         cut = to_transparent_png(
             im,

@@ -24,7 +24,7 @@ Each family has **at most one** named special in the **Random** column (working 
 | ---------------- | ----------------------------- | ------------ | ------------ |
 | **Evil Fairies** | **Fey** (Paragon) | Yes — full `ParagonFey` pack; **default skin Opaline** (`Fey_Opaline`) | Choose-a-fairy encounter ([TODO.md](../TODO.md)) |
 | **Undead**       | **Sevarog** (Paragon) | Yes — `ParagonSevarog/.../Meshes/Sevarog` | — |
-| **Orcs**         | **Narbash** (moved from Boss) | Yes — `ParagonNarbash/.../Meshes/Narbash` | Paragon drum; new **Boss** pick TBD; hide drum? ([TODO.md](../TODO.md)) |
+| **Orcs**         | **Narbash** (Paragon) | Yes — `ParagonNarbash/.../Meshes/Narbash` | Orc **Random** only; war drum on mesh — keep / hide? ([TODO.md](../TODO.md)) |
 | **Fungal**       | **Fungal Queen** | Yes — `FungalQueen/Fungal_Queen` | — |
 | **Spiders**      | **Peacock** | Yes — `Spiders/Peacock` (+ anims) | — |
 | **Mutants**      | — | **No** — name + asset TBD | — |
@@ -42,7 +42,7 @@ Skeletal mesh or primary rig per tier. `—` = tier not imported yet.
 
 | Family           | Worker                                              | Minion                                     | Elite                                                     | Boss                                                              | Random                                                                       |
 | ---------------- | --------------------------------------------------- | ------------------------------------------ | --------------------------------------------------------- | ----------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| **Orcs**         | `Orcs/StylizedGoblinMinion/SK_StylizedGoblinMinion` | `Orcs/3dGoblin/SM_3dGoblin` (static)       | `Orcs/elite_orc`                                          | — (new boss TBD)                                                  | **Narbash** — `Orcs/ParagonNarbash/Characters/Heroes/Narbash/Meshes/Narbash` |
+| **Orcs**         | `Orcs/StylizedGoblinMinion/SK_StylizedGoblinMinion` | `Orcs/3dGoblin/SM_3dGoblin` (static)       | `Orcs/elite_orc`                                          | `Orcs/OrcBoss/Orc_Boss_unreal`                                    | **Narbash** — `Orcs/ParagonNarbash/Characters/Heroes/Narbash/Meshes/Narbash` |
 | **Evil Fairies** | `EvilFairies/dark_fairy_worker_1`                   | `EvilFairies/dark_fairy_Minion_v1`         | `EvilFairies/dark_fairy_elite_v1`                         | `EvilFairies/dark_fairy_boss_v1`                                  | **Fey (Opaline)** — `EvilFairies/ParagonFey/Characters/Heroes/Fey/Skins/Opaline/Meshes/Fey_Opaline` |
 | **Fungal**       | `Fungal/Fungal_Worker_v2`                           | `Fungal/Fungal_Minion`                     | `Fungal/SK_FungiInfestedKnight`                           | `Fungal/SK_FungalMyconidGolem`                                    | **Fungal Queen** — `Fungal/FungalQueen/Fungal_Queen` |
 | **Spiders**      | `Spiders/Argiope_v3`                                | `Spiders/Blue_Tarantula_v3`                | `Spiders/Karakurt`                                        | `Spiders/Tarantula`                                               | **Peacock** — `Spiders/Peacock` |
@@ -50,6 +50,8 @@ Skeletal mesh or primary rig per tier. `—` = tier not imported yet.
 | **Mutants**      | `Mutants/mutant_worker_v2`                          | `Mutants/Character_001/Meshes/Monster_001` | `Mutants/FleshMutantMonster/Meshes/SK_FleshMutantMonster` | `Mutants/Hollow_Walker/Meshy_AI_The_Hollow_Walker_All_Animations` | —                                                                            |
 
 **Orc Elite** (`elite_orc`): ref [Orc-Elite-v3-closed-mouth.png](./Reference%20Images/Orcs/Orc-Elite-v3-closed-mouth.png); Hi3D `Orc-Elite_v2.glb`; CC `orc-elite_v1.ccProject`.
+
+**Orc Boss** (`Orc_Boss_unreal`): ref [Orc-Boss.png](./Reference%20Images/Orcs/Orc-Boss.png); Hi3D/CC pipeline `imports/hi3d/Orcs/Orc-Boss/`; UE folder `Orcs/OrcBoss/`; showcase idle `Motion/Orc_Boss_unreal_Anim_0_Open_A_UE5` (CC Open A, same pattern as `elite_orc`).
 
 **Undead Worker** (`Zombie`): ref [Zombie.png](./Reference%20Images/Undead/Zombie.png); Hi3D `Zombie.glb`; CC `Zombie.ccProject` (`imports/hi3d/Undead/`).
 
@@ -74,7 +76,6 @@ Fab library / pipeline only — **no row** for tiers already listed above.
 
 | Family | Tier | Asset / note |
 | --- | --- | --- |
-| **Orcs** | Boss | New boss after Narbash moved to **Random**; drum on Narbash still open ([TODO.md](../TODO.md)) |
 | **Mutants** | Random | Name + asset TBD |
 | **Evil Fairies** | Random | **Gameplay** — choose-a-fairy picker not wired; design default mesh **Opaline** ([TODO.md](../TODO.md)) |
 | **Undead** | Random | Alternate (not tier pick): **Wraith** — Fab TBD |

@@ -4,11 +4,11 @@ Catalog of everything that can be (or is planned to be) bought from the dungeon 
 
 **Done column:** `[x]` only when the item is **fully shipped** (store row when applicable, place rules, icon, model when applicable, gameplay matches the row). Rows 11–14 are store rows now; they are not done until they have behavior.
 
-**In store:** whether the item has a HUD row (`StoreItem_*`) in the current fifteen-row build.
+**In store:** whether the item has a HUD row (`StoreItem_*`) in the current **sixteen-row** build (`StoreItem_0` … `StoreItem_15`).
 
 **Assets in UE:** icon and/or mesh under `/Game/UI/Icons/` and `/Game/Props/StoreItems/`.
 
-Catalog synced with the build **2026-11-17** (Ley Conduit, Mana Reservoir, Siphon Font and Mirror Pillar wired as store rows 11–14).
+Catalog synced with the build **2026-11-19** (Drag Lattice **#15** mesh + HUD icon; Displacement Glyph **exit** icon ref only — not a store row yet).
 
 ---
 
@@ -19,6 +19,13 @@ Ley Conduit, Mana Reservoir, Siphon Font and Mirror Pillar became store rows **1
 **Mirror Pillar (design):** free-standing mirror; turns a **Prism Beam** 90°; facing set in edit mode. Reference cuts: `mirror_pillar-v1.png`, `mirror_pillar-v2.png` (history); canonical HUD source `mirror_pillar.png`.
 
 **CC pipeline props:** anything routed Hi3D → Blender (decimate) → Character Creator → Unreal arrives as a **skeletal** mesh with `RL_Standard` materials, so it needs a static re-import of the same FBX for the ISM component, and its theme hook is `Glow Color Tint` rather than `EmissiveTint` — `TintOne` sets both, so no per-item decision is needed ([Store.md](./Store.md#to-wire-each-of-them)).
+
+## Art / icons (2026-11-19)
+
+| Item | HUD / store | Canonical icon | UE texture | Notes |
+| --- | --- | --- | --- | --- |
+| **Drag Lattice** | Row **#15** | [drag_lattice.png](./Reference%20Images/icons/drag_lattice.png) | `/Game/UI/Icons/drag_lattice` | Approved from `drag_lattice-v5`; history `drag_lattice-v1` … `v4`. |
+| **Displacement Glyph** | Not in store yet | Enter: [displacement_glyph.png](./Reference%20Images/icons/displacement_glyph.png) (`v2`); exit: [displacement_glyph_exit.png](./Reference%20Images/icons/displacement_glyph_exit.png) | `/Game/UI/Icons/displacement_glyph`, `/Game/UI/Icons/displacement_glyph_exit` | Pair art in UE; store row + placement still TBD ([Store.md](./Store.md#traps-and-control)). |
 
 ---
 
@@ -59,8 +66,8 @@ Damage, pathing, slowing, misdirection, and rail-dependent hazards.
 | 4 | [x] | [x] | **Gravity Well Trap** | 45 | Nothing yet | `gravity_well_trap/Gravity_Well_Trap_tmpq61u_eep_obj`, own white/purple glow | No unlock step written | `gravity_well_trap.png` |
 | 5 | [ ] | [x] | **Runaway Cart Trap** | 30 | Nothing yet | None, placeholder block | Needs a **built rail line** ([Future.md](./Future.md)) | `runaway_cart_trap.png` |
 | 14 | [ ] | [x] | **Mirror Pillar** | 15 | Buys and places; no behavior | `mirror_pillar/Mirror_Pillar_v2`, theme glow | Free-standing mirror; turns Prism Beam 90°; facing set in edit mode | `mirror_pillar.png` |
-| — | [ ] | — | **Drag Lattice** | 20 | Not built | No art yet | Floor lattice: half speed, no damage | — |
-| — | [ ] | — | **Displacement Glyph** | 75 | Not built | No art yet: **enter** + **exit** (two distinct looks); invader steps enter → appears on exit, one-way | — |
+| 15 | [ ] | [x] | **Drag Lattice** | 20 | Buys and places; no behavior | `drag_lattice/drag_lattice_unreal_SM`, `DragLattices` ISM, theme tint | Half speed on crossing; no damage ([Invaders.md](./Invaders.md)) | `drag_lattice.png` |
+| — | [ ] | — | **Displacement Glyph** | 75 | Not built | No mesh yet | Linked **enter** + **exit** pair; one-way teleport ([Store.md](./Store.md#traps-and-control)). Enter/exit HUD textures in UE; store row TBD | `displacement_glyph.png` (enter); `displacement_glyph_exit.png` (exit) |
 | — | [ ] | — | **Crystal Barricade** | 10 | Not built | No art yet | Blocks one square until broken; defenders pass | — |
 | — | [ ] | — | **Mirage Veil** | 30 | Not built | No art yet | Fake solid edge; scouts / veterans ignore after seeing one | — |
 
@@ -167,3 +174,4 @@ Quick lookup from HUD `ItemIndex` to section:
 | 12 | Mana Reservoir | Power and economy |
 | 13 | Siphon Font | Power and economy |
 | 14 | Mirror Pillar | Traps, barriers, and control |
+| 15 | Drag Lattice | Traps, barriers, and control |
