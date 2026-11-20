@@ -95,7 +95,7 @@ One-time Will moments that fire the first time each thing happens. Same delivery
 
 | Trigger | Will teaches |
 | --- | --- |
-| First adventurer party enters | Adventurers feed the core; lure them in |
+| First adventurer party enters | Adventurers feed the core; lure them in — **must be Common** (never Paragon on raid #1); see [Invaders.md — First raid](./Invaders.md#first-raid-vs-ongoing-spawns) |
 | First loot placed as bait | Loot draws parties; better loot, stronger parties |
 | Reputation / danger meter moves | Too deadly brings retaliation, too easy starves the core |
 | First named adventurer returns | Named parties remember the dungeon |

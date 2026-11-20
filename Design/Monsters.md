@@ -90,9 +90,9 @@ Spider tier is by role, not mesh size. Minion source is `imports/blender/Blue Ta
 
 ## Intruders (adventurers)
 
-Surface heroes — not dungeon families. Fab / Paragon catalog, plus one custom Firefly party. `—` = not under `/Game/` yet.
+Surface heroes — not dungeon families. **Full Epic Paragon hero catalog owned** (not all migrated); Fab fills gaps; plus one custom Firefly party. `—` = not under `/Game/` yet. Owned-but-unassigned heroes: [Invaders-Paragons.md](./Invaders-Paragons.md#owned-catalog-vs-in-project).
 
-**AI, party behavior, trap knowledge, and character-sheet fields:** [Invaders.md](./Invaders.md).
+**Combat character sheets** (all families + tiers + invaders): [Character-Sheets.md](./Character-Sheets.md). **Invader trap / party AI:** [Invaders.md](./Invaders.md). **Paragon wiki map:** [Invaders-Paragons.md](./Invaders-Paragons.md).
 
 | Role | Primary asset | Named / alternates |
 | --- | --- | --- |

@@ -1,6 +1,6 @@
 # Invaders — parties, AI, and character sheets
 
-Surface **adventurer parties** that raid the dungeon. Visual roster and Fab picks: [Monsters.md](./Monsters.md#intruders-adventurers). Store items that change invader behavior: [Store.md](./Store.md). This doc is the **single place** for raid AI, party state, and per-invader data the simulation needs.
+Surface **adventurer parties** that raid the dungeon. Visual roster and Fab picks: [Monsters.md](./Monsters.md#intruders-adventurers). Paragon MOBA reference (stats, wiki links, roster map): [Invaders-Paragons.md](./Invaders-Paragons.md). Store items that change invader behavior: [Store.md](./Store.md). This doc is the **single place** for raid AI, party state, and per-invader data the simulation needs.
 
 **Status:** design only — no invader party system or character sheets are implemented in UE yet.
 
@@ -20,6 +20,83 @@ Surface **adventurer parties** that raid the dungeon. Visual roster and Fab pick
 | **Knowledge tag** | Boolean or tiered fact about dungeon mechanics (e.g. knows displacement pairs). |
 | **Trap literacy** | Set of knowledge tags relevant to traps and dungeon fixtures. |
 | **Witnessed** | Unit had line-of-sight (or was within N cells) when the event fired. |
+| **Raid wave** | One surface incursion: one `PartyId`, spawns near the dungeon mouth. Size and power depend on **invader line** ([below](#raid-scaling-core-level)). |
+| **Invader line** | `Common` (Fab / custom — Wanderer, Hero, Assassin, Firefly party) vs `Paragon` (Epic MOBA heroes). Same party AI; very different combat sheets. |
+| **Paragon-caliber** | Paragon line only: full MOBA-style kit on the sheet ([Character-Sheets.md](./Character-Sheets.md)); **not** full wiki level-15 numbers until the `ReferenceTier` band allows it. |
+
+## Raid scaling (core level)
+
+Surface response scales with [Dungeon Core Levels.md](./Dungeon%20Core%20Levels.md). Two **spawn lines** share trap / party AI ([party state](#party-state-runtime-not-on-sheet)) but differ in **party size rules** and **power**.
+
+| Line | Meshes | Power (vs Paragon at same core) | Party size |
+| --- | --- | --- | --- |
+| **Common** | Non-Paragon intruders ([Monsters.md](./Monsters.md#intruders-adventurers)) | **Much lower** — `Fodder` stats, thin kits (see [Character-Sheets.md](./Character-Sheets.md)) | **Parties from core 1** (2–3 typical; solo Wanderer OK) |
+| **Paragon** | Paragon invaders | Full kits; numbers ramp by core | **Solo → duo → trio** by core level |
+
+### Common line (Fab / custom)
+
+- **From core level 1:** raids may be **parties of 2 or 3** using Common meshes (e.g. Wanderer + Hero, or full **Firefly party** when rigged). Solo **Wanderer** remains valid cheap fodder.
+- **Party AI always on** when size > 1: `PartyId`, cohesion, witness learning, glyph reunite — same as Paragon groups.
+- **Power:** always treat as **well below** a Paragon hero. Default `ReferenceTier` = `Fodder`; apply `CommonPowerScalar` **≈ 0.4** on vitals and damage vs a Paragon-derived sheet at the same tier (tune in combat). **One** simple active or none; passives optional — not full MOBA kits.
+- **Frequency:** Common waves are the **bread and butter** (often, forgiving). They teach traps and party behavior before Paragon champions show up.
+
+### Paragon line — party size
+
+| Core level | Paragon raiders per wave | Party AI (size 1) |
+| --- | ---: | --- |
+| **1–4** | **1** (solo) | Unit-only reactions (no shared memory). |
+| **5–7** | **2** | Full party AI. |
+| **8–10** | **3** | Full party AI; displacement glyph spec assumes **two witnesses** (see below). |
+
+Launch slice caps Paragon at **three** per wave (no 4–5 stacks). Larger warbands are future / reputation events.
+
+### Paragon line — reference tier per core band
+
+Combat stats: [Character-Sheets.md — Reference tier](./Character-Sheets.md#reference-tier). Paragon meshes use full kits; **numbers** ramp so core 1–2 is not fighting wiki level-15 veterans.
+
+| Core level | Default `ReferenceTier` | Notes |
+| --- | --- | --- |
+| **1–2** | `Fodder` → `Standard` | Rare **solo** Paragon scout / champion; most early surface traffic is **Common parties**. |
+| **3–4** | `Standard` | Paragon solos more common; still one body per Paragon wave. |
+| **5–7** | `Standard` → `Veteran` | Paragon duos; at **7**, one slot may roll `Veteran`. |
+| **8–10** | `Veteran` | Paragon trios; support slot may stay `Standard` for balance. |
+
+Optional runtime `SpawnPowerScalar` (0.85–1.15) stacks on top for depth / Randomness — not a substitute for tier bands or `CommonPowerScalar`.
+
+### Composition templates (spawn table)
+
+Random mesh triples are forbidden. Each wave picks from **templates** (line-specific meshes):
+
+| Size | Templates (pick one) | Roles |
+| --- | --- | --- |
+| **2** | `FrontBack` | Tank or Bruiser + Mage, Archer, or Cleric |
+| **2** | `ScoutDuo` | Scout/Assassin + Fighter (Firefly dwarf + elf fits here) |
+| **3** | `Classic` | Tank + damage (Hero/Bruiser/Mage) + Cleric or Scout |
+| **3** | `GlassCannon` | Tank + Mage + Archer (high trap payoff if split) |
+
+- **Common:** templates use Fab / Firefly archetypes only; sizes **2–3** from core 1.
+- **Paragon:** same templates but Paragon meshes per [Invaders-Paragons.md](./Invaders-Paragons.md); size capped by core level table above.
+
+### First raid vs ongoing spawns
+
+| Raid # | `InvaderLine` | Rule |
+| --- | --- | --- |
+| **1st wave ever** (this save) | **Common only** | **Hard rule — never Paragon.** Scripted or table-forced: e.g. **2** `Fodder` units, naive trap knowledge. Sets player expectation that Fab parties come first; Paragon is “real heroes” later. |
+| **2nd wave onward** | **Random** | Roll `Common` vs `Paragon` from spawn weights (below). Still obey **party size** rules per line and core level. |
+
+Runtime flag: `bFirstSurfaceRaidConsumed` (or raid count ≥ 1) gates the guarantee. Tutorial does not spawn surface invaders; this applies to **first organic lure** after [Tutorial.md](./Tutorial.md) hand-off.
+
+### Spawn economy (draft)
+
+- **Line roll (after 1st wave):** weighted random each wave — draft **60% Common / 40% Paragon** at low core, shifting toward **40 / 60** by core 8–10 (tune). Reputation may bias later.
+- **Common parties:** lower essence per kill than Paragon; good for [adventurer paradox](./Overall.md) traffic without wipes.
+- **Paragon waves:** **fewer, heavier** as party size grows — do not triple Paragon spawn rate when duos/trios unlock; bump reward per cleared Paragon wave slightly.
+- Failed raids that retreat: partial XP (both lines).
+- **Reputation** (TBD): too lethal → longer gaps; too easy → Common spam — separate knob from line weights.
+
+### Tutorial / first lure
+
+[Tutorial.md](./Tutorial.md) defers **lure adventurers** to free play. The **first** surface raid must match [First raid vs ongoing spawns](#first-raid-vs-ongoing-spawns) (**Common** duo, no Paragon). From the **second** raid on, line is random. Paragon **duos** only when core **≥ 5**; Paragon **trios** when core **≥ 8**.
 
 ## Party state (runtime, not on sheet)
 
@@ -37,13 +114,14 @@ Surface **adventurer parties** that raid the dungeon. Visual roster and Fab pick
 
 These fields belong on the **data asset or spawn table row** for each intruder archetype, plus per-instance overrides when spawning a named party.
 
-### Identity and combat (existing / TBD)
+### Identity and combat
 
 | Field | Notes |
 | --- | --- |
 | `ArchetypeId` | Wanderer, Tank, Cleric, Scout, Mage, etc. ([Monsters.md](./Monsters.md#intruders-adventurers)) |
+| `InvaderLine` | `Common` \| `Paragon` — party-size rules and power scalar ([raid scaling](#raid-scaling-core-level)) |
 | `Mesh / rig` | Asset path — out of scope here |
-| Combat stats | HP, armor, DPS — TBD in combat doc |
+| Combat stats, ratings, abilities | Shared schema: [Character-Sheets.md](./Character-Sheets.md) (`EntityKind = Invader` + rows below) |
 
 ### Behavior (required for trap reactions)
 
@@ -100,7 +178,7 @@ When a trap or fixture fires:
 
 1. **Apply effect** to victim (teleport, stick, slow, sleep, …).
 2. **Emit party event** (`AllyTeleported`, `AllyStuck`, `TrapTriggered`, …) with location, trap type, witness list.
-3. **Witnessed units** →短 halt (~1s reaction anim / bark).
+3. **Witnessed units** → short halt (~1s reaction anim / bark).
 4. **Choose intent** per non-victim unit (priority order):
    - If `PartyMemory` has relevant **Knows_*** → use **educated** branch (table below).
    - Else roll from archetype weights + `Cohesion` + `CohesionBias`.
@@ -143,6 +221,7 @@ Detailed spec for displacement (reference for other traps):
 - [ ] Intent switch: `ContinueObjective | FollowViaEnter | ReuniteViaPath | HelpAlly | AvoidTrap | Search`
 - [ ] Tag query: `HasKnowledge(Unit, Party, TagId)`
 - [ ] Spawn tables: map [Monsters.md](./Monsters.md) roles → archetype row
+- [ ] Raid spawner: force Common on raid #1; then weighted `InvaderLine` roll; `PartySize` (Common 2–3 from L1; Paragon 1/2/3 by core); composition template; `ReferenceTier`; `CommonPowerScalar`; `bFirstSurfaceRaidConsumed`
 - [ ] Scout party event → seed `LayoutIntel` + tags on **next** raid only
 - [ ] Telemetry / bark hooks for player readability (optional but recommended)
 
@@ -151,11 +230,14 @@ Detailed spec for displacement (reference for other traps):
 - Exact cohesion formula and whether the player sees party tier names (LitRPG flavor).
 - Per-faction tag sets (dwarves +glyph lore?) vs only veteran tier.
 - Whether **Call** ping reveals exit room through fog to allies (strong) or only direction (weaker).
-- Sync with tutorial first adventurer beat ([Tutorial.md](./Tutorial.md)) — naive party guaranteed.
+- Raid spawn cadence vs essence income (pair with reputation when it exists).
 
 ## Cross-links
 
+- Combat sheet schema (shared with monsters): [Character-Sheets.md](./Character-Sheets.md)
+- Paragon reference: [Invaders-Paragons.md](./Invaders-Paragons.md)
 - Assets: [Monsters.md — Intruders](./Monsters.md#intruders-adventurers)
 - Trap catalog: [Store.md](./Store.md), [store_items.md](./store_items.md)
 - Scout intel event: [Random Events.md](./Random%20Events.md)
 - Genre balance (bait vs lethality): [Overall.md](./Overall.md)
+- Core level XP curve & milestones: [Dungeon Core Levels.md](./Dungeon%20Core%20Levels.md)

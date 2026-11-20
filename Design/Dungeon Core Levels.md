@@ -50,6 +50,7 @@ Levels between milestones still earn XP and future perks; they do not add strata
 
 ## Implementation notes
 
+- **Surface raids:** invader **party size** (solo → duo → trio) and default combat tier by level band — [Invaders.md — Raid scaling](./Invaders.md#raid-scaling-core-level).
 - **Dungeon strata** = vertical build layers the core may energize; breaches from workers can open pockets on any unlocked stratum.
 - **Powered pockets** = distinct biome/resident regions that stay **powered** (bright ley grid) without brownouts; dormant pockets beyond the cap stay **dormant** until the player powers down another.
 - **Boss chambers** = active **Boss**-tier assignments per [Monsters.md](./Monsters.md); Elites do not count toward this cap.
