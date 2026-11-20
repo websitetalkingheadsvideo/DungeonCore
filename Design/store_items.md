@@ -26,6 +26,7 @@ Ley Conduit, Mana Reservoir, Siphon Font and Mirror Pillar became store rows **1
 | --- | --- | --- | --- | --- |
 | **Drag Lattice** | Row **#15** | [drag_lattice.png](./Reference%20Images/icons/drag_lattice.png) | `/Game/UI/Icons/drag_lattice` | Approved from `drag_lattice-v5`; history `drag_lattice-v1` … `v4`. |
 | **Displacement Glyph** | Not in store yet | Enter: [displacement_glyph.png](./Reference%20Images/icons/displacement_glyph.png) (`v2`); exit: [displacement_glyph_exit.png](./Reference%20Images/icons/displacement_glyph_exit.png) | `/Game/UI/Icons/displacement_glyph`, `/Game/UI/Icons/displacement_glyph_exit` | Pair art in UE; store row + placement still TBD ([Store.md](./Store.md#traps-and-control)). |
+| **Mirage Veil** | Not in store yet | [mirage_veil.png](./Reference%20Images/icons/mirage_veil.png) (`v1`) | `/Game/UI/Icons/mirage_veil` | Icon ref in UE; row + edge placement TBD ([Store.md](./Store.md#traps-and-control)). |
 
 ---
 
@@ -69,7 +70,7 @@ Damage, pathing, slowing, misdirection, and rail-dependent hazards.
 | 15 | [ ] | [x] | **Drag Lattice** | 20 | Buys and places; no behavior | `drag_lattice/drag_lattice_unreal_SM`, `DragLattices` ISM, theme tint | Half speed on crossing; no damage ([Invaders.md](./Invaders.md)) | `drag_lattice.png` |
 | — | [ ] | — | **Displacement Glyph** | 75 | Not built | No mesh yet | Linked **enter** + **exit** pair; one-way teleport ([Store.md](./Store.md#traps-and-control)). Enter/exit HUD textures in UE; store row TBD | `displacement_glyph.png` (enter); `displacement_glyph_exit.png` (exit) |
 | — | [ ] | — | **Crystal Barricade** | 10 | Not built | No art yet | Blocks one square until broken; defenders pass | — |
-| — | [ ] | — | **Mirage Veil** | 30 | Not built | No art yet | Fake solid edge; scouts / veterans ignore after seeing one | — |
+| — | [ ] | — | **Mirage Veil** | 30 | Not built | No mesh yet | Fake solid edge; scouts / veterans ignore after seeing one ([Invaders.md](./Invaders.md)) | `mirage_veil.png` |
 
 **Why Mirror Pillar:** Prism Beam design assumes mirrors and sightlines. It is store row 14 now, with mesh, icon and theme glow; the beam-turning behavior is not built ([Store.md](./Store.md#traps-and-control)).
 
