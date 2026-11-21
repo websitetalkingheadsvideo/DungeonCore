@@ -43,7 +43,33 @@
 			"Enabled": true
 		},
 		{
-			"Name": "MetaHuman",
+			"Name": "MetaHumanCoreML",
+			"Enabled": true,
+			"SupportedTargetPlatforms": [
+				"Mac",
+				"IOS",
+				"TVOS",
+				"VisionOS"
+			]
+		},
+		{
+			"Name": "MetaHumanRuntime",
+			"Enabled": true
+		},
+		{
+			"Name": "Aura",
+			"Enabled": true,
+			"SupportedTargetPlatforms": [
+				"Win64",
+				"Mac"
+			]
+		},
+		{
+			"Name": "MetaHumanCoreTech",
+			"Enabled": true
+		},
+		{
+			"Name": "MetaHumanCalibrationProcessing",
 			"Enabled": true,
 			"SupportedTargetPlatforms": [
 				"Win64",
@@ -61,26 +87,12 @@
 			]
 		},
 		{
-			"Name": "MetaHumanCalibrationProcessing",
+			"Name": "MetaHuman",
 			"Enabled": true,
 			"SupportedTargetPlatforms": [
 				"Win64",
 				"Linux",
 				"Mac"
-			]
-		},
-		{
-			"Name": "MetaHumanCoreTech",
-			"Enabled": true
-		},
-		{
-			"Name": "MetaHumanCoreML",
-			"Enabled": true,
-			"SupportedTargetPlatforms": [
-				"Mac",
-				"IOS",
-				"TVOS",
-				"VisionOS"
 			]
 		},
 		{
@@ -102,18 +114,6 @@
 		{
 			"Name": "MetaHumanLiveLink",
 			"Enabled": true
-		},
-		{
-			"Name": "MetaHumanRuntime",
-			"Enabled": true
-		},
-		{
-			"Name": "Aura",
-			"Enabled": true,
-			"SupportedTargetPlatforms": [
-				"Win64",
-				"Mac"
-			]
 		}
 	]
 }

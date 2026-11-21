@@ -13,7 +13,7 @@ Source table: `Design/Store.md`. Behavior/look: `Design/General.md` (traps, cons
 | 6 | Loot Bait | `loot_bait` | `loot-bait` | Soft gold glint | **Treasure lure** — exposed coins/gems on **pedestal or skull platter** with ley-line crystal accent; readable as bait, not hero loot pile |
 | 7 | Unshackled Golem | `unshackled_golem` | `unshackled-golem` | Cyan ley core | **Floating obsidian shards** orbiting a **bright ley-energy node**; rigid mechanical facets, no face |
 | 8 | Shard Sentinel | `shard_sentinel` | `shard-sentinel` | White / pale prism | **Small darting prism** or wisp bundle; **no face**; searchlight cone or lens flare OK; **not violet**, not slow facet shimmer (reserved for Will) |
-| 9 | Spore Generator | `spore_generator` | `spore-generator` | Pale spore green / cream bioluminescence | **Neutral fungal plant:** round **cap** on thick **stalk** rooted to floor (not floating); faint **spore cloud** around cap; reads as sleep/gas emitter, not mushroom light like mana shell |
+| 9 | Spore Generator (trap) | `spore_generator` | `spore-generator` | Pale spore green / cream bioluminescence | **Neutral fungal plant:** round **cap** on thick **stalk** rooted to floor (not floating); faint **spore cloud** around cap; reads as sleep/gas **trap**, not mushroom light like mana shell |
 
 ## Files
 

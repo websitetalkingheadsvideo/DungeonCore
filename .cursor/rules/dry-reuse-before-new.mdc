@@ -1,0 +1,42 @@
+---
+description: Search existing C++/Blueprint functions before adding new ones; prefer extend/reuse; ask before duplicating
+alwaysApply: true
+---
+
+# Reuse Before New Logic (DRY)
+
+Dungeon Core keeps authoritative logic in C++ and Blueprints. Do not add parallel implementations because a quick search was skipped.
+
+## Before any new function, event, or macro
+
+1. **Inventory first** — search and **list in chat** (bulleted) what already exists on the target:
+   - **C++ class or Function Library:** `Grep` / read headers and `.cpp` for `UFUNCTION`, `static`, and related helpers in the same module.
+   - **Blueprint:** use Unreal MCP (or an approved project workflow) to list function graphs, events, and macros on the target asset **before** proposing a new node.
+2. **Never** add a new function, Custom Event, or macro until that inventory is done and shown (or you explicitly report “no matches” and what you searched).
+
+## Before writing new logic
+
+- Check whether an **existing** function already does the behavior, or can do it with a **small extension** (extra parameter, optional flag, enum case) instead of a duplicate graph or method.
+- If two call sites need the same steps, **one** shared implementation wins: C++ helper, `UBlueprintFunctionLibrary`, or one Blueprint function called from both places — not copy-pasted branches.
+
+## When something similar exists
+
+**Stop and ask the user** (in chat, before edits):
+
+- Reuse and call the existing function as-is?
+- **Modify/extend** the existing function (preferred when behavior is the same family)?
+- Create a **new** function anyway (only if they choose this after seeing the list)?
+
+Do not silently add a “NewFunction_2” or a second C++ wrapper that mirrors an existing one.
+
+## Overlap with existing systems
+
+If the request might touch store placement, grid/dig, mana, invaders, themes, tinting, etc., read/search those systems first. **Ask clarifying questions** instead of assuming a new hook or duplicate path.
+
+## Agent reply pattern
+
+When adding logic, briefly include:
+
+1. **Existing matches** (names + where they live).
+2. **Proposed approach** (reuse / extend / new — and why).
+3. **User decision** when reuse vs new is not obvious.

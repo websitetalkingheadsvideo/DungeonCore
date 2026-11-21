@@ -45,14 +45,11 @@ Mana, room power, cap, and essence rewards.
 
 ## Generators and spawners
 
-Placeable objects that produce creatures or ongoing room effects (not single-use traps).
+Placeable objects that spawn creatures (Monster Generator only today).
 
 | # | Done | In store | Item | Price (mana) | What it does today | Model in the build | Needs to open: design docs | Icon file |
 | --- | --- | --- | --- | --- | ---: | --- | --- | --- |
 | 0 | [x] | [x] | **Monster Generator** | 40 | Click to open monster menu and buy creatures | `Monster_Generator_v2`, theme glow | Creature menu at tutorial beat 8 (first defender), after first trap | `monster_generator.png` |
-| 9 | [ ] | [x] | **Spore Generator** | 30 | Nothing yet | `spore_generator/Spore_Generator_Spore_Generator`, no glow | **Powered room:** crowd of spores; invaders in the same room **asleep** while active. Neutral shell now; per-theme shells later ([Theme.md](./Theme.md)) | `spore_generator.png` |
-
-**Open (Spore Generator):** stack multiple in one room; sleep vs traps that need awake targets; powered room like mana generators ([Future.md](./Future.md)) — see [Store.md](./Store.md#open-questions).
 
 ---
 
@@ -66,11 +63,14 @@ Damage, pathing, slowing, misdirection, and rail-dependent hazards.
 | 3 | [x] | [x] | **Resonance Plate Trap** | 20 | Nothing yet | `PlateTrap/Plate_Trap_Plate_Trap`, theme glow | First trap: menu at tutorial beat 7 when first dug room is powered | `resonance_plate_trap.png` |
 | 4 | [x] | [x] | **Gravity Well Trap** | 45 | Nothing yet | `gravity_well_trap/Gravity_Well_Trap_tmpq61u_eep_obj`, own white/purple glow | No unlock step written | `gravity_well_trap.png` |
 | 5 | [ ] | [x] | **Runaway Cart Trap** | 30 | Nothing yet | None, placeholder block | Needs a **built rail line** ([Future.md](./Future.md)) | `runaway_cart_trap.png` |
+| 9 | [ ] | [x] | **Spore Generator** | 30 | Nothing yet | `spore_generator/Spore_Generator_Spore_Generator`, no glow | **Trap (sleep):** powered room; crowd of spores; invaders in the same room **asleep** while active. Neutral shell now; per-theme shells later ([Theme.md](./Theme.md)) | `spore_generator.png` |
 | 14 | [ ] | [x] | **Mirror Pillar** | 15 | Buys and places; no behavior | `mirror_pillar/Mirror_Pillar_v2`, theme glow | Free-standing mirror; turns Prism Beam 90°; facing set in edit mode | `mirror_pillar.png` |
 | 15 | [ ] | [x] | **Drag Lattice** | 20 | Buys and places; no behavior | `drag_lattice/drag_lattice_unreal_SM`, `DragLattices` ISM, theme tint | Half speed on crossing; no damage ([Invaders.md](./Invaders.md)) | `drag_lattice.png` |
 | — | [ ] | — | **Displacement Glyph** | 75 | Not built | No mesh yet | Linked **enter** + **exit** pair; one-way teleport ([Store.md](./Store.md#traps-and-control)). Enter/exit HUD textures in UE; store row TBD | `displacement_glyph.png` (enter); `displacement_glyph_exit.png` (exit) |
 | — | [ ] | — | **Crystal Barricade** | 10 | Not built | No art yet | Blocks one square until broken; defenders pass | — |
 | — | [ ] | — | **Mirage Veil** | 30 | Not built | No mesh yet | Fake solid edge; scouts / veterans ignore after seeing one ([Invaders.md](./Invaders.md)) | `mirage_veil.png` |
+
+**Spore Generator (#9):** catalog **trap**, not a generator — sleep hazard in a **powered** room ([Future.md](./Future.md)). Stack multiple in one room; sleep vs traps that need awake targets — [Store.md](./Store.md#open-questions).
 
 **Why Mirror Pillar:** Prism Beam design assumes mirrors and sightlines. It is store row 14 now, with mesh, icon and theme glow; the beam-turning behavior is not built ([Store.md](./Store.md#traps-and-control)).
 
@@ -169,7 +169,7 @@ Quick lookup from HUD `ItemIndex` to section:
 | 6 | Loot Bait | Lures and bait |
 | 7 | Unshackled Golem | Defenders |
 | 8 | Shard Sentinel | Defenders |
-| 9 | Spore Generator | Generators and spawners |
+| 9 | Spore Generator | Traps, barriers, and control |
 | 10 | Map Table | Defender support, intel, and warnings |
 | 11 | Ley Conduit | Power and economy |
 | 12 | Mana Reservoir | Power and economy |

@@ -1,10 +1,10 @@
-# Paragon heroes — reference data for invaders and Random spawns
+# Paragon heroes — reference data for invaders and Hero spawns
 
-Epic released Paragon (2016–2018) hero assets to UE; Dungeon Core uses them as **invader meshes** and, in three families, as **dungeon Random** specials. Paragon was a **third-person MOBA** (5v5, lanes, cards/Power progression). There is **no official Epic “character sheet” PDF**, but the community preserved **per-hero stat and ability pages** that are the right source when tuning combat and AI.
+Epic released Paragon (2016–2018) hero assets to UE; Dungeon Core uses them as **invader meshes** and, in three families, as **dungeon Hero** specials. Paragon was a **third-person MOBA** (5v5, lanes, cards/Power progression). There is **no official Epic “character sheet” PDF**, but the community preserved **per-hero stat and ability pages** that are the right source when tuning combat and AI.
 
 **Runtime invader fields** (caution, trap literacy, party behavior) live in [Invaders.md](./Invaders.md). **Unified combat sheets** (vitals, ratings, compact abilities): [Character-Sheets.md](./Character-Sheets.md). **Asset paths and roles** live in [Monsters.md](./Monsters.md). This doc is the **Paragon-only** cheat sheet: where to look up numbers, how to translate them into Dungeon Core, and roster maps for **assigned** heroes plus the **full owned catalog**.
 
-**Asset scope:** You own the **complete Epic Paragon hero catalog** (all released playable heroes + their packs/skins). Only a **subset is migrated** into this UE project under `/Game/` ([checklist below](#owned-catalog-vs-in-project)). More invader roles, Random specials, or alternate casts can swap in **without new Fab purchases** — migrate the pack when a row gets a design seat.
+**Asset scope:** You own the **complete Epic Paragon hero catalog** (all released playable heroes + their packs/skins). Only a **subset is migrated** into this UE project under `/Game/` ([checklist below](#owned-catalog-vs-in-project)). More invader roles, Hero specials, or alternate casts can swap in **without new Fab purchases** — migrate the pack when a row gets a design seat.
 
 **Status:** design reference — combat numbers in UE are TBD; values below are **last-live Paragon** (≈2018), not balanced for the dungeon grid yet.
 
@@ -63,7 +63,7 @@ Paragon’s **card deck / Power** loop (≈60 Power, ~6.5 physical or energy dam
 - Dungeon Core: **1 gameplay block = 10 ft = 300 U** ([project C++ convention](../.cursorrules)).
 - **No fixed conversion** is defined yet. When implementing, pick anchor heroes (e.g. Sparrow range vs one room width) and document the formula in the combat spec.
 
-### Random dungeon Paragons (Narbash, Fey, Sevarog)
+### Hero dungeon Paragons (Narbash, Fey, Sevarog)
 
 These are **defenders**, not surface invaders. Use the same wiki kits for **encounter design** (aoe, buff, knockback, fly-up), not invader trap-literacy tables unless a future event raids with them.
 
@@ -76,7 +76,8 @@ Paths from [Monsters.md — Intruders](./Monsters.md#intruders-adventurers). Wik
 | DC role | Paragon hero | UE primary path | Paragon wiki | Paragon lane / style (wiki) | Dungeon Core notes |
 | --- | --- | --- | --- | --- | --- |
 | **Champion** | **Terra** | `/Game/Invaders/ParagonTerra` | [Terra](https://paragon.fandom.com/wiki/Terra) | Fighter / solo; earth shields, sustained frontline | Map to **Hero / Fighter** archetype; high `CohesionBias`, moderate `Caution`. Veteran: `Knows_LeyTraps`. |
-| **Tank** | **Greystone** | ParagonGreystone (invaders pack) | [Greystone](https://paragon.fandom.com/wiki/Greystone) | Solo / jungle durable; stone ult, self-heal, split kit | **Tank** defaults in [Invaders.md](./Invaders.md); low `Caution`, high `HelperWeight`. |
+| **Tank** | **Greystone** | `/Game/Invaders/ParagonGreystone` | [Greystone](https://paragon.fandom.com/wiki/Greystone) | Solo / jungle durable; stone ult, self-heal, split kit | **Tank** defaults in [Invaders.md](./Invaders.md); low `Caution`, high `HelperWeight`. |
+| **Tank (alt mesh)** | **Rampage** | `/Game/ParagonRampage/Characters/Heroes/Rampage/Meshes/Rampage` | [Rampage](https://paragon.fandom.com/wiki/Rampage) | Tank / jungler; leap, throw, high base HP | Same archetype as Greystone; higher durability flavor per wiki L1 stats; `Knows_LeyTraps` on veterans. |
 | **Bruiser** | **Kwang** | `/Game/Invaders/ParagonKwang` | [Kwang](https://paragon.fandom.com/wiki/Kwang) | Carry / bruiser; sword swing, lane pressure | **Tank / Bruiser** row; aggressive pathing, lower trap avoidance than Mage. |
 | **Mage** | **Phase** | ParagonPhase | [Phase](https://paragon.fandom.com/wiki/Phase) | Mid/support; dimensional mobility, poke, team save | **Mage** row; higher `Caution`; candidate for educated `Knows_DisplacementGlyphs` on veterans (blinks). |
 | **Mage (alt mesh)** | **Aurora** | `/Game/Invaders/ParagonAurora` | [Aurora](https://paragon.fandom.com/wiki/Aurora) | Mid; ice root, mobility, teamfight ult | Same archetype as Phase; **ice / root** kit → prefer **hold** formation vs scatter. |
@@ -93,19 +94,20 @@ Not from Paragon canon — **Dungeon Core** hooks only. Tune in data tables.
 | --- | --- | --- |
 | Phase, Aurora | `Knows_DisplacementGlyphs` | Mobility / blink mindset. |
 | Sparrow | — | Stays with party; learns from witnesses like default Mage. |
-| Greystone, Terra, Kwang | `Knows_LeyTraps` | Frontliners who’ve survived powered rooms. |
+| Greystone, Rampage, Terra, Kwang | `Knows_LeyTraps` | Frontliners who’ve survived powered rooms. |
 | Zinx | — | Supports learn via party memory; high follow-to-heal. |
 | Scout / Assassin (Fab today) | `Knows_MimicRisk` | **Owned pool:** Kallari, Countess, Yin, Revenant — migrate when Assassin seat goes Paragon ([full catalog](#owned-catalog-vs-in-project)). |
 
 ---
 
-## Dungeon Random roster (Paragon defenders)
+## Dungeon Hero roster (Paragon defenders)
 
 | Family | Hero | UE mesh (see [Monsters.md](./Monsters.md)) | Paragon wiki | Paragon role (wiki) | Encounter notes |
 | --- | --- | --- | --- | --- | --- |
 | **Orcs** | **Narbash** | `Orcs/ParagonNarbash/.../Narbash` | [Narbash](https://paragon.fandom.com/wiki/Narbash) | Support tank; drums, heals, knockbacks | Full Paragon anim set — no CC skeleton. War drum bones — product call in [TODO.md](../TODO.md). |
 | **Evil Fairies** | **The Fey** (Opaline default) | `.../Fey_Opaline` | [The Fey](https://paragon.fandom.com/wiki/The_Fey) | Support zoner; bramble, fly, slow | Skins: Opaline (default), AutumnKeeper, Frostbloom, Nightshade — [Monsters.md](./Monsters.md). |
-| **Undead** | **Sevarog** | `Undead/ParagonSevarog/.../Sevarog` | [Sevarog](https://paragon.fandom.com/wiki/Sevarog) | Jungle tank; hammer, soul stacks, **fly** ult | Large silhouette; good **boss-feel** Random despite replacing any tier. |
+| **Undead** | **Sevarog** | `Undead/ParagonSevarog/.../Sevarog` | [Sevarog](https://paragon.fandom.com/wiki/Sevarog) | Jungle tank; hammer, soul stacks, **fly** ult | Large silhouette; good **boss-feel** Hero despite replacing any tier. |
+| **Mutants** | **Rampage** | `/Game/ParagonRampage/.../Meshes/Rampage` | [Rampage](https://paragon.fandom.com/wiki/Rampage) | Tank / jungler; leap, throw rock | Paragon mount outside `Monsters/Mutants/`; also invader **Tank** alt mesh. |
 
 ---
 
@@ -149,11 +151,14 @@ Use Narendur’s sheet or side-by-side charts for assigned heroes without transc
 | Aurora | Invader — Mage (alt mesh) | `/Game/Invaders/ParagonAurora` |
 | Sparrow | Invader — Archer | `/Game/Invaders/ParagonSparrow` |
 | Zinx | Invader — Cleric | `/Game/Invaders/ParagonZinx` |
-| Narbash | Defender — Orcs **Random** | `/Game/Monsters/Orcs/ParagonNarbash/...` |
-| The Fey | Defender — Evil Fairies **Random** (Opaline default) | `/Game/Monsters/EvilFairies/ParagonFey/...` |
-| Sevarog | Defender — Undead **Random** | `/Game/Monsters/Undead/ParagonSevarog/...` |
+| Narbash | Defender — Orcs **Hero** | `/Game/Monsters/Orcs/ParagonNarbash/...` |
+| The Fey | Defender — Evil Fairies **Hero** (Opaline default) | `/Game/Monsters/EvilFairies/ParagonFey/...` |
+| Sevarog | Defender — Undead **Hero** | `/Game/Monsters/Undead/ParagonSevarog/...` |
+| Rampage | Defender — Mutants **Hero**; invader **Tank** alt mesh | `/Game/ParagonRampage` (mesh `.../Rampage/Meshes/Rampage`) |
 
-**10 heroes** in project today · **26** owned but not migrated (or migrated elsewhere on disk — still no `/Game/` seat).
+**11 heroes assigned** a DC seat (incl. **Rampage** as Mutants Hero) · **25** owned heroes not migrated.
+
+> **Path convention:** Invader packs usually live under `/Game/Invaders/Paragon*`. **Rampage** imported at Epic default **`/Game/ParagonRampage`** — relocate or re-mount only if spawn code standardizes on `/Game/Invaders/`.
 
 ### Full owned roster (migrate on demand)
 
@@ -174,24 +179,24 @@ Fandom index: https://paragon.fandom.com/wiki/Heroes. **In UE** = migrated into 
 | Howitzer | | — | [Howitzer](https://paragon.fandom.com/wiki/Howitzer) | Mid | Artillery; poor fit |
 | Iggy & Scorch | | — | [Iggy & Scorch](https://paragon.fandom.com/wiki/Iggy_%26_Scorch) | Mid / jungler | Mech; poor fit |
 | Kallari | | — | [Kallari](https://paragon.fandom.com/wiki/Kallari) | Assassin / jungler | **Assassin** candidate |
-| Khaimera | | — | [Khaimera](https://paragon.fandom.com/wiki/Khaimera) | Jungler | Beast elite / Random |
+| Khaimera | | — | [Khaimera](https://paragon.fandom.com/wiki/Khaimera) | Jungler | Beast elite / Hero |
 | Kwang | ✓ | Bruiser | [Kwang](https://paragon.fandom.com/wiki/Kwang) | Bruiser carry | — |
 | Lt. Belica | | — | [Lt. Belica](https://paragon.fandom.com/wiki/Lt._Belica) | Mid | Sci-fi cop; poor fit |
 | Morigesh | | — | [Morigesh](https://paragon.fandom.com/wiki/Morigesh) | Mid | Witch; fairy / fungal boss alt |
 | Murdock | | — | [Murdock](https://paragon.fandom.com/wiki/Murdock) | Carry | Tanky ranged; gunner |
 | Muriel | | — | [Muriel](https://paragon.fandom.com/wiki/Muriel) | Support | Angel support; cleric alt |
-| Narbash | ✓ | Orc Random | [Narbash](https://paragon.fandom.com/wiki/Narbash) | Support tank | — |
+| Narbash | ✓ | Orc Hero | [Narbash](https://paragon.fandom.com/wiki/Narbash) | Support tank | — |
 | Phase | ✓ | Mage | [Phase](https://paragon.fandom.com/wiki/Phase) | Support / mid | — |
-| Rampage | | — | [Rampage](https://paragon.fandom.com/wiki/Rampage) | Tank / jungler | Big tank; orc boss alt |
+| Rampage | ✓ | Mutants **Hero**; Tank alt | [Rampage](https://paragon.fandom.com/wiki/Rampage) | Tank / jungler | [Monsters.md](./Monsters.md) Hero column; `/Game/ParagonRampage` |
 | Revenant | | — | [Revenant](https://paragon.fandom.com/wiki/Revenant) | Carry assassin | **Assassin** / ranged carry |
 | Riktor | | — | [Riktor](https://paragon.fandom.com/wiki/Riktor) | Solo / jungler | Chain tank |
-| Sevarog | ✓ | Undead Random | [Sevarog](https://paragon.fandom.com/wiki/Sevarog) | Jungle tank | — |
+| Sevarog | ✓ | Undead Hero | [Sevarog](https://paragon.fandom.com/wiki/Sevarog) | Jungle tank | — |
 | Serath | | — | [Serath](https://paragon.fandom.com/wiki/Serath) | Carry | Angel carry |
 | Shinbi | | — | [Shinbi](https://paragon.fandom.com/wiki/Shinbi) | Mid | Wolf rider |
 | Sparrow | ✓ | Archer | [Sparrow](https://paragon.fandom.com/wiki/Sparrow) | Carry | — |
 | Steel | | — | [Steel](https://paragon.fandom.com/wiki/Steel) | Support / solo | Robot knight; **Tank** alt if retextured |
 | Terra | ✓ | Champion | [Terra](https://paragon.fandom.com/wiki/Terra) | Fighter | — |
-| The Fey | ✓ | Fairy Random | [The Fey](https://paragon.fandom.com/wiki/The_Fey) | Support zoner | — |
+| The Fey | ✓ | Fairy Hero | [The Fey](https://paragon.fandom.com/wiki/The_Fey) | Support zoner | — |
 | TwinBlast | | — | [TwinBlast](https://paragon.fandom.com/wiki/TwinBlast) | Carry | Gunner; poor fit |
 | Wukong | | — | [Wukong](https://paragon.fandom.com/wiki/Wukong) | Carry / jungler | Melee carry |
 | Wraith | | — | [Wraith](https://paragon.fandom.com/wiki/Wraith) | Mid | Sci-fi; poor fit |
@@ -205,5 +210,5 @@ Fandom index: https://paragon.fandom.com/wiki/Heroes. **In UE** = migrated into 
 ## Cross-links
 
 - Invader AI and sheet schema: [Invaders.md](./Invaders.md)
-- Intruder table and Random tier: [Monsters.md](./Monsters.md)
+- Intruder table and Hero tier: [Monsters.md](./Monsters.md)
 - Character powers backlog: [TODO.md](../TODO.md) — “Design abilities for every creature family” and invader roles

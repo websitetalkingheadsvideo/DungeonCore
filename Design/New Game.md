@@ -35,7 +35,7 @@ Card option: **Random Events — Low / Medium / High**. Default **Medium**. Save
 
 **Randomness — Low / Medium / High** (default **Medium**). Saved with the game. **Not built** on the card yet (fourth row TBD).
 
-Controls how often a family's **Random** special replaces any creature spawn ([Monsters.md](./Monsters.md#random-tier-special-spawn)): Low **0.1%**, Medium **1%**, High **5%**. Separate from Random Events frequency above.
+Controls how often a family's **Hero** special replaces any creature spawn ([Monsters.md](./Monsters.md#hero-tier-special-spawn)): Low **0.1%**, Medium **1%**, High **5%**. Separate from Random Events frequency above.
 
 ## Theme kits
 

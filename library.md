@@ -254,7 +254,7 @@ Paragon gunners and sci-fi heroes (Twinblast, Dekker, Drongo, Gadget, Howitzer, 
 | Asset | Family / use idea |
 | --- | --- |
 | Paragon: Minions | Fodder (any family, retexture) |
-| Paragon: Grux, Rampage, Narbash | Brute bosses (Orcs) |
+| Paragon: Grux, Rampage, Narbash | Brute bosses (Orcs); **Rampage** in UE at `/Game/ParagonRampage` (see [Invaders-Paragons.md](Design/Invaders-Paragons.md)) |
 | Paragon: Sevarog, Countess | Undead bosses |
 | Paragon: The Fey, Morigesh | Evil Fairies / Fungal bosses |
 | Paragon: Khaimera | Beast elite |
@@ -263,7 +263,7 @@ Paragon gunners and sci-fi heroes (Twinblast, Dekker, Drongo, Gadget, Howitzer, 
 | Quadruped Fantasy Creatures | Beast fodder / elites |
 | Kraken, ASC Teuthisan | Sunken Ruins boss |
 | Dark Vampire Enchantress | Undead / Fairy elite |
-| Existing Monsters.md picks | 3dGoblin, MetaGoblin, Warrior Orc, Mutant, Flesh Mutant, Hollow Walker, Harpy Assassin, Grave Keeper, Skeleton Necromancer, Zombie, Spider, Theraphosa, Spider Tarantula, Mushroom Demon |
+| Existing Monsters.md picks | MetaGoblin (`MHC_MetaGoblin` — Orc minion), Warrior Orc, Mutant, Flesh Mutant, Hollow Walker, Harpy Assassin, Grave Keeper, Skeleton Necromancer, Zombie, Spider, Theraphosa, Spider Tarantula, Mushroom Demon |
 
 ### Dungeon environments
 

@@ -1,5 +1,5 @@
 ---
-description: Monsters.md — each family has Worker, Minion, Elite, Boss, plus Random (fifth column)
+description: Monsters.md — each family has Worker, Minion, Elite, Boss, plus Hero (fifth column)
 globs: Design/Monsters.md
 alwaysApply: false
 ---
@@ -8,10 +8,10 @@ alwaysApply: false
 
 ## Rule
 
-In the **`## In UE`** table, each dungeon family has **five columns**, in order: **Worker → Minion → Elite → Boss → Random**.
+In the **`## In UE`** table, each dungeon family has **five columns**, in order: **Worker → Minion → Elite → Boss → Hero**.
 
 - **Worker / Minion / Elite / Boss** — normal tier grid for spawns and chamber design.
-- **Random** — one optional **special** per family (name + asset); not a normal tier roll. Spawn rules: [Monsters.md](Design/Monsters.md) (Random tier section).
+- **Hero** — one optional **special** per family (name + asset); not a normal tier roll. Spawn rules: [Monsters.md](Design/Monsters.md) (Hero tier section).
 
 **Asset / note cells may list anything:** multiple Fab candidates, Hi3D + Fab options, backup bosses, rejected picks, UE paths, pipeline detail — unrestricted.
 

@@ -28,11 +28,11 @@ Single schema for **dungeon monsters** (by family + tier) and **surface invaders
 | `SheetId` | name | e.g. `Orcs.Elite` | e.g. `Invader.Tank` |
 | `EntityKind` | enum | `Defender` | `Invader` |
 | `FamilyId` | enum | Orcs, Undead, … | — |
-| `Tier` | enum | Worker, Minion, Elite, Boss, Random | — |
+| `Tier` | enum | Worker, Minion, Elite, Boss, Hero | — |
 | `ArchetypeId` | enum | — | Wanderer, Tank, Mage, … |
 | `DisplayName` | text | Player-facing name | Party-facing name |
 | `MeshRef` | soft path | From [Monsters.md](./Monsters.md) | From intruder table |
-| `ParagonRef` | optional name | e.g. `Sevarog` for Random | e.g. `Greystone` |
+| `ParagonRef` | optional name | e.g. `Sevarog` for Hero | e.g. `Greystone` |
 | `InvaderLine` | enum | — | `Common` \| `Paragon` (surface raids only) |
 | `StatSource` | enum | `ParagonWiki` \| `TierBaseline` \| `HandTuned` | Same |
 
@@ -48,7 +48,7 @@ Dungeon combat assumes units fight at a single logical tier (no mid-raid levelin
 | --- | --- |
 | `Fodder` | Minions, Wanderers — derive from Paragon **level 1** or tier baseline. |
 | `Standard` | Elite invaders, dungeon Elites — Paragon **~level 9–11** equivalent or hand-tuned. |
-| `Veteran` | Champion raids, Bosses, Paragon Random specials — Paragon **level 15** equivalent. |
+| `Veteran` | Champion raids, Bosses, Paragon Hero specials — Paragon **level 15** equivalent. |
 
 Spawn code may multiply vitals by `SpawnPowerScalar` (0.85–1.15) from raid depth or Randomness; that multiplier is **runtime**, not stored on the base sheet.
 
@@ -130,7 +130,7 @@ Each entry in `Abilities[]`:
 | `Melee` / `Ranged` | Attack range bucket |
 | `Dash`, `Blink` | Ignores some floor hazards once |
 | `Root`, `Slow`, `Stun` | CC duration lives in ability tuning data |
-| `Heal`, `Shield` | Support invaders / Narbash-style Random |
+| `Heal`, `Shield` | Support invaders / Narbash-style Hero |
 | `AOE`, `Cone`, `Line` | Trap dodge weighting |
 | `Summon`, `BuffAura` | Minion family elites |
 | `Execute` | Finisher vs low-HP defenders |
@@ -149,11 +149,11 @@ Fab/Hi3D creatures without `ParagonRef` start from **family Elite = 1.0** vitals
 | **Minion** | 0.45 | 0.4 | 0.5 | Basic +0, Durability −2 |
 | **Elite** | 1.0 | 1.0 | 1.0 | Baseline |
 | **Boss** | 3.0 | 1.4 | 1.6 | Durability +3, Basic +2 |
-| **Random** | 1.15 | 1.1 | 1.2 | Use Paragon row when applicable |
+| **Hero** | 1.15 | 1.1 | 1.2 | Use Paragon row when applicable |
 
 Workers may set `BasicDamage = 0` and omit combat `Abilities[]` except a dig/build tag.
 
-**Random + Paragon:** Ignore minion tier multipliers; use **Veteran** derivation from that hero’s wiki stats, then optional family flavor (e.g. Sevarog slightly tankier than Countess).
+**Hero + Paragon:** Ignore minion tier multipliers; use **Veteran** derivation from that hero’s wiki stats, then optional family flavor (e.g. Sevarog slightly tankier than Countess).
 
 ---
 
@@ -199,7 +199,7 @@ Same combat block as above, plus **unchanged** invader-only fields from [Invader
 - `Caution`, `CohesionBias`, `FollowerWeight`, `HelperWeight`, `ScoutRating`
 - `StartingKnowledgeTags[]`
 
-Those floats are **not** on defender sheets unless a Random Paragon also raids (not planned).
+Those floats are **not** on defender sheets unless a Hero-tier Paragon also raids (not planned).
 
 ### Archetype → combat sketch (invaders)
 
@@ -251,13 +251,13 @@ Optional fields on `EntityKind == Defender`:
 | Rating_Basic / Ability / Durability / Mobility | 5 / 2 / 5 / 4 |
 | Abilities | *(TODO powers)* one `Cleave`-tag melee active |
 
-### `Undead.Random` (Sevarog)
+### `Undead.Hero` (Sevarog)
 
 | Field | Value |
 | --- | --- |
 | ParagonRef | Sevarog |
 | ReferenceTier | Veteran |
-| StatSource | ParagonWiki @ 15 + Random mult |
+| StatSource | ParagonWiki @ 15 + Hero mult |
 | Ratings | From wiki |
 | Vitals | Derived + scalars |
 | Abilities | Hammer slam, Soul stacks passive, Fly ult — tags `AOE`, `Dash` |
