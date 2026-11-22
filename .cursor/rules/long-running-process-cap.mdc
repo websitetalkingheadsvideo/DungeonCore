@@ -1,0 +1,35 @@
+---
+description: Kill or abandon work with no response after 5 minutes; notify the user immediately
+alwaysApply: true
+---
+
+# Long-running process cap (5 minutes)
+
+If a command, subprocess, MCP call, or background shell **has not produced a useful response within 5 minutes** (300 seconds), treat it as **permanently stuck**. Do not wait longer hoping it will finish.
+
+## Required behavior
+
+1. **Stop it**
+   - **Shell / background terminal:** kill the process (PID from the terminal metadata). On Windows, `taskkill /PID <pid> /F` when needed.
+   - **MCP tool call:** do not retry the same call in a loop. One timeout is enough.
+   - **Do not** start a second parallel client to the same service (e.g. another socket to Blender `9876`) while one call is still hung.
+
+2. **Notify the user in the first paragraph**
+   - What was running (command, tool name, or task title).
+   - How long it ran.
+   - That you **stopped or abandoned** it because there was no response.
+   - One concrete next step (restart service, check firewall, reduce scope, etc.).
+
+3. **Prefer shorter waits for probes**
+   - Health checks, smoke tests, and “is it up?” calls: default **30–60 seconds** max unless the user asked for a longer soak test.
+   - **5 minutes is a hard ceiling**, not a default wait time.
+
+## Forbidden
+
+- Letting a blind `send_code`, socket client, or MCP tool ride out multi-minute timeouts without telling the user mid-flight.
+- Chaining another long-running attempt before reporting the first timeout.
+- Framing a 5-minute hang as “still working” without killing, abandoning, or escalating.
+
+## Example (good)
+
+> **Stopped:** Blender bridge smoke test ran ~5m with no reply on `localhost:9876`. Killed the `uv` child (PID …). TCP may be open while the add-on is wedged — restart the MCP server in Blender, then retry with a short listing call.
