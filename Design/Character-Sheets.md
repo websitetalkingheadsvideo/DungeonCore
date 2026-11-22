@@ -198,8 +198,31 @@ Same combat block as above, plus **unchanged** invader-only fields from [Invader
 
 - `Caution`, `CohesionBias`, `FollowerWeight`, `HelperWeight`, `ScoutRating`
 - `StartingKnowledgeTags[]`
+- Expedition gear ([below](#expedition-gear-invaders)) — rope, climb, flight for **pit and vertical** encounters
 
 Those floats are **not** on defender sheets unless a Hero-tier Paragon also raids (not planned).
+
+### Expedition gear (invaders)
+
+Fixed kit for raid AI (not loot inventory in v1). One **10 ft** rope = **300 UU** (one gameplay cube) — enough for a standard pit depth in [todo/ideas.md](../todo/ideas.md).
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `HasRope` | bool | Enables **rope rescue** action at pit edge; takes time (haul / secure), not instant. |
+| `RopeLengthUU` | float | Default **300** when `HasRope`; longer rope = rare veteran / event override later. |
+| `CanClimbWalls` | bool | Self-extract from climbable pit without ally rope (thief / rogue fantasy). |
+| `HasSustainedFlight` | bool | From kit tag (e.g. fly ultimate as sustained mobility); self-extract or assist rescue; still costs time. |
+
+**Archetype defaults (targets):**
+
+| Archetype | `HasRope` | `RopeLengthUU` | `CanClimbWalls` | `HasSustainedFlight` |
+| --- | ---: | ---: | ---: | ---: |
+| Scout / Assassin / thief–rogue roles | true | 300 | true | false (unless kit grants) |
+| Fighter / Hero / Tank / Bruiser | false | 0 | false | false (unless kit grants) |
+| Cleric / Mage / Archer / Wanderer | false | 0 | false | false |
+| Paragon with fly ult | — | optional rope per role | false typical | **true** when ult tagged sustained |
+
+Derive `HasSustainedFlight` from `Abilities[].Tags` containing `SustainedFly` when combat powers ship; until then, set by hand on Paragon rows that raid with flight.
 
 ### Archetype → combat sketch (invaders)
 

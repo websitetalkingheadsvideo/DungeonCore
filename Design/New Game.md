@@ -37,6 +37,20 @@ Card option: **Random Events — Low / Medium / High**. Default **Medium**. Save
 
 Controls how often a family's **Hero** special replaces any creature spawn ([Monsters.md](./Monsters.md#hero-tier-special-spawn)): Low **0.1%**, Medium **1%**, High **5%**. Separate from Random Events frequency above.
 
+## Crisis Discipline
+
+**Crisis Discipline — Sanctuary Accord / Standard Delve / Iron Ley Compact** (default **Standard Delve**). Saved with the game. **Not built** on the card yet (fifth row or grouped with other run settings).
+
+When workers **flee** (raid warning → safe room) or **die** mid–worker task, how much **job progress** is kept for trap resets, digs, and other queued chores ([todo/time-passage-plan.md](../todo/time-passage-plan.md#crisis-discipline-new-game)).
+
+| Setting | Card label | Effect on interrupt |
+| --- | --- | --- |
+| Sanctuary | **Sanctuary Accord** | All progress on the current job saved |
+| Standard (default) | **Standard Delve** | Up to **half** the job’s total work saved |
+| Iron Ley | **Iron Ley Compact** | No progress saved — task restarts from zero |
+
+Independent of **Random Events** and **Randomness**. Will FAQ line (draft): *"Iron Ley means a panicked worker drops their tools. Sanctuary means they bag the work first."*
+
 ## Theme kits
 
 Materials and light colors as wired in `WBP_NewGame` (2026-11-12). Full kit, paths and per-theme dressing: [Theme.md](./Theme.md).
