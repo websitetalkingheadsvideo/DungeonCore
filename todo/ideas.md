@@ -108,6 +108,33 @@ Brainstorming only — not a task list. Capture mechanics, traps, creatures, UX 
 
 ---
 
+## Lures & bait
+
+### Hollow Offering *(store-placeable)*
+
+**Vibe:** a **shrine plug-in** — not a chest. Invaders read “free essence / claim the blessing,” not “open the loot.”
+
+**Visual & silhouette**
+
+- **Waist-low pedestal** on one cell: dark **basalt** disc or short truncated pillar (knee–waist height), single **300 UU** footprint.
+- **Shallow offering bowl** on top — stone or **iron ring** cradling **quartz shards** (broken geode nest), not coins or a chest.
+- **Sigils:** **hair-thin ley fractures** etched on pedestal faces and bowl lip. **Unpowered room:** dark cracks only. **Powered room:** faint **violet-white pulse** along the lines (core-adjacent; **not** theme torch emissive like gold/green).
+- Optional: two small **iron pegs** on the rim with a **broken chain** — “someone already took the good part,” still tempts greed.
+- **Icon / mesh:** ¾ isometric; reads at **48×48** as bowl-on-stand + glowing sigils; distinguish from **Loot Bait** chest pile and **Mimic** anxiety.
+
+**Mechanics**
+
+- **Store row (proposed):** **Hollow Offering** ~**18** mana; not in HUD yet.
+- **Lure only** — no “open” or pickup; reaching the stand does **not** pay real essence (tempo / positioning).
+- **Pull:** biases raid **`Objective` → this room** via `LootGreed × Party.TrustLoot`; **~70%** peak tug vs **Loot Bait (#6)** — softer hook, **more of the party** drifts in (formation matters).
+- **Who leads:** highest effective loot pull paths first; scouts may **orbit** (`ScoutRating`, `Caution`) before anyone commits; low-`LootGreed` (e.g. cleric) may hug the doorway.
+- **Pairs:** **Capillary Snare** on the approach cell **before** the offering; **Mirage Veil** to hide a side path; **not** a Mimic — no chest shape.
+- **Powered room (TBD):** full sigil pulse only when powered; placement rules same as other store items.
+- **Still open:** stack cap for multiple offerings; tutorial beat; `TrustLoot` after fake-shrine “nothing happens” witness.
+- **Sheet hooks:** `LootGreed`, `Party.TrustLoot`, `Caution`, `Objective` override — [Invaders.md](../Design/Invaders.md).
+
+---
+
 ## Time & captivity (summary)
 
 Full notes: [time-passage-plan.md](./time-passage-plan.md).
