@@ -196,11 +196,13 @@ Anchor once: **Sparrow** ranged basic at Standard vs **one room width** ([Invade
 
 Same combat block as above, plus **unchanged** invader-only fields from [Invaders.md](./Invaders.md):
 
-- `Caution`, `CohesionBias`, `FollowerWeight`, `HelperWeight`, `ScoutRating`
+- `Caution`, `CohesionBias`, `FollowerWeight`, `HelperWeight`, `ScoutRating`, `LootGreed`
 - `StartingKnowledgeTags[]`
 - Expedition gear ([below](#expedition-gear-invaders)) — rope, climb, flight for **pit and vertical** encounters
 
 Those floats are **not** on defender sheets unless a Hero-tier Paragon also raids (not planned).
+
+**Party-only (not on sheet):** `TrustLoot` — see [Invaders.md — Party state](./Invaders.md#party-state-runtime-not-on-sheet). Loot pathing uses `LootGreed × TrustLoot` at runtime.
 
 ### Expedition gear (invaders)
 

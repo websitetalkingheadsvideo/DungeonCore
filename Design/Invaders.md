@@ -132,6 +132,9 @@ These fields belong on the **data asset or spawn table row** for each intruder a
 | `FollowerWeight` | 0–1 | Archetype | Chance to step on **enter** glyph after ally vanishes (before knowledge). |
 | `HelperWeight` | 0–1 | Archetype | Mimic stick: help held ally vs continue. |
 | `ScoutRating` | 0–1 | Archetype | Spot Mirage Veil / mimic tell before contact (player-only tells still hidden). |
+| `LootGreed` | 0–1 | Archetype | Baseline lure toward **Loot Bait**, visible treasure, idol pickups — independent of trap caution. |
+
+**Loot pull (runtime):** per-unit draw toward loot objectives uses **`LootGreed`** (sheet) × **`Party.TrustLoot`** (party state, default **1.0** until mimic bite or similar lowers it). **`Caution`** and trap-literacy tags affect **floor/trap** choices separately — a unit can be cautious (0.6) and still greedy (0.5) like an “Indy” hero: thinks about traps, still takes the idol when temptation wins. Flagship bait (**snare → bait**, idol vault) picks the pathing unit with highest effective pull unless AI overrides (scout hangs back, tank ordered forward).
 
 ### Trap literacy (knowledge tags on sheet)
 
@@ -152,14 +155,14 @@ Sheets list **starting tags** only. Runtime union = `Unit.StartingTags ∪ Party
 
 ### Archetype defaults (placeholder tuning)
 
-| Archetype | Caution | CohesionBias | FollowerWeight | HelperWeight | ScoutRating | Typical starting tags |
-| --- | ---: | ---: | ---: | ---: | ---: | --- |
-| Tank / Bruiser | 0.3 | +0.3 | 0.55 | 0.7 | 0.2 | `Knows_LeyTraps` (veterans only) |
-| Cleric | 0.4 | +0.5 | 0.65 | 0.85 | 0.3 | — |
-| Fighter / Hero | 0.35 | +0.2 | 0.45 | 0.6 | 0.25 | — |
-| Scout / Assassin | 0.75 | −0.2 | 0.15 | 0.35 | 0.85 | `Knows_MimicRisk` (weak) |
-| Mage | 0.6 | −0.1 | 0.25 | 0.4 | 0.4 | — |
-| Wanderer (fodder) | 0.2 | 0 | 0.35 | 0.45 | 0.15 | none |
+| Archetype | Caution | CohesionBias | FollowerWeight | HelperWeight | ScoutRating | LootGreed | Typical starting tags |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| Tank / Bruiser | 0.3 | +0.3 | 0.55 | 0.7 | 0.2 | 0.35 | `Knows_LeyTraps` (veterans only) |
+| Cleric | 0.4 | +0.5 | 0.65 | 0.85 | 0.3 | 0.25 | — |
+| Fighter / Hero | 0.35 | +0.2 | 0.45 | 0.6 | 0.25 | **0.50** | — |
+| Scout / Assassin | 0.75 | −0.2 | 0.15 | 0.35 | 0.85 | 0.30 | `Knows_MimicRisk` (weak) |
+| Mage | 0.6 | −0.1 | 0.25 | 0.4 | 0.4 | 0.30 | — |
+| Wanderer (fodder) | 0.2 | 0 | 0.35 | 0.45 | 0.15 | 0.65 | none |
 
 Custom Firefly party ([Monsters.md](./Monsters.md)): assign archetypes (Dwarf → Tank, Cleric → Cleric, Elf → Scout, Wizard → Mage).
 
@@ -193,7 +196,7 @@ No unit should auto-path onto **enter** in the same frame as the victim; minimum
 | **Displacement Glyph** | `Knows_DisplacementGlyphs` | Halt; high `FollowerWeight` ally may step **enter**; other holds or wanders | **Avoid enter**; path to reunite via doors toward ping / exit room |
 | **Mirage Veil** | `Knows_MirageVeil` | Treat fake edge as wall | Scout checks; party ignores after one reveal |
 | **Mimic** | `Knows_MimicRisk` + `TrustLoot` | Open bait like Loot Bait | Slow open; scouts may refuse; after bite, `TrustLoot` drops |
-| **Loot Bait** | — | Draw toward room | Same; educated: slightly slower if `TrustLoot` low |
+| **Loot Bait** | — | Highest-`LootGreed` units lead toward bait | Slower approach when `Party.TrustLoot` low; scouts may refuse |
 | **Drag Lattice** | `Knows_LeyTraps` | Walk through, slower | Optional: path around if alternate route known (`LayoutIntel`) |
 | **Spore Generator** | `Knows_SporeSleep` | Enter room, fall asleep | Avoid room or send one expendable first |
 | **Crystal Barricade** | — | Blocked path; break or reroute | — |

@@ -72,7 +72,7 @@ Brainstorming only — not a task list. Capture mechanics, traps, creatures, UX 
 - **Store / cost:** flagship trap — **very expensive** mana and placement rules (single set-piece or one active vault per branch TBD).
 - **Set-piece room:** on place, defines a **sealed chamber** **10×10×10 gameplay cells** (3000×3000×3000 UU). Not hand-dug tile-by-tile — prefab vault grafted onto the dungeon ([General.md](../Design/General.md) cube snap).
 - **Layout:** **treasure** at the **far end** (pedestal / idol); **sliding wall** animates down at the **near / entrance end**, blocking retreat from the room.
-- **Trigger:** invader **sees treasure** (loot draw / `TrustLoot`) → path to pedestal → **pickup** fires the mechanism (no pickup = vault stays idle).
+- **Trigger:** invader **sees treasure** (highest `LootGreed × Party.TrustLoot`) → path to pedestal → **pickup** fires the mechanism (no pickup = vault stays idle).
 - **Escape window:** wall closes over **N seconds** (tune). Race from pedestal back to exit:
   - **Fast / agile** (`MoveSpeed`, `Rating_Mobility`, dash/blink tags) — realistic sprint out.
   - **Slow** (tanks, wounded, encumbered) — caught.
@@ -84,7 +84,27 @@ Brainstorming only — not a task list. Capture mechanics, traps, creatures, UX 
 - **Relation to [Siphon Font](../Design/Store.md):** siphon = essence spike when invaders **fall in that room**; idol vault = **living** tap over strategic time. Stack both only if tuning allows.
 - **Reuse:** workers reset the vault **only after trapped invader(s) die** — slab up, treasure restored, trap re-armed (mana cost TBD). **No** worker reset while someone is still alive inside.
 - **Still open:** drip rate per strategic day vs death clock length; pause strategic time during raids; calendar UI; does wall damage defenders; tutorial / unlock band; literacy tag `Knows_IdolVault`; party AI split (one greedy, rest camp exit).
-- **Sheet hooks:** `TrustLoot`, `Rating_Mobility`, dash/blink abilities; wall-break tags on kits; optional `GreedyLootWeight` per archetype.
+- **Sheet hooks:** `LootGreed` (Hero **0.5** Indy-ish default), `Party.TrustLoot`, `Rating_Mobility`, dash/blink abilities; wall-break tags on kits.
+
+### Capillary Snare *(store-placeable — two-part with Loot Bait)*
+
+**Vibe:** hairline fracture in polished obsidian; when the room is **ley-powered**, the capillary flares and quartz filaments **lace the ankle** — hold, don’t kill.
+
+- **Store row (proposed):** **Capillary Snare** ~**25** mana; not in HUD yet — see brainstorm table in agent chat / future [store_items.md](../Design/store_items.md).
+- **Grid:** one **floor cell** (300 UU); standard room-square placement.
+- **Powered room only** — dormant hairline visible in build mode; **armed** glow when room is powered (theme emissive).
+- **Trigger:** invader **enters** cell → **root/hold** in place (no leave until break-out); **light** damage once on snap (not lethal).
+- **Break-out:** self **durability**/bruiser roll, **ally help** action (time on raid clock), or timer — party comp matters; not infinite stick.
+- **Best layout — 2-part funnel:** **Snare on approach cell**, **Loot Bait** in the **next cell inward** so path-to-bait crosses snare first:
+
+  `[ invaders enter ] → | SNARE | → | BAIT | → room`
+
+  High-`LootGreed` unit leads (× `Party.TrustLoot`); snare catches the greedy front-runner in the choke.
+- **Invader AI:** **`Caution`** / `Knows_LeyTraps` slow wide steps after one witness; **`LootGreed`** still pulls bait-fools; scouts may refuse to enter snare cell after party memory.
+- **Combos:** **Resonance Plate** (stagger → snare), **smoke** (mis-step into tile), **pit/dart** side branches; defenders farm rooted target.
+- **Reuse:** workers **re-arm** between raids; optional small mana; **Crisis Discipline** banks partial reset job if worker flees mid-rearm.
+- **Still open:** break-out timers vs cleric help; does root block casting; defender friendly-fire on rooted invader; tutorial unlock; icon/mesh art pass.
+- **Sheet hooks:** `LootGreed`, `Party.TrustLoot`, `Caution`, `Knows_LeyTraps`; contrast **Drag Lattice** (slow cross) vs **hold-in-cell**.
 
 ---
 
