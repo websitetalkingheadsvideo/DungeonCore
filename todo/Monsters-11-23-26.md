@@ -17,3 +17,14 @@ Worker- has idle but hands are crossed and elbos inside body
 Minion- has idle but it is backwords, tilted, arms are behind back, legs cross
 Elite- shoulders and elbos arched back.
 
+Mutants
+Worker- Feet are in the ground.  Nexk mesh has hole in it.
+Minion and Elite- for some reason the original flesh mutant
+Boss- neets a texture that matches the style of the other Mutants.  Idle is a scream?
+
+Spiders
+worker 25% smaller
+Minion 25% smaller
+Elite 25% larger
+Boss 10% larger
+Hero 20% larger
