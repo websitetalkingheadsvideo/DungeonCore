@@ -67,8 +67,8 @@ Produce a **fix plan** for every issue in [Monsters-11-23-26.md](todo/Monsters-1
 | Tier | Issue |
 | --- | --- |
 | Worker | **Feet in ground**; **neck mesh hole** |
-| Minion, Elite | Todo note incomplete: **“for some reason the original flesh mutant”** — **inspect both** `Mutants/Character_001/Meshes/Monster_001` and `Mutants/FleshMutantMonster/Meshes/SK_FleshMutantMonster`; plan must **inventory** what’s wrong vs Worker/Boss/Hero |
-| Boss (Hollow Walker) | **Texture** to match other Mutants’ style; idle described as **scream** — confirm acceptable gameplay idle or pick alternate from Meshy set |
+| Minion, Elite | **Canon (2026-11-24):** same mesh as Worker — `Mutants/mutant_worker_v2`. Gallery/spawn must **not** use Fab `Monster_001` / `SK_FleshMutantMonster`. QA: scale/MI differentiation + feet-in-ground / neck hole (worker note) |
+| Boss | **Canon:** `Mutants/Boss/Mutant_Boss` + `Mutants/Boss/Post_Process/`. Texture/style align with worker flesh line; retire gallery Hollow Walker placement |
 | Hero (Rampage) | Not in todo — note if gallery scale/anim differs |
 
 ### Spiders (scale-only per todo)

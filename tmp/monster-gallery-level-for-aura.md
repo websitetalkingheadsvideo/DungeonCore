@@ -95,9 +95,9 @@ Prefix all with `/Game/Monsters/`.
 | Tier | Asset |
 | --- | --- |
 | Worker | `Mutants/mutant_worker_v2` |
-| Minion | `Mutants/Character_001/Meshes/Monster_001` |
-| Elite | `Mutants/FleshMutantMonster/Meshes/SK_FleshMutantMonster` |
-| Boss | `Mutants/Hollow_Walker/Meshy_AI_The_Hollow_Walker_All_Animations` |
+| Minion | `Mutants/mutant_worker_v2` |
+| Elite | `Mutants/mutant_worker_v2` |
+| Boss | `Mutants/Boss/Mutant_Boss` |
 | Hero | **— none in project** |
 
 **Mutants Hero:** **Rampage** — `/Game/ParagonRampage/Characters/Heroes/Rampage/Meshes/Rampage`.

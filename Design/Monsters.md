@@ -47,7 +47,7 @@ Skeletal mesh or primary rig per tier. `—` = tier not imported yet.
 | **Fungal**       | `Fungal/Fungal_Worker_v2`                           | `Fungal/Fungal_Minion`                     | `Fungal/SK_FungiInfestedKnight`                           | `Fungal/SK_FungalMyconidGolem`                                    | **Fungal Queen** — `Fungal/FungalQueen/Fungal_Queen` |
 | **Spiders**      | `Spiders/Argiope_v3`                                | `Spiders/Blue_Tarantula_v3`                | `Spiders/Karakurt`                                        | `Spiders/Tarantula`                                               | **Peacock** — `Spiders/Peacock` |
 | **Undead**       | `Undead/Zombie`                                     | `Undead/skeleton_v1`                       | `Undead/mummy_v1`                                         | `Undead/litch_v1`                                                 | **Sevarog** — `Undead/ParagonSevarog/Characters/Heroes/Sevarog/Meshes/Sevarog` |
-| **Mutants**      | `Mutants/mutant_worker_v2`                          | `Mutants/Character_001/Meshes/Monster_001` | `Mutants/FleshMutantMonster/Meshes/SK_FleshMutantMonster` | `Mutants/Hollow_Walker/Meshy_AI_The_Hollow_Walker_All_Animations` | **Rampage** — `/Game/ParagonRampage/Characters/Heroes/Rampage/Meshes/Rampage` |
+| **Mutants**      | `Mutants/mutant_worker_v2`                          | `Mutants/mutant_worker_v2`                 | `Mutants/mutant_worker_v2`                                | `Mutants/Boss/Mutant_Boss`                                          | **Rampage** — `/Game/ParagonRampage/Characters/Heroes/Rampage/Meshes/Rampage` |
 
 **Orc Minion** (`MHC_MetaGoblin`): Fab **MetaGoblin** under `Orcs/MetaGoblin/`. Retexture to art pillar ([General.md](./General.md)). **Still:** AccuRIG + shared CC skeleton with other humanoids ([TODO.md](../TODO.md)). Supersedes Hi3D minion `Orcs/OrcMinion/SK_OrcMinion`. Orphan duplicate `Orcs/OrcWorker/SK_OrcWorker` — retire when unreferenced.
 
@@ -59,7 +59,11 @@ Skeletal mesh or primary rig per tier. `—` = tier not imported yet.
 
 **Fungal Boss** (`SK_FungalMyconidGolem`): ref [Fungal-Myconid-Golem.png](./Reference%20Images/Fungal/Fungal-Myconid-Golem.png); Hi3D `Fungal-Myconid-Golem.glb`; CC `Fungal-Myconid-Golem.ccProject`.
 
-**Mutants Boss** (Hollow Walker): Fab / Meshy. **Canonical import:** Interchange GLB `01_Animated_GLB/Meshy_AI_The_Hollow_Walker_All_Animations.glb` → skeletal `Meshy_AI_The_Hollow_Walker_All_Animations` + skeleton; **anims:** `...Running`, `...Walking`, `...BeHit_FlyUp`, `...Run_03`, `...Skill_01` (same folder). Reimport: [import_hollow_walker_interchange.py](../DungeonCore/Content/Python/import_hollow_walker_interchange.py) via `UnrealEditor-Cmd -ExecutePythonScript` (MCP `SkeletalMeshTools.import_file` cannot load `.glb`). Stale `SK_Hollow_Walker` orphan removed 2026-11-18. Fab preview: [thumbnail.jpg](../imports/fab/Mutants/Hollow_Walker/glb/thumbnail.jpg).
+**Mutants Worker / Minion / Elite** (`mutant_worker_v2`): Hi3D → CC → UE raw-flesh digger (no fungal growth, no tooth-maw). Ref [Mutant-Worker_v3.png](./Reference%20Images/Mutants/Mutant-Worker_v3.png); pipeline slug `mutant-worker` in Hi3D skill. **Minion** and **Elite** use this mesh until tier-specific Hi3D imports exist — differentiate in spawn (scale / material instance), not separate SKs yet.
+
+**Mutants folder layout:** Tier subfolders under `Mutants/` — `Worker`, `Minion`, `Elite`, `Boss`, `Hero` (each may hold `Materials`, `Meshes`, `Post_Process`, `Rigs`, `Textures`). Worker/minion/elite SKs still at family root until moved into tier folders ([Monsters.md](./Monsters.md) grid updated when paths settle).
+
+**Mutants Boss** (`Mutant_Boss`): Hi3D → CC → AccuRIG → UE at `Mutants/Boss/Mutant_Boss`. Hi3D `Mutant-Boss.glb`; CC `imports/hi3d/Mutant/mutant-boss.ccProject`. CC rig blueprints + ABP live under `Mutants/Boss/Post_Process/` (`Mutant_Boss_Blueprint_CC_ControlRig`, `Mutant_Boss_Blueprint_LiveLink`, etc.). Idle pattern: CC Open A → `Mutant_Boss_Anim_0_Open_A_UE5` (same as other humanoids). Shares flesh-mutant art line with worker; boss read = bulk / maw from Hi3D boss gen (Hollow Walker = alternate).
 
 **Paragon Fey — skin meshes** (no shared `Meshes/Fey`; each skin is its own skeletal mesh under `.../Fey/Skins/<Skin>/Meshes/`):
 
@@ -70,7 +74,7 @@ Skeletal mesh or primary rig per tier. `—` = tier not imported yet.
 | **Frostbloom** | `Fey_Frostbloom` |
 | **Nightshade** | `Fey_Nightshade` |
 
-**Also in project (not tier-assigned):** `Orcs/OrcMinion/SK_OrcMinion` (superseded minion; Hi3D/CC). `Orcs/OrcWorker/SK_OrcWorker` (duplicate of old minion — not Worker tier). `Fungal/Fungal_Elegance_v1` (alternate elite; **not** the Hero pick). `Spiders/Spider-Yellow` (alternate spider).
+**Also in project (not tier-assigned):** `Orcs/OrcMinion/SK_OrcMinion` (superseded minion; Hi3D/CC). `Orcs/OrcWorker/SK_OrcWorker` (duplicate of old minion — not Worker tier). `Fungal/Fungal_Elegance_v1` (alternate elite; **not** the Hero pick). `Spiders/Spider-Yellow` (alternate spider). `Mutants/Character_001/Meshes/Monster_001` and `Mutants/FleshMutantMonster/Meshes/SK_FleshMutantMonster` (superseded Fab flesh mutants — tooth-maw style; anim demo packs retained). `Mutants/MutantBoss/` (pre-reorg CC import — superseded by `Mutants/Boss/`). `Mutants/Hollow_Walker/Meshy_AI_The_Hollow_Walker_All_Animations` (Meshy alternate boss; embedded anims, not CC skeleton).
 
 ## Not in UE yet
 
