@@ -42,14 +42,16 @@ Skeletal mesh or primary rig per tier. `—` = tier not imported yet.
 
 | Family           | Worker                                              | Minion                                     | Elite                                                     | Boss                                                              | Hero                                                                         |
 | ---------------- | --------------------------------------------------- | ------------------------------------------ | --------------------------------------------------------- | ----------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| **Orcs**         | `Orcs/StylizedGoblinMinion/SK_StylizedGoblinMinion` | `Orcs/MetaGoblin/MHC_MetaGoblin`           | `Orcs/elite_orc`                                          | `Orcs/OrcBoss/Orc_Boss_unreal`                                    | **Narbash** — `Orcs/ParagonNarbash/Characters/Heroes/Narbash/Meshes/Narbash` |
+| **Orcs**         | `Orcs/StylizedGoblinMinion/SK_StylizedGoblinMinion` | `Orcs/Minion/Orc_Minion_Unreal`            | `Orcs/elite_orc`                                          | `Orcs/OrcBoss/Orc_Boss_unreal`                                    | **Narbash** — `Orcs/ParagonNarbash/Characters/Heroes/Narbash/Meshes/Narbash` |
 | **Evil Fairies** | `EvilFairies/dark_fairy_worker_1`                   | `EvilFairies/dark_fairy_Minion_v1`         | `EvilFairies/dark_fairy_elite_v1`                         | `EvilFairies/dark_fairy_boss_v1`                                  | **Fey (Opaline)** — `EvilFairies/ParagonFey/Characters/Heroes/Fey/Skins/Opaline/Meshes/Fey_Opaline` |
 | **Fungal**       | `Fungal/Fungal_Worker_v2`                           | `Fungal/Fungal_Minion`                     | `Fungal/SK_FungiInfestedKnight`                           | `Fungal/SK_FungalMyconidGolem`                                    | **Fungal Queen** — `Fungal/FungalQueen/Fungal_Queen` |
 | **Spiders**      | `Spiders/Argiope_v3`                                | `Spiders/Blue_Tarantula_v3`                | `Spiders/Karakurt`                                        | `Spiders/Tarantula`                                               | **Peacock** — `Spiders/Peacock` |
 | **Undead**       | `Undead/Zombie`                                     | `Undead/skeleton_v1`                       | `Undead/mummy_v1`                                         | `Undead/litch_v1`                                                 | **Sevarog** — `Undead/ParagonSevarog/Characters/Heroes/Sevarog/Meshes/Sevarog` |
-| **Mutants**      | `Mutants/mutant_worker_v2`                          | `Mutants/mutant_worker_v2`                 | `Mutants/mutant_worker_v2`                                | `Mutants/Boss/Mutant_Boss`                                          | **Rampage** — `/Game/ParagonRampage/Characters/Heroes/Rampage/Meshes/Rampage` |
+| **Mutants**      | `Mutants/mutant_worker_v2`                          | `Mutants/Minion/Mutant_Minion_Unreal`      | `Mutants/mutant_worker_v2`                                | `Mutants/Boss/Mutant_Boss`                                          | **Rampage** — `/Game/ParagonRampage/Characters/Heroes/Rampage/Meshes/Rampage` |
 
-**Orc Minion** (`MHC_MetaGoblin`): Fab **MetaGoblin** under `Orcs/MetaGoblin/`. Retexture to art pillar ([General.md](./General.md)). **Still:** AccuRIG + shared CC skeleton with other humanoids ([TODO.md](../TODO.md)). Supersedes Hi3D minion `Orcs/OrcMinion/SK_OrcMinion`. Orphan duplicate `Orcs/OrcWorker/SK_OrcWorker` — retire when unreferenced.
+**Orc Minion** (`Orc_Minion_Unreal`): Hi3D → CC → UE at `Orcs/Minion/Orc_Minion_Unreal`. Ref [Goblin-Minion.png](./Reference%20Images/Orcs/Goblin-Minion.png) — same stocky goblin-orc species as worker, **open brown leather vest** + **matching leather miner hat**, no torch. CC rig under `Orcs/Minion/Post_Process/`. **Supersedes** Fab `Orcs/MetaGoblin/MHC_MetaGoblin` (retain Fab pack until spawn refs retargeted).
+
+**Orc Minion (superseded Fab)** (`MHC_MetaGoblin`): Fab **MetaGoblin** under `Orcs/MetaGoblin/` — not tier pick; was prior grid minion.
 
 **Orc Elite** (`elite_orc`): ref [Orc-Elite-v3-closed-mouth.png](./Reference%20Images/Orcs/Orc-Elite-v3-closed-mouth.png); Hi3D `Orc-Elite_v2.glb`; CC `orc-elite_v1.ccProject`.
 
@@ -59,9 +61,13 @@ Skeletal mesh or primary rig per tier. `—` = tier not imported yet.
 
 **Fungal Boss** (`SK_FungalMyconidGolem`): ref [Fungal-Myconid-Golem.png](./Reference%20Images/Fungal/Fungal-Myconid-Golem.png); Hi3D `Fungal-Myconid-Golem.glb`; CC `Fungal-Myconid-Golem.ccProject`.
 
-**Mutants Worker / Minion / Elite** (`mutant_worker_v2`): Hi3D → CC → UE raw-flesh digger (no fungal growth, no tooth-maw). Ref [Mutant-Worker_v3.png](./Reference%20Images/Mutants/Mutant-Worker_v3.png); pipeline slug `mutant-worker` in Hi3D skill. **Minion** and **Elite** use this mesh until tier-specific Hi3D imports exist — differentiate in spawn (scale / material instance), not separate SKs yet.
+**Mutants Worker** (`mutant_worker_v2`): Hi3D → CC → UE raw-flesh digger (no fungal growth, no tooth-maw). Ref [Mutant-Worker_v3.png](./Reference%20Images/Mutants/Mutant-Worker_v3.png); pipeline slug `mutant-worker`. CC post-process at `Mutants/Post_Process/` (family root).
 
-**Mutants folder layout:** Tier subfolders under `Mutants/` — `Worker`, `Minion`, `Elite`, `Boss`, `Hero` (each may hold `Materials`, `Meshes`, `Post_Process`, `Rigs`, `Textures`). Worker/minion/elite SKs still at family root until moved into tier folders ([Monsters.md](./Monsters.md) grid updated when paths settle).
+**Mutants Minion** (`Mutant_Minion_Unreal`): Hi3D → CC → `Mutants/Minion/Mutant_Minion_Unreal`. Ref [Mutant Minion.png](./Reference%20Images/Mutants/Mutant%20Minion.png); CC under `Mutants/Minion/Post_Process/`. Same flesh family as worker; tier read = shorter stockier runt (scale in spawn still fine-tune).
+
+**Mutants Elite:** still **`mutant_worker_v2`** at family root until dedicated elite Hi3D import — differentiate via scale / MI at spawn.
+
+**Mutants / Orcs folder layout:** Tier subfolders where imported — e.g. `Mutants/Minion/`, `Mutants/Boss/`, `Orcs/Minion/` (`Post_Process`, `Motion`, `Rigs`). **Worker** meshes may stay at family root until moved.
 
 **Mutants Boss** (`Mutant_Boss`): Hi3D → CC → AccuRIG → UE at `Mutants/Boss/Mutant_Boss`. Hi3D `Mutant-Boss.glb`; CC `imports/hi3d/Mutant/mutant-boss.ccProject`. CC rig blueprints + ABP live under `Mutants/Boss/Post_Process/` (`Mutant_Boss_Blueprint_CC_ControlRig`, `Mutant_Boss_Blueprint_LiveLink`, etc.). Idle pattern: CC Open A → `Mutant_Boss_Anim_0_Open_A_UE5` (same as other humanoids). Shares flesh-mutant art line with worker; boss read = bulk / maw from Hi3D boss gen (Hollow Walker = alternate).
 
@@ -74,7 +80,7 @@ Skeletal mesh or primary rig per tier. `—` = tier not imported yet.
 | **Frostbloom** | `Fey_Frostbloom` |
 | **Nightshade** | `Fey_Nightshade` |
 
-**Also in project (not tier-assigned):** `Orcs/OrcMinion/SK_OrcMinion` (superseded minion; Hi3D/CC). `Orcs/OrcWorker/SK_OrcWorker` (duplicate of old minion — not Worker tier). `Fungal/Fungal_Elegance_v1` (alternate elite; **not** the Hero pick). `Spiders/Spider-Yellow` (alternate spider). `Mutants/Character_001/Meshes/Monster_001` and `Mutants/FleshMutantMonster/Meshes/SK_FleshMutantMonster` (superseded Fab flesh mutants — tooth-maw style; anim demo packs retained). `Mutants/MutantBoss/` (pre-reorg CC import — superseded by `Mutants/Boss/`). `Mutants/Hollow_Walker/Meshy_AI_The_Hollow_Walker_All_Animations` (Meshy alternate boss; embedded anims, not CC skeleton).
+**Also in project (not tier-assigned):** `Orcs/MetaGoblin/MHC_MetaGoblin` (superseded minion — Fab). `Orcs/OrcMinion/SK_OrcMinion` (older Hi3D/CC minion). `Orcs/OrcWorker/SK_OrcWorker` (duplicate of old minion — not Worker tier). `Fungal/Fungal_Elegance_v1` (alternate elite; **not** the Hero pick). `Spiders/Spider-Yellow` (alternate spider). `Mutants/Character_001/Meshes/Monster_001` and `Mutants/FleshMutantMonster/Meshes/SK_FleshMutantMonster` (superseded Fab flesh mutants — tooth-maw style; anim demo packs retained). `Mutants/MutantBoss/` (pre-reorg CC import — superseded by `Mutants/Boss/`). `Mutants/Hollow_Walker/Meshy_AI_The_Hollow_Walker_All_Animations` (Meshy alternate boss; embedded anims, not CC skeleton).
 
 ## Not in UE yet
 
@@ -95,7 +101,7 @@ Spider tier is by role, not mesh size. Minion source is `imports/blender/Blue Ta
 
 ## Intruders (adventurers)
 
-Surface heroes — not dungeon families. **Full Epic Paragon hero catalog owned** (not all migrated); Fab fills gaps; plus one custom Firefly party. `—` = not under `/Game/` yet. Owned-but-unassigned heroes: [Invaders-Paragons.md](./Invaders-Paragons.md#owned-catalog-vs-in-project).
+Surface heroes — not dungeon families. **Full Epic Paragon hero catalog owned** (not all migrated); Fab fills gaps; **Firefly party** + knights **in UE** ([Invaders.md — In UE](./Invaders.md#in-ue-gameinvaders)). `—` = not under `/Game/` yet. Owned-but-unassigned heroes: [Invaders-Paragons.md](./Invaders-Paragons.md#owned-catalog-vs-in-project).
 
 **Combat character sheets** (all families + tiers + invaders): [Character-Sheets.md](./Character-Sheets.md). **Invader trap / party AI:** [Invaders.md](./Invaders.md). **Paragon wiki map:** [Invaders-Paragons.md](./Invaders-Paragons.md).
 
@@ -103,19 +109,20 @@ Surface heroes — not dungeon families. **Full Epic Paragon hero catalog owned*
 | --- | --- | --- |
 | **Wanderer** | Wanderer | — |
 | **Assassin** | Free Medieval Assassin Girl | — |
-| **Hero** | Heroic Warrior | — |
+| **Hero** | `Invaders/HeroicWarrior/SM_HeroicWarrior` | Static mesh only — skeletal TBD |
 | **Champion** | Paragon: **Terra** (`/Game/Invaders/ParagonTerra`) | Warrior Queen (rigged) — alternate |
-| **Tank** | Paragon: **Greystone** (`/Game/Invaders/ParagonGreystone`) | Paragon: **Rampage** (`/Game/ParagonRampage/Characters/Heroes/Rampage/Meshes/Rampage`) — Tank alt; Paladin RPG Set (knight skins) |
-| **Bruiser** | Paragon: **Kwang** (`/Game/Invaders/ParagonKwang`) | Gothic Knight |
+| **Tank** | Paragon: **Greystone** (`/Game/Invaders/ParagonGreystone`) | Paragon **Rampage** (Tank alt); `Invaders/Paladin/Paladin` (CC); `Invaders/GKnight/` (**Gothic Knight** VA–VF) |
+| **Bruiser** | Paragon: **Kwang** (`/Game/Invaders/ParagonKwang`) | `Invaders/GKnight/Meshes/SK_GothicKnight_VA` (Fab modular **Gothic Knight**) |
 | **Mage** | Paragon: **Phase** | Aurora (`/Game/Invaders/ParagonAurora`) - alternate |
 | **Archer** | Paragon: **Sparrow** (`/Game/Invaders/ParagonSparrow`) | — |
-| **Dwarf Fighter** | Firefly / Hi3D TBD | Intruder party |
-| **Elf Bowman** | Firefly / Hi3D TBD | Intruder party |
-| **Old Wizard** | Firefly / Hi3D TBD | Intruder party |
-| **Female Human Cleric** | Paragon: **Zinx** (`/Game/Invaders/ParagonZinx`) | Firefly / Hi3D TBD - Zinx has a non-sci-fi skin, so she is the Cleric unless the skin does not fit, in which case drop her |
+| **Dwarf Fighter** | `Invaders/Dwarf/Dwarf_Fighter` | Firefly party · [Invader-Dward_v2.png](./Reference%20Images/Invaders/Invader-Dward_v2.png) |
+| **Elf Bowman** | `Invaders/Elf-Archer/Elf_Archer` | Firefly party · [Invader-Elf.png](./Reference%20Images/Invaders/Invader-Elf.png) |
+| **Elf Mage** | — | Firefly ref / `Invader-Elf-Mage` pipeline — **not** in Content yet |
+| **Old Wizard** | `Invaders/Thelma/Invader_Thelma` | Firefly party (**Thelma**) |
+| **Female Human Cleric** | Paragon: **Zinx** (`/Game/Invaders/ParagonZinx`) | Zinx non-sci-fi skin = default Cleric unless art review fails |
 
-**Intruder party** (custom, not in UE): one shared kit — charcoal wool, ivory linen, dark leather, brushed steel, muted navy trim. Clean stylized realism, white T-pose sheets. Dwarf is the scale fighter: iron cap on his head, shield on the back, axe on the hip.
+**Intruder party** (Common line): shared kit — charcoal wool, ivory linen, dark leather, brushed steel, muted navy trim. **In UE:** dwarf, elf archer, wizard Thelma ([Invaders.md](./Invaders.md#in-ue-gameinvaders)). Elf **mage** mesh still pending.
 
-**Knight / paladin variants (Fab):** **Gothic Knight**, **Paladin RPG Set** — retexture to match art pillar; assign to Hero or Tank spawn tables.
+**Knight / paladin (Fab + CC):** `Invaders/GKnight/` (**Gothic Knight** variants VA–VF); `Invaders/Paladin/Paladin` — CC import with art-pillar retexture; assign to Tank / Bruiser spawn templates.
 
 See also [library.md](../library.md) (Fab invaders list), [Future.md](./Future.md) (Warrior Queen, Fantasy RPG Humanoid Pack).

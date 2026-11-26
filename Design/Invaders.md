@@ -2,7 +2,56 @@
 
 Surface **adventurer parties** that raid the dungeon. Visual roster and Fab picks: [Monsters.md](./Monsters.md#intruders-adventurers). Paragon MOBA reference (stats, wiki links, roster map): [Invaders-Paragons.md](./Invaders-Paragons.md). Store items that change invader behavior: [Store.md](./Store.md). This doc is the **single place** for raid AI, party state, and per-invader data the simulation needs.
 
-**Status:** design only — no invader party system or character sheets are implemented in UE yet.
+**Status:** Raid AI, spawn tables, and runtime character sheets are **not** implemented in UE yet. **Meshes:** Common-line **Firefly party** + Fab knights + partial **Paragon** packs live under `/Game/Invaders/` ([In UE](#in-ue-gameinvaders)). Role → path for spawn wiring remains in [Monsters.md — Intruders](./Monsters.md#intruders-adventurers).
+
+## In UE (`/Game/Invaders/`)
+
+Primary **skeletal mesh** (or static mesh) per custom / Fab adventurer. `—` = not imported. Paragon paths also summarized in [Invaders-Paragons.md](./Invaders-Paragons.md#invader-roster-paragon-meshes). Pipeline: Hi3D / Firefly → CC → AccuRIG → UE unless noted.
+
+### Firefly party (Common line)
+
+Shared kit: charcoal wool, ivory linen, dark leather, brushed steel, muted navy trim ([Monsters.md](./Monsters.md#intruders-adventurers)). CC idle: Open A → `Motion/*_Anim_0_Open_A_UE5`; rig under each folder’s `Post_Process/`.
+
+| Design role | Archetype (draft) | UE mesh | 2D ref / CC source |
+| --- | --- | --- | --- |
+| **Dwarf Fighter** | Fighter (+ tank bias in `ScoutDuo`) | `Dwarf/Dwarf_Fighter` | [Invader-Dward_v2.png](./Reference%20Images/Invaders/Invader-Dward_v2.png); `imports/hi3d/Invaders/Invader-Dwarf.ccProject` |
+| **Elf Bowman** | Scout / Archer | `Elf-Archer/Elf_Archer` | [Invader-Elf.png](./Reference%20Images/Invaders/Invader-Elf.png); `Invader-Elf-Archer.ccProject` |
+| **Old Wizard** (**Thelma**) | Mage | `Thelma/Invader_Thelma` | Firefly grey-robe wizard ref; `Invader_Thelma` FBX / CC export |
+| **Elf Mage** | Mage (party `GlassCannon` / `FrontBack`) | — | Pipeline WIP: `imports/hi3d/Invaders/Invader-Elf-Mage.*` — **not** in Content yet (archer is separate mesh) |
+| **Female Cleric** (optional party slot) | Cleric | — | Paragon **Zinx** or future Firefly cleric — see below |
+
+### Fab / CC humanoids (Common line)
+
+| Design role | UE asset | Notes |
+| --- | --- | --- |
+| **Paladin** (RPG set) | `Paladin/Paladin` | CC humanoid; retarget idles from `GKnight` (`Retargeted_Anims/anim_Idle_SK_GothicKnight_VA_Paladin`). Tank / Cleric flavor for templates — assign in spawn table. |
+| **Gothic Knight** | `GKnight/Meshes/SK_GothicKnight_VA` … `VF` | Fab modular set (body/head/cape/parts under `Meshes/Parts/`). Default spawn: **VA** unless template picks variant. Bruiser / Tank alt per [Monsters.md](./Monsters.md#intruders-adventurers). |
+| **Hero** | `HeroicWarrior/SM_HeroicWarrior` | **Static mesh only** — no skeleton / ABP yet ([TODO.md](../TODO.md)). |
+
+### Paragon packs (migrated subset)
+
+Mounted under `Invaders/Paragon*` (hero mesh + Epic anim sets). Use for **Paragon line** raids; same trap/party AI as Common.
+
+| Design role | Folder | Primary mesh |
+| --- | --- | --- |
+| Champion | `ParagonTerra` | `Terra` |
+| Tank | `ParagonGreystone` | `Greystone` |
+| Bruiser | `ParagonKwang` | `Kwang` |
+| Mage | `ParagonPhase` | `Phase` |
+| Mage (alt) | `ParagonAurora` | `Aurora` |
+| Archer | `ParagonSparrow` | `Sparrow` |
+| Cleric | `ParagonZinx` | `Zinx` |
+| — (extra migrated) | `ParagonGideon` | `Gideon` — no DC role row yet; candidate Bruiser/Mage |
+
+**Not in project:** Fab **Wanderer**, **Assassin**, **Free Medieval Assassin Girl** — still mount TBD ([Monsters.md](./Monsters.md#intruders-adventurers)).
+
+### Composition hooks (Firefly + Fab)
+
+| Template | Suggested Common meshes (when rigged) |
+| --- | --- |
+| `ScoutDuo` | `Dwarf_Fighter` + `Elf_Archer` |
+| `FrontBack` | `Dwarf_Fighter` or `Paladin` + `Invader_Thelma` or (later) `Elf_Mage` |
+| `Classic` | Tank slot: `Paladin` or `SK_GothicKnight_VA` + damage: `Elf_Archer` + support: `Invader_Thelma` or `Zinx` |
 
 ## Goals
 
@@ -164,7 +213,7 @@ Sheets list **starting tags** only. Runtime union = `Unit.StartingTags ∪ Party
 | Mage | 0.6 | −0.1 | 0.25 | 0.4 | 0.4 | 0.30 | — |
 | Wanderer (fodder) | 0.2 | 0 | 0.35 | 0.45 | 0.15 | 0.65 | none |
 
-Custom Firefly party ([Monsters.md](./Monsters.md)): assign archetypes (Dwarf → Tank, Cleric → Cleric, Elf → Scout, Wizard → Mage).
+**Firefly party archetypes** (meshes in UE — see [In UE](#in-ue-gameinvaders)): `Dwarf_Fighter` → Fighter (tank-leaning); `Elf_Archer` → Scout / Archer; `Invader_Thelma` → Mage. **Elf Mage** when imported → Mage. **Paladin** / **Gothic Knight** → Tank or Bruiser per spawn template. **Zinx** → Cleric when Paragon line or mixed party.
 
 ## Learning, witnessing, and events
 
@@ -239,7 +288,8 @@ Detailed spec for displacement (reference for other traps):
 
 - Combat sheet schema (shared with monsters): [Character-Sheets.md](./Character-Sheets.md)
 - Paragon reference: [Invaders-Paragons.md](./Invaders-Paragons.md)
-- Assets: [Monsters.md — Intruders](./Monsters.md#intruders-adventurers)
+- **UE asset paths (this doc):** [In UE](#in-ue-gameinvaders)
+- Role → path summary: [Monsters.md — Intruders](./Monsters.md#intruders-adventurers)
 - Trap catalog: [Store.md](./Store.md), [store_items.md](./store_items.md)
 - Scout intel event: [Random Events.md](./Random%20Events.md)
 - Genre balance (bait vs lethality): [Overall.md](./Overall.md)
