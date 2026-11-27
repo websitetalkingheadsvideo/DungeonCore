@@ -19,9 +19,9 @@ ARCHETYPE_KITS: dict[str, dict[str, Any]] = {
     },
     "Thief": {
         "primary": "Lockpick",
-        "secondary": "Smoke vanish",
+        "secondary": "Climb walls",
         "effectTagsPrimary": ["PickLock"],
-        "effectTagsSecondary": ["Blink"],
+        "effectTagsSecondary": ["ClimbWall"],
     },
     "Assassin": {
         "primary": "Ambush / execute",
@@ -184,11 +184,67 @@ HERO_META: dict[str, dict[str, Any]] = {
         "DisplayName": "Fungal Queen",
         "ArchetypeId": "Mage",
         "StatSource": "HandTuned",
+        "Primary": "Spores",
+        "Secondary": "Roots",
+        "EffectTagsPrimary": ["Ranged", "AOE"],
+        "EffectTagsSecondary": ["Root", "Slow"],
+        "VitalsOverride": {
+            "MaxHealth": 58,
+            "BasicDamage": 6,
+            "BasicDefense": 12,
+            "AbilityDefense": 16,
+            "MoveSpeed": 260,
+            "CleavePct": 0.05,
+        },
+        "RatingsOverride": {
+            "BasicDamage": 3,
+            "AbilityDamage": 8,
+            "Durability": 3,
+            "Mobility": 4,
+            "Intelligence": 9,
+            "Wisdom": 8,
+        },
+        "AbilityTuning": [
+            {"BaseDamage": 22, "CooldownSec": 8, "RangeUU": 600},
+            {"BaseDamage": 18, "CooldownSec": 14, "RangeUU": 450},
+        ],
+        "DefenderAIOverride": {
+            "AggroStyle": "Stationary",
+            "LeashRadiusUU": 300,
+            "PreferredRange": "Long",
+        },
     },
     "Spiders": {
         "DisplayName": "Peacock",
         "ArchetypeId": "Archer",
         "StatSource": "HandTuned",
+        "Primary": "Ranged web",
+        "Secondary": "Leap attack",
+        "EffectTagsPrimary": ["Ranged", "Root", "Slow"],
+        "EffectTagsSecondary": ["Melee", "Dash"],
+        "VitalsOverride": {
+            "MaxHealth": 88,
+            "BasicDamage": 10,
+            "BasicDefense": 18,
+            "AbilityDefense": 14,
+            "MoveSpeed": 285,
+            "CleavePct": 0.1,
+        },
+        "RatingsOverride": {
+            "BasicDamage": 6,
+            "AbilityDamage": 5,
+            "Durability": 7,
+            "Mobility": 6,
+        },
+        "AbilityTuning": [
+            {"BaseDamage": 16, "CooldownSec": 9, "RangeUU": 650},
+            {"BaseDamage": 24, "CooldownSec": 12, "RangeUU": 400},
+        ],
+        "DefenderAIOverride": {
+            "AggroStyle": "Stationary",
+            "LeashRadiusUU": 300,
+            "PreferredRange": "Long",
+        },
     },
     "Undead": {
         "DisplayName": "Sevarog",
@@ -425,7 +481,15 @@ def defender_sheet(family: str, tier: str) -> dict[str, Any]:
         for i, key in enumerate(hero.get("ParagonKeys", ())):
             if i < len(abilities):
                 abilities[i]["ParagonAbilityKey"] = key
-        ratings = {"BasicDamage": 5, "AbilityDamage": 4, "Durability": 8, "Mobility": 5}
+        for i, tune in enumerate(hero.get("AbilityTuning", ())):
+            if i < len(abilities):
+                abilities[i].update(tune)
+        if hero.get("VitalsOverride"):
+            vitals.update(hero["VitalsOverride"])
+        ratings = hero.get(
+            "RatingsOverride",
+            {"BasicDamage": 5, "AbilityDamage": 4, "Durability": 8, "Mobility": 5},
+        )
     else:
         archetype = TIER_ARCHETYPE[tier]
         if tier == "Minion" and family in FAMILY_MINION_ARCHETYPE:
@@ -463,11 +527,15 @@ def defender_sheet(family: str, tier: str) -> dict[str, Any]:
             "WorkerRole": WORKER_ROLE_BY_FAMILY.get(family, "None") if tier == "Worker" else "None",
             "AggroStyle": "Chase",
             "LeashRadiusUU": 1200 if tier in ("Boss", "Hero") else 900,
-            "PreferredRange": "Melee" if archetype != "Archer" else "Long",
+            "PreferredRange": "Melee" if archetype not in ("Archer", "Mage") else "Long",
             "UsesParagonAnimSet": bool(HERO_META.get(family, {}).get("UsesParagonAnimSet")) if tier == "Hero" else False,
         },
         "StartingKnowledgeTags": [],
     }
+    if tier == "Hero" and family in HERO_META:
+        ai_override = HERO_META[family].get("DefenderAIOverride")
+        if ai_override:
+            row["DefenderAI"].update(ai_override)
     if paragon_ref:
         row["ParagonRef"] = paragon_ref
     return row
@@ -545,6 +613,209 @@ def invader_sheet(
     }
     if paragon_ref:
         row["ParagonRef"] = paragon_ref
+    return row
+
+
+def _firefly_cleric_sheet() -> dict[str, Any]:
+    row = invader_sheet(
+        "Invader.Cleric.FireflySlot",
+        "Cleric",
+        "Firefly Cleric",
+        "",
+        line="Common",
+        ref_tier="Standard",
+    )
+    row["MeshPipeline"] = "Hi3D"
+    row["MeshTargetPath"] = "/Game/Invaders/Cleric/"
+    row["StatSource"] = "HandTuned"
+    row["PartyTemplates"] = ["FireflyFour"]
+    row["Vitals"].update(
+        {
+            "MaxHealth": 76,
+            "HealthRegenPerSec": 0.5,
+            "MaxStamina": 120,
+            "StaminaRegenPerSec": 2.5,
+            "BasicDamage": 3,
+            "BasicDefense": 16,
+            "AbilityDefense": 18,
+            "MoveSpeed": 275,
+            "CleavePct": 0.05,
+        }
+    )
+    row["Ratings"].update(
+        {
+            "BasicDamage": 3,
+            "AbilityDamage": 5,
+            "Durability": 4,
+            "Mobility": 3,
+            "Agility": 3,
+            "Intelligence": 3,
+            "Wisdom": 9,
+        }
+    )
+    row["Abilities"][0].update(
+        {"DamageType": "Ability", "BaseDamage": 20, "EffectTags": ["Heal"]}
+    )
+    row["Abilities"][1].update(
+        {"DamageType": "Ability", "BaseDamage": 16, "EffectTags": ["Shield", "Heal"]}
+    )
+    row["InvaderBehavior"].update(
+        {
+            "CohesionBias": 0.55,
+            "HelperWeight": 0.9,
+            "FollowerWeight": 0.7,
+            "Caution": 0.45,
+            "LootGreed": 0.2,
+        }
+    )
+    row["StartingKnowledgeTags"] = ["Knows_LeyTraps", "Knows_AllyHeal"]
+    return row
+
+
+def _warrior_queen_sheet() -> dict[str, Any]:
+    row = invader_sheet(
+        "Invader.Champion.WarriorQueen",
+        "Champion",
+        "Warrior Queen",
+        "/Game/Invaders/WarriorQueen/Warrior_Queen",
+        line="Common",
+        ref_tier="Standard",
+    )
+    row["MeshPipeline"] = "InUE"
+    row["MeshTargetPath"] = "/Game/Invaders/WarriorQueen/"
+    row["StatSource"] = "HandTuned"
+    row["Vitals"].update(
+        {
+            "MaxHealth": 62,
+            "BasicDamage": 9,
+            "BasicDefense": 17,
+            "AbilityDefense": 15,
+            "MoveSpeed": 288,
+            "CleavePct": 0.12,
+        }
+    )
+    row["Ratings"].update(
+        {
+            "BasicDamage": 7,
+            "AbilityDamage": 6,
+            "Durability": 7,
+            "Mobility": 6,
+            "Agility": 6,
+            "Intelligence": 7,
+            "Wisdom": 7,
+        }
+    )
+    row["Abilities"][0].update({"BaseDamage": 18, "CooldownSec": 8})
+    row["Abilities"][1].update({"BaseDamage": 14, "CooldownSec": 12, "EffectTags": ["Slow", "Root"]})
+    row["InvaderBehavior"].update(
+        {
+            "CohesionBias": 0.45,
+            "FollowerWeight": 0.6,
+            "HelperWeight": 0.65,
+            "Caution": 0.35,
+            "LootGreed": 0.45,
+        }
+    )
+    row["StartingKnowledgeTags"] = []
+    return row
+
+
+def _thief_common_sheet() -> dict[str, Any]:
+    row = invader_sheet(
+        "Invader.Thief.Common",
+        "Thief",
+        "Thief",
+        "",
+        line="Common",
+        ref_tier="Fodder",
+        knowledge=["Knows_MimicRisk", "Knows_LeyTraps", "Knows_MirageVeil"],
+    )
+    row["MeshPipeline"] = "Hi3D"
+    row["MeshTargetPath"] = "/Game/Invaders/Thief/"
+    row["StatSource"] = "HandTuned"
+    row["Vitals"].update(
+        {
+            "MaxHealth": 18,
+            "BasicDamage": 3,
+            "MoveSpeed": 310,
+            "CleavePct": 0.08,
+            "BasicDefense": 13,
+            "AbilityDefense": 10,
+        }
+    )
+    row["Ratings"].update(
+        {
+            "BasicDamage": 2,
+            "Durability": 2,
+            "Mobility": 8,
+            "Agility": 9,
+            "Intelligence": 4,
+            "Wisdom": 4,
+        }
+    )
+    row["Abilities"] = [
+        {
+            "AbilityId": "Invader_Thief_Common.Primary",
+            "Slot": "Primary",
+            "DisplayName": "Lockpick",
+            "DamageType": "None",
+            "BaseDamage": 0,
+            "CooldownSec": 8,
+            "RangeUU": 150,
+            "EffectTags": ["PickLock"],
+        },
+        {
+            "AbilityId": "Invader_Thief_Common.Secondary",
+            "Slot": "Secondary",
+            "DisplayName": "Climb walls",
+            "DamageType": "None",
+            "BaseDamage": 0,
+            "CooldownSec": 10,
+            "RangeUU": 300,
+            "EffectTags": ["ClimbWall"],
+        },
+    ]
+    row["ExpeditionGear"] = {
+        "HasRope": False,
+        "RopeLengthUU": 0,
+        "HasLockpick": True,
+        "CanClimbWalls": True,
+        "HasSustainedFlight": False,
+    }
+    row["StartingKnowledgeTags"] = [
+        "Knows_MimicRisk",
+        "Knows_LeyTraps",
+        "Knows_MirageVeil",
+    ]
+    return row
+
+
+def _wanderer_common_sheet() -> dict[str, Any]:
+    row = invader_sheet("Invader.Wanderer.Common", "Wanderer", "Wanderer", "", line="Common", ref_tier="Fodder")
+    row["MeshPipeline"] = "Hi3D"
+    row["MeshTargetPath"] = "/Game/Invaders/Wanderer/"
+    row["StatSource"] = "HandTuned"
+    row["Vitals"].update(
+        {
+            "MaxHealth": 22,
+            "BasicDamage": 3.5,
+            "CleavePct": 0.1,
+            "BasicDefense": 15,
+            "AbilityDefense": 12,
+        }
+    )
+    row["Ratings"].update(
+        {
+            "BasicDamage": 3,
+            "Durability": 3,
+            "Intelligence": 7,
+            "Wisdom": 7,
+        }
+    )
+    row["Abilities"][0]["BaseDamage"] = 5
+    row["Abilities"][1]["BaseDamage"] = 4
+    row["InvaderBehavior"].update({"Caution": 0.45, "ScoutRating": 0.4})
+    row["StartingKnowledgeTags"] = ["Knows_LeyTraps", "Knows_MimicRisk"]
     return row
 
 
@@ -641,23 +912,252 @@ def write_character_objects_todo(sheets: list[dict[str, Any]]) -> None:
     print(f"Wrote todo to {todo_path}")
 
 
+WORKER_DISPLAY_NAMES: dict[str, str] = {
+    "Orcs": "Orc Worker",
+    "Undead": "Undead Worker",
+    "EvilFairies": "Evil Fairy Worker",
+    "Fungal": "Fungal Worker",
+    "Spiders": "Spider Worker",
+    "Mutants": "Mutant Worker",
+}
+
+DEFENDER_SHEET_OVERRIDES: dict[str, dict[str, Any]] = {
+    "Orcs.Minion": {
+        "DisplayName": "Orc Minion",
+        "ReferenceTier": "Standard",
+        "StatSource": "HandTuned",
+        "Vitals": {
+            "MaxHealth": 48,
+            "BasicDamage": 7,
+            "BasicDefense": 16,
+            "AbilityDefense": 13,
+            "CleavePct": 0.12,
+        },
+        "Ratings": {
+            "BasicDamage": 5,
+            "AbilityDamage": 4,
+            "Durability": 5,
+            "Mobility": 5,
+            "Intelligence": 2,
+            "Wisdom": 2,
+        },
+        "Abilities": [
+            {
+                "AbilityId": "Orcs_Minion.Primary",
+                "Slot": "Primary",
+                "DisplayName": "Combo strike",
+                "DamageType": "Ability",
+                "BaseDamage": 12,
+                "CooldownSec": 8,
+                "RangeUU": 0,
+                "EffectTags": ["Melee"],
+            },
+            {
+                "AbilityId": "Orcs_Minion.Secondary",
+                "Slot": "Secondary",
+                "DisplayName": "War cry",
+                "DamageType": "Ability",
+                "BaseDamage": 8,
+                "CooldownSec": 14,
+                "RangeUU": 0,
+                "EffectTags": ["BuffAura", "Melee"],
+            },
+        ],
+        "DefenderAI": {
+            "AggroStyle": "Chase",
+            "IntruderResponse": "Fight",
+            "HarassInvaders": True,
+            "LeashRadiusUU": 1200,
+        },
+    },
+    "Orcs.Elite": {
+        "DisplayName": "Orc Elite",
+        "StatSource": "HandTuned",
+        "Vitals": {
+            "MaxHealth": 68,
+            "BasicDamage": 10,
+            "BasicDefense": 17,
+            "AbilityDefense": 14,
+            "CleavePct": 0.18,
+        },
+        "Ratings": {
+            "BasicDamage": 6,
+            "AbilityDamage": 5,
+            "Durability": 6,
+            "Mobility": 5,
+            "Intelligence": 2,
+            "Wisdom": 2,
+        },
+        "Abilities": [
+            {
+                "AbilityId": "Orcs_Elite.Primary",
+                "Slot": "Primary",
+                "DisplayName": "Heavy cleave",
+                "DamageType": "Ability",
+                "BaseDamage": 20,
+                "CooldownSec": 8,
+                "RangeUU": 0,
+                "EffectTags": ["Melee", "Cleave"],
+            },
+            {
+                "AbilityId": "Orcs_Elite.Secondary",
+                "Slot": "Secondary",
+                "DisplayName": "Bull rush",
+                "DamageType": "Ability",
+                "BaseDamage": 16,
+                "CooldownSec": 11,
+                "RangeUU": 350,
+                "EffectTags": ["Melee", "Dash"],
+            },
+        ],
+        "DefenderAI": {
+            "AggroStyle": "Chase",
+            "IntruderResponse": "Fight",
+            "HarassInvaders": True,
+            "LeashRadiusUU": 1000,
+        },
+    },
+    "Orcs.Boss": {
+        "DisplayName": "Orc Boss",
+        "StatSource": "HandTuned",
+        "Vitals": {
+            "MaxHealth": 175,
+            "BasicDamage": 13,
+            "BasicDefense": 20,
+            "AbilityDefense": 16,
+            "CleavePct": 0.2,
+        },
+        "Ratings": {
+            "BasicDamage": 7,
+            "AbilityDamage": 4,
+            "Durability": 8,
+            "Mobility": 4,
+            "Intelligence": 2,
+            "Wisdom": 2,
+        },
+        "Abilities": [
+            {
+                "AbilityId": "Orcs_Boss.Primary",
+                "Slot": "Primary",
+                "DisplayName": "Guard / damage soak taunt",
+                "DamageType": "Ability",
+                "BaseDamage": 22,
+                "CooldownSec": 10,
+                "RangeUU": 0,
+                "EffectTags": ["Melee", "AOE"],
+            },
+            {
+                "AbilityId": "Orcs_Boss.Secondary",
+                "Slot": "Secondary",
+                "DisplayName": "Shield slam",
+                "DamageType": "Ability",
+                "BaseDamage": 28,
+                "CooldownSec": 13,
+                "RangeUU": 0,
+                "EffectTags": ["Melee", "AOE"],
+            },
+        ],
+        "DefenderAI": {
+            "AggroStyle": "Chase",
+            "IntruderResponse": "Fight",
+            "HarassInvaders": True,
+            "LeashRadiusUU": 900,
+        },
+    },
+}
+
+
+def apply_worker_template(sheet: dict[str, Any]) -> dict[str, Any]:
+    if sheet.get("Tier") != "Worker":
+        return sheet
+    family = sheet["FamilyId"]
+    ability_prefix = family.replace(".", "_")
+    sheet["DisplayName"] = WORKER_DISPLAY_NAMES.get(family, f"{family} Worker")
+    sheet["StatSource"] = "HandTuned"
+    sheet["Vitals"].update(
+        {
+            "MaxHealth": 18,
+            "BasicDamage": 2,
+            "BasicDefense": 14,
+            "AbilityDefense": 11,
+            "CleavePct": 0.05,
+        }
+    )
+    sheet["Ratings"] = {
+        "BasicDamage": 2,
+        "AbilityDamage": 2,
+        "Durability": 2,
+        "Mobility": 3,
+        "Intelligence": 2,
+        "Wisdom": 2,
+    }
+    sheet["Abilities"] = [
+        {
+            "AbilityId": f"{ability_prefix}_Worker.Primary",
+            "Slot": "Primary",
+            "DisplayName": "Dig",
+            "DamageType": "None",
+            "BaseDamage": 0,
+            "CooldownSec": 6,
+            "RangeUU": 0,
+            "EffectTags": ["Dig"],
+        },
+        {
+            "AbilityId": f"{ability_prefix}_Worker.Secondary",
+            "Slot": "Secondary",
+            "DisplayName": "Reset traps",
+            "DamageType": "None",
+            "BaseDamage": 0,
+            "CooldownSec": 10,
+            "RangeUU": 150,
+            "EffectTags": ["TrapReset"],
+        },
+    ]
+    sheet["DefenderAI"].update(
+        {
+            "IntruderResponse": "Flee",
+            "FleeOnRaidIntel": True,
+            "AggroStyle": "Guard",
+            "LeashRadiusUU": 600,
+            "HarassInvaders": False,
+        }
+    )
+    return sheet
+
+
+def apply_defender_overrides(sheet: dict[str, Any]) -> dict[str, Any]:
+    if sheet.get("Tier") == "Worker":
+        sheet = apply_worker_template(sheet)
+    patch = DEFENDER_SHEET_OVERRIDES.get(sheet["SheetId"])
+    if not patch:
+        return sheet
+    if "ReferenceTier" in patch:
+        sheet["ReferenceTier"] = patch["ReferenceTier"]
+    if "DisplayName" in patch:
+        sheet["DisplayName"] = patch["DisplayName"]
+    if "StatSource" in patch:
+        sheet["StatSource"] = patch["StatSource"]
+    if "Vitals" in patch:
+        sheet["Vitals"].update(patch["Vitals"])
+    if "Ratings" in patch:
+        sheet["Ratings"].update(patch["Ratings"])
+    if "Abilities" in patch:
+        sheet["Abilities"] = patch["Abilities"]
+    if "DefenderAI" in patch:
+        sheet["DefenderAI"].update(patch["DefenderAI"])
+    return sheet
+
+
 def main() -> None:
     sheets: list[dict[str, Any]] = []
 
     for family in DEFENDER_FAMILIES:
         for tier in ("Worker", "Minion", "Elite", "Boss", "Hero"):
-            sheets.append(defender_sheet(family, tier))
+            sheets.append(apply_defender_overrides(defender_sheet(family, tier)))
 
     invaders = [
-        invader_sheet("Invader.Wanderer.Common", "Wanderer", "Wanderer", "", line="Common", ref_tier="Fodder"),
-        invader_sheet(
-            "Invader.Thief.Common",
-            "Thief",
-            "Thief",
-            "",
-            line="Common",
-            knowledge=["Knows_MimicRisk"],
-        ),
+        _wanderer_common_sheet(),
+        _thief_common_sheet(),
         invader_sheet("Invader.HeroicWarrior.Common", "Hero", "Heroic Warrior", "/Game/Invaders/HeroicWarrior/SM_HeroicWarrior", line="Common"),
         invader_sheet("Invader.DwarfFighter.Common", "Fighter", "Dwarf Fighter", "/Game/Invaders/Dwarf/Dwarf_Fighter", line="Common"),
         invader_sheet("Invader.ElfArcher.Common", "Archer", "Elf Bowman", "/Game/Invaders/Elf-Archer/Elf_Archer", line="Common"),
@@ -674,22 +1174,8 @@ def main() -> None:
         invader_sheet("Invader.Mage.Aurora", "Mage", "Aurora", "/Game/Invaders/ParagonAurora", line="Paragon", paragon_ref="Aurora", ref_tier="Standard"),
         invader_sheet("Invader.Archer.Sparrow", "Archer", "Sparrow", "/Game/Invaders/ParagonSparrow", line="Paragon", paragon_ref="Sparrow", ref_tier="Standard"),
         invader_sheet("Invader.Cleric.Zinx", "Cleric", "Zinx", "/Game/Invaders/ParagonZinx", line="Paragon", paragon_ref="Zinx", ref_tier="Standard"),
-        invader_sheet(
-            "Invader.Champion.WarriorQueen",
-            "Champion",
-            "Warrior Queen",
-            "",
-            line="Common",
-            ref_tier="Standard",
-        ),
-        invader_sheet(
-            "Invader.Cleric.FireflySlot",
-            "Cleric",
-            "Firefly Cleric",
-            "",
-            line="Common",
-            ref_tier="Fodder",
-        ),
+        _warrior_queen_sheet(),
+        _firefly_cleric_sheet(),
     ]
     for display, archetype, ability_key in PARAGON_INVADER_CATALOG:
         ref = display

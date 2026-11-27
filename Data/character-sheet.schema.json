@@ -79,7 +79,9 @@
         "CleavePct": { "type": "number", "minimum": 0, "maximum": 1 },
         "BasicAffinity": { "enum": ["Physical", "Energy"] },
         "BasicDefense": { "type": "number", "minimum": 0 },
-        "AbilityDefense": { "type": "number", "minimum": 0 }
+        "AbilityDefense": { "type": "number", "minimum": 0 },
+        "MaxStamina": { "type": "number", "minimum": 0 },
+        "StaminaRegenPerSec": { "type": "number", "minimum": 0 }
       },
       "additionalProperties": false
     },
@@ -95,7 +97,10 @@
         "BasicDamage": { "type": "integer", "minimum": 1, "maximum": 10 },
         "AbilityDamage": { "type": "integer", "minimum": 1, "maximum": 10 },
         "Durability": { "type": "integer", "minimum": 1, "maximum": 10 },
-        "Mobility": { "type": "integer", "minimum": 1, "maximum": 10 }
+        "Mobility": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "Intelligence": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "Wisdom": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "Agility": { "type": "integer", "minimum": 1, "maximum": 10 }
       },
       "additionalProperties": false
     },
@@ -111,6 +116,15 @@
     "StartingKnowledgeTags": {
       "type": "array",
       "items": { "type": "string" }
+    },
+    "MeshPipeline": {
+      "enum": ["Hi3D", "Fab", "ParagonVault", "InUE"]
+    },
+    "MeshTargetPath": { "type": "string" },
+    "PartyTemplates": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
     }
   },
   "allOf": [
@@ -206,7 +220,10 @@
         "AggroStyle": { "enum": ["Guard", "Chase", "Stationary"] },
         "LeashRadiusUU": { "type": "number", "minimum": 0 },
         "PreferredRange": { "enum": ["Melee", "Short", "Long"] },
-        "UsesParagonAnimSet": { "type": "boolean" }
+        "UsesParagonAnimSet": { "type": "boolean" },
+        "IntruderResponse": { "enum": ["Fight", "Flee", "Hold"] },
+        "FleeOnRaidIntel": { "type": "boolean" },
+        "HarassInvaders": { "type": "boolean" }
       },
       "additionalProperties": false
     }

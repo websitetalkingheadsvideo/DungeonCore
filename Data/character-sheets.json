@@ -27,12 +27,12 @@
     },
     "Thief": {
       "primary": "Lockpick",
-      "secondary": "Smoke vanish",
+      "secondary": "Climb walls",
       "effectTagsPrimary": [
         "PickLock"
       ],
       "effectTagsSecondary": [
-        "Blink"
+        "ClimbWall"
       ]
     },
     "Assassin": {
@@ -153,34 +153,64 @@
       "ArchetypeId": "Fighter",
       "FamilyId": "Orcs",
       "Tier": "Worker",
-      "DisplayName": "Orcs Worker",
+      "DisplayName": "Orc Worker",
       "MeshRef": "/Game/Monsters/Orcs/StylizedGoblinMinion/SK_StylizedGoblinMinion",
-      "StatSource": "TierBaseline",
+      "StatSource": "HandTuned",
       "ReferenceTier": "Fodder",
       "Vitals": {
-        "MaxHealth": 18.0,
+        "MaxHealth": 18,
         "HealthRegenPerSec": 0,
         "MoveSpeed": 280,
-        "BasicDamage": 0,
+        "BasicDamage": 2,
         "AttackPeriod": 0.95,
-        "CleavePct": 0.15,
+        "CleavePct": 0.05,
         "BasicAffinity": "Physical",
-        "BasicDefense": 18,
-        "AbilityDefense": 14
+        "BasicDefense": 14,
+        "AbilityDefense": 11
       },
       "Ratings": {
-        "BasicDamage": 5,
+        "BasicDamage": 2,
         "AbilityDamage": 2,
-        "Durability": 5,
-        "Mobility": 4
+        "Durability": 2,
+        "Mobility": 3,
+        "Intelligence": 2,
+        "Wisdom": 2
       },
-      "Abilities": [],
+      "Abilities": [
+        {
+          "AbilityId": "Orcs_Worker.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Dig",
+          "DamageType": "None",
+          "BaseDamage": 0,
+          "CooldownSec": 6,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Dig"
+          ]
+        },
+        {
+          "AbilityId": "Orcs_Worker.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Reset traps",
+          "DamageType": "None",
+          "BaseDamage": 0,
+          "CooldownSec": 10,
+          "RangeUU": 150,
+          "EffectTags": [
+            "TrapReset"
+          ]
+        }
+      ],
       "DefenderAI": {
         "WorkerRole": "Dig",
-        "AggroStyle": "Chase",
-        "LeashRadiusUU": 900,
+        "AggroStyle": "Guard",
+        "LeashRadiusUU": 600,
         "PreferredRange": "Melee",
-        "UsesParagonAnimSet": false
+        "UsesParagonAnimSet": false,
+        "IntruderResponse": "Flee",
+        "FleeOnRaidIntel": true,
+        "HarassInvaders": false
       },
       "StartingKnowledgeTags": []
     },
@@ -190,26 +220,28 @@
       "ArchetypeId": "Fighter",
       "FamilyId": "Orcs",
       "Tier": "Minion",
-      "DisplayName": "Orcs Minion",
+      "DisplayName": "Orc Minion",
       "MeshRef": "/Game/Monsters/Orcs/Minion/Orc_Minion_Unreal",
-      "StatSource": "TierBaseline",
-      "ReferenceTier": "Fodder",
+      "StatSource": "HandTuned",
+      "ReferenceTier": "Standard",
       "Vitals": {
-        "MaxHealth": 32.4,
+        "MaxHealth": 48,
         "HealthRegenPerSec": 0,
         "MoveSpeed": 280,
-        "BasicDamage": 4.4,
+        "BasicDamage": 7,
         "AttackPeriod": 0.95,
-        "CleavePct": 0.15,
+        "CleavePct": 0.12,
         "BasicAffinity": "Physical",
-        "BasicDefense": 18,
-        "AbilityDefense": 14
+        "BasicDefense": 16,
+        "AbilityDefense": 13
       },
       "Ratings": {
         "BasicDamage": 5,
-        "AbilityDamage": 2,
+        "AbilityDamage": 4,
         "Durability": 5,
-        "Mobility": 4
+        "Mobility": 5,
+        "Intelligence": 2,
+        "Wisdom": 2
       },
       "Abilities": [
         {
@@ -217,10 +249,23 @@
           "Slot": "Primary",
           "DisplayName": "Combo strike",
           "DamageType": "Ability",
-          "BaseDamage": 7,
+          "BaseDamage": 12,
           "CooldownSec": 8,
           "RangeUU": 0,
           "EffectTags": [
+            "Melee"
+          ]
+        },
+        {
+          "AbilityId": "Orcs_Minion.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "War cry",
+          "DamageType": "Ability",
+          "BaseDamage": 8,
+          "CooldownSec": 14,
+          "RangeUU": 0,
+          "EffectTags": [
+            "BuffAura",
             "Melee"
           ]
         }
@@ -228,9 +273,11 @@
       "DefenderAI": {
         "WorkerRole": "None",
         "AggroStyle": "Chase",
-        "LeashRadiusUU": 900,
+        "LeashRadiusUU": 1200,
         "PreferredRange": "Melee",
-        "UsesParagonAnimSet": false
+        "UsesParagonAnimSet": false,
+        "IntruderResponse": "Fight",
+        "HarassInvaders": true
       },
       "StartingKnowledgeTags": []
     },
@@ -240,26 +287,28 @@
       "ArchetypeId": "Bruiser",
       "FamilyId": "Orcs",
       "Tier": "Elite",
-      "DisplayName": "Orcs Elite",
+      "DisplayName": "Orc Elite",
       "MeshRef": "/Game/Monsters/Orcs/elite_orc",
-      "StatSource": "TierBaseline",
+      "StatSource": "HandTuned",
       "ReferenceTier": "Standard",
       "Vitals": {
-        "MaxHealth": 72.0,
+        "MaxHealth": 68,
         "HealthRegenPerSec": 0,
         "MoveSpeed": 280,
-        "BasicDamage": 11.0,
+        "BasicDamage": 10,
         "AttackPeriod": 0.95,
-        "CleavePct": 0.15,
+        "CleavePct": 0.18,
         "BasicAffinity": "Physical",
-        "BasicDefense": 18,
+        "BasicDefense": 17,
         "AbilityDefense": 14
       },
       "Ratings": {
-        "BasicDamage": 5,
-        "AbilityDamage": 2,
-        "Durability": 5,
-        "Mobility": 4
+        "BasicDamage": 6,
+        "AbilityDamage": 5,
+        "Durability": 6,
+        "Mobility": 5,
+        "Intelligence": 2,
+        "Wisdom": 2
       },
       "Abilities": [
         {
@@ -267,7 +316,7 @@
           "Slot": "Primary",
           "DisplayName": "Heavy cleave",
           "DamageType": "Ability",
-          "BaseDamage": 18,
+          "BaseDamage": 20,
           "CooldownSec": 8,
           "RangeUU": 0,
           "EffectTags": [
@@ -280,9 +329,9 @@
           "Slot": "Secondary",
           "DisplayName": "Bull rush",
           "DamageType": "Ability",
-          "BaseDamage": 14,
-          "CooldownSec": 12,
-          "RangeUU": 0,
+          "BaseDamage": 16,
+          "CooldownSec": 11,
+          "RangeUU": 350,
           "EffectTags": [
             "Melee",
             "Dash"
@@ -292,9 +341,11 @@
       "DefenderAI": {
         "WorkerRole": "None",
         "AggroStyle": "Chase",
-        "LeashRadiusUU": 900,
+        "LeashRadiusUU": 1000,
         "PreferredRange": "Melee",
-        "UsesParagonAnimSet": false
+        "UsesParagonAnimSet": false,
+        "IntruderResponse": "Fight",
+        "HarassInvaders": true
       },
       "StartingKnowledgeTags": []
     },
@@ -304,26 +355,28 @@
       "ArchetypeId": "Tank",
       "FamilyId": "Orcs",
       "Tier": "Boss",
-      "DisplayName": "Orcs Boss",
+      "DisplayName": "Orc Boss",
       "MeshRef": "/Game/Monsters/Orcs/OrcBoss/Orc_Boss_unreal",
-      "StatSource": "TierBaseline",
+      "StatSource": "HandTuned",
       "ReferenceTier": "Veteran",
       "Vitals": {
-        "MaxHealth": 216.0,
+        "MaxHealth": 175,
         "HealthRegenPerSec": 0,
         "MoveSpeed": 280,
-        "BasicDamage": 15.4,
+        "BasicDamage": 13,
         "AttackPeriod": 0.95,
-        "CleavePct": 0.15,
+        "CleavePct": 0.2,
         "BasicAffinity": "Physical",
-        "BasicDefense": 18,
-        "AbilityDefense": 14
+        "BasicDefense": 20,
+        "AbilityDefense": 16
       },
       "Ratings": {
         "BasicDamage": 7,
-        "AbilityDamage": 2,
+        "AbilityDamage": 4,
         "Durability": 8,
-        "Mobility": 4
+        "Mobility": 4,
+        "Intelligence": 2,
+        "Wisdom": 2
       },
       "Abilities": [
         {
@@ -331,8 +384,8 @@
           "Slot": "Primary",
           "DisplayName": "Guard / damage soak taunt",
           "DamageType": "Ability",
-          "BaseDamage": 25,
-          "CooldownSec": 8,
+          "BaseDamage": 22,
+          "CooldownSec": 10,
           "RangeUU": 0,
           "EffectTags": [
             "Melee",
@@ -344,8 +397,8 @@
           "Slot": "Secondary",
           "DisplayName": "Shield slam",
           "DamageType": "Ability",
-          "BaseDamage": 20,
-          "CooldownSec": 12,
+          "BaseDamage": 28,
+          "CooldownSec": 13,
           "RangeUU": 0,
           "EffectTags": [
             "Melee",
@@ -356,9 +409,11 @@
       "DefenderAI": {
         "WorkerRole": "None",
         "AggroStyle": "Chase",
-        "LeashRadiusUU": 1200,
+        "LeashRadiusUU": 900,
         "PreferredRange": "Melee",
-        "UsesParagonAnimSet": false
+        "UsesParagonAnimSet": false,
+        "IntruderResponse": "Fight",
+        "HarassInvaders": true
       },
       "StartingKnowledgeTags": []
     },
@@ -433,34 +488,64 @@
       "ArchetypeId": "Fighter",
       "FamilyId": "EvilFairies",
       "Tier": "Worker",
-      "DisplayName": "EvilFairies Worker",
+      "DisplayName": "Evil Fairy Worker",
       "MeshRef": "/Game/Monsters/EvilFairies/dark_fairy_worker_1",
-      "StatSource": "TierBaseline",
+      "StatSource": "HandTuned",
       "ReferenceTier": "Fodder",
       "Vitals": {
-        "MaxHealth": 18.0,
+        "MaxHealth": 18,
         "HealthRegenPerSec": 0,
         "MoveSpeed": 280,
-        "BasicDamage": 0,
+        "BasicDamage": 2,
         "AttackPeriod": 0.95,
-        "CleavePct": 0.15,
+        "CleavePct": 0.05,
         "BasicAffinity": "Physical",
-        "BasicDefense": 18,
-        "AbilityDefense": 14
+        "BasicDefense": 14,
+        "AbilityDefense": 11
       },
       "Ratings": {
-        "BasicDamage": 5,
+        "BasicDamage": 2,
         "AbilityDamage": 2,
-        "Durability": 5,
-        "Mobility": 4
+        "Durability": 2,
+        "Mobility": 3,
+        "Intelligence": 2,
+        "Wisdom": 2
       },
-      "Abilities": [],
+      "Abilities": [
+        {
+          "AbilityId": "EvilFairies_Worker.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Dig",
+          "DamageType": "None",
+          "BaseDamage": 0,
+          "CooldownSec": 6,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Dig"
+          ]
+        },
+        {
+          "AbilityId": "EvilFairies_Worker.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Reset traps",
+          "DamageType": "None",
+          "BaseDamage": 0,
+          "CooldownSec": 10,
+          "RangeUU": 150,
+          "EffectTags": [
+            "TrapReset"
+          ]
+        }
+      ],
       "DefenderAI": {
         "WorkerRole": "Build",
-        "AggroStyle": "Chase",
-        "LeashRadiusUU": 900,
+        "AggroStyle": "Guard",
+        "LeashRadiusUU": 600,
         "PreferredRange": "Melee",
-        "UsesParagonAnimSet": false
+        "UsesParagonAnimSet": false,
+        "IntruderResponse": "Flee",
+        "FleeOnRaidIntel": true,
+        "HarassInvaders": false
       },
       "StartingKnowledgeTags": []
     },
@@ -510,7 +595,7 @@
         "WorkerRole": "None",
         "AggroStyle": "Chase",
         "LeashRadiusUU": 900,
-        "PreferredRange": "Melee",
+        "PreferredRange": "Long",
         "UsesParagonAnimSet": false
       },
       "StartingKnowledgeTags": []
@@ -703,7 +788,7 @@
         "WorkerRole": "None",
         "AggroStyle": "Chase",
         "LeashRadiusUU": 1200,
-        "PreferredRange": "Melee",
+        "PreferredRange": "Long",
         "UsesParagonAnimSet": true
       },
       "StartingKnowledgeTags": [],
@@ -717,32 +802,62 @@
       "Tier": "Worker",
       "DisplayName": "Fungal Worker",
       "MeshRef": "/Game/Monsters/Fungal/Fungal_Worker_v2",
-      "StatSource": "TierBaseline",
+      "StatSource": "HandTuned",
       "ReferenceTier": "Fodder",
       "Vitals": {
-        "MaxHealth": 18.0,
+        "MaxHealth": 18,
         "HealthRegenPerSec": 0,
         "MoveSpeed": 280,
-        "BasicDamage": 0,
+        "BasicDamage": 2,
         "AttackPeriod": 0.95,
-        "CleavePct": 0.15,
+        "CleavePct": 0.05,
         "BasicAffinity": "Physical",
-        "BasicDefense": 18,
-        "AbilityDefense": 14
+        "BasicDefense": 14,
+        "AbilityDefense": 11
       },
       "Ratings": {
-        "BasicDamage": 5,
+        "BasicDamage": 2,
         "AbilityDamage": 2,
-        "Durability": 5,
-        "Mobility": 4
+        "Durability": 2,
+        "Mobility": 3,
+        "Intelligence": 2,
+        "Wisdom": 2
       },
-      "Abilities": [],
+      "Abilities": [
+        {
+          "AbilityId": "Fungal_Worker.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Dig",
+          "DamageType": "None",
+          "BaseDamage": 0,
+          "CooldownSec": 6,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Dig"
+          ]
+        },
+        {
+          "AbilityId": "Fungal_Worker.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Reset traps",
+          "DamageType": "None",
+          "BaseDamage": 0,
+          "CooldownSec": 10,
+          "RangeUU": 150,
+          "EffectTags": [
+            "TrapReset"
+          ]
+        }
+      ],
       "DefenderAI": {
         "WorkerRole": "Dig",
-        "AggroStyle": "Chase",
-        "LeashRadiusUU": 900,
+        "AggroStyle": "Guard",
+        "LeashRadiusUU": 600,
         "PreferredRange": "Melee",
-        "UsesParagonAnimSet": false
+        "UsesParagonAnimSet": false,
+        "IntruderResponse": "Flee",
+        "FleeOnRaidIntel": true,
+        "HarassInvaders": false
       },
       "StartingKnowledgeTags": []
     },
@@ -935,54 +1050,59 @@
       "StatSource": "HandTuned",
       "ReferenceTier": "Veteran",
       "Vitals": {
-        "MaxHealth": 82.8,
+        "MaxHealth": 58,
         "HealthRegenPerSec": 0,
-        "MoveSpeed": 280,
-        "BasicDamage": 12.1,
+        "MoveSpeed": 260,
+        "BasicDamage": 6,
         "AttackPeriod": 0.95,
-        "CleavePct": 0.15,
+        "CleavePct": 0.05,
         "BasicAffinity": "Physical",
-        "BasicDefense": 18,
-        "AbilityDefense": 14
+        "BasicDefense": 12,
+        "AbilityDefense": 16
       },
       "Ratings": {
-        "BasicDamage": 5,
-        "AbilityDamage": 4,
-        "Durability": 8,
-        "Mobility": 5
+        "BasicDamage": 3,
+        "AbilityDamage": 8,
+        "Durability": 3,
+        "Mobility": 4,
+        "Intelligence": 9,
+        "Wisdom": 8
       },
       "Abilities": [
         {
           "AbilityId": "Fungal_Hero.Primary",
           "Slot": "Primary",
-          "DisplayName": "Ranged burst",
+          "DisplayName": "Spores",
           "DamageType": "Ability",
-          "BaseDamage": 20,
+          "BaseDamage": 22,
           "CooldownSec": 8,
-          "RangeUU": 0,
+          "RangeUU": 600,
           "EffectTags": [
             "Ranged",
-            "Ability"
-          ]
+            "AOE"
+          ],
+          "ParagonAbilityKey": "Spores"
         },
         {
           "AbilityId": "Fungal_Hero.Secondary",
           "Slot": "Secondary",
-          "DisplayName": "Blink or reposition",
+          "DisplayName": "Roots",
           "DamageType": "Ability",
-          "BaseDamage": 15,
-          "CooldownSec": 12,
-          "RangeUU": 0,
+          "BaseDamage": 18,
+          "CooldownSec": 14,
+          "RangeUU": 450,
           "EffectTags": [
-            "Blink"
-          ]
+            "Root",
+            "Slow"
+          ],
+          "ParagonAbilityKey": "Roots"
         }
       ],
       "DefenderAI": {
         "WorkerRole": "None",
-        "AggroStyle": "Chase",
-        "LeashRadiusUU": 1200,
-        "PreferredRange": "Melee",
+        "AggroStyle": "Stationary",
+        "LeashRadiusUU": 300,
+        "PreferredRange": "Long",
         "UsesParagonAnimSet": false
       },
       "StartingKnowledgeTags": []
@@ -993,34 +1113,64 @@
       "ArchetypeId": "Fighter",
       "FamilyId": "Spiders",
       "Tier": "Worker",
-      "DisplayName": "Spiders Worker",
+      "DisplayName": "Spider Worker",
       "MeshRef": "/Game/Monsters/Spiders/Argiope_v3",
-      "StatSource": "TierBaseline",
+      "StatSource": "HandTuned",
       "ReferenceTier": "Fodder",
       "Vitals": {
-        "MaxHealth": 18.0,
+        "MaxHealth": 18,
         "HealthRegenPerSec": 0,
         "MoveSpeed": 280,
-        "BasicDamage": 0,
+        "BasicDamage": 2,
         "AttackPeriod": 0.95,
-        "CleavePct": 0.15,
+        "CleavePct": 0.05,
         "BasicAffinity": "Physical",
-        "BasicDefense": 18,
-        "AbilityDefense": 14
+        "BasicDefense": 14,
+        "AbilityDefense": 11
       },
       "Ratings": {
-        "BasicDamage": 5,
+        "BasicDamage": 2,
         "AbilityDamage": 2,
-        "Durability": 5,
-        "Mobility": 4
+        "Durability": 2,
+        "Mobility": 3,
+        "Intelligence": 2,
+        "Wisdom": 2
       },
-      "Abilities": [],
+      "Abilities": [
+        {
+          "AbilityId": "Spiders_Worker.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Dig",
+          "DamageType": "None",
+          "BaseDamage": 0,
+          "CooldownSec": 6,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Dig"
+          ]
+        },
+        {
+          "AbilityId": "Spiders_Worker.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Reset traps",
+          "DamageType": "None",
+          "BaseDamage": 0,
+          "CooldownSec": 10,
+          "RangeUU": 150,
+          "EffectTags": [
+            "TrapReset"
+          ]
+        }
+      ],
       "DefenderAI": {
         "WorkerRole": "None",
-        "AggroStyle": "Chase",
-        "LeashRadiusUU": 900,
+        "AggroStyle": "Guard",
+        "LeashRadiusUU": 600,
         "PreferredRange": "Melee",
-        "UsesParagonAnimSet": false
+        "UsesParagonAnimSet": false,
+        "IntruderResponse": "Flee",
+        "FleeOnRaidIntel": true,
+        "HarassInvaders": false
       },
       "StartingKnowledgeTags": []
     },
@@ -1214,54 +1364,57 @@
       "StatSource": "HandTuned",
       "ReferenceTier": "Veteran",
       "Vitals": {
-        "MaxHealth": 82.8,
+        "MaxHealth": 88,
         "HealthRegenPerSec": 0,
-        "MoveSpeed": 280,
-        "BasicDamage": 12.1,
+        "MoveSpeed": 285,
+        "BasicDamage": 10,
         "AttackPeriod": 0.95,
-        "CleavePct": 0.15,
+        "CleavePct": 0.1,
         "BasicAffinity": "Physical",
         "BasicDefense": 18,
         "AbilityDefense": 14
       },
       "Ratings": {
-        "BasicDamage": 5,
-        "AbilityDamage": 4,
-        "Durability": 8,
-        "Mobility": 5
+        "BasicDamage": 6,
+        "AbilityDamage": 5,
+        "Durability": 7,
+        "Mobility": 6
       },
       "Abilities": [
         {
           "AbilityId": "Spiders_Hero.Primary",
           "Slot": "Primary",
-          "DisplayName": "Piercing shot",
+          "DisplayName": "Ranged web",
           "DamageType": "Ability",
-          "BaseDamage": 20,
-          "CooldownSec": 8,
-          "RangeUU": 0,
+          "BaseDamage": 16,
+          "CooldownSec": 9,
+          "RangeUU": 650,
           "EffectTags": [
             "Ranged",
-            "Line"
-          ]
+            "Root",
+            "Slow"
+          ],
+          "ParagonAbilityKey": "Ranged web"
         },
         {
           "AbilityId": "Spiders_Hero.Secondary",
           "Slot": "Secondary",
-          "DisplayName": "Volley or marked target",
+          "DisplayName": "Leap attack",
           "DamageType": "Ability",
-          "BaseDamage": 15,
+          "BaseDamage": 24,
           "CooldownSec": 12,
-          "RangeUU": 0,
+          "RangeUU": 400,
           "EffectTags": [
-            "Ranged",
-            "AOE"
-          ]
+            "Melee",
+            "Dash"
+          ],
+          "ParagonAbilityKey": "Leap attack"
         }
       ],
       "DefenderAI": {
         "WorkerRole": "None",
-        "AggroStyle": "Chase",
-        "LeashRadiusUU": 1200,
+        "AggroStyle": "Stationary",
+        "LeashRadiusUU": 300,
         "PreferredRange": "Long",
         "UsesParagonAnimSet": false
       },
@@ -1275,32 +1428,62 @@
       "Tier": "Worker",
       "DisplayName": "Undead Worker",
       "MeshRef": "/Game/Monsters/Undead/Zombie",
-      "StatSource": "TierBaseline",
+      "StatSource": "HandTuned",
       "ReferenceTier": "Fodder",
       "Vitals": {
-        "MaxHealth": 18.0,
+        "MaxHealth": 18,
         "HealthRegenPerSec": 0,
         "MoveSpeed": 280,
-        "BasicDamage": 0,
+        "BasicDamage": 2,
         "AttackPeriod": 0.95,
-        "CleavePct": 0.15,
+        "CleavePct": 0.05,
         "BasicAffinity": "Physical",
-        "BasicDefense": 18,
-        "AbilityDefense": 14
+        "BasicDefense": 14,
+        "AbilityDefense": 11
       },
       "Ratings": {
-        "BasicDamage": 5,
+        "BasicDamage": 2,
         "AbilityDamage": 2,
-        "Durability": 5,
-        "Mobility": 4
+        "Durability": 2,
+        "Mobility": 3,
+        "Intelligence": 2,
+        "Wisdom": 2
       },
-      "Abilities": [],
+      "Abilities": [
+        {
+          "AbilityId": "Undead_Worker.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Dig",
+          "DamageType": "None",
+          "BaseDamage": 0,
+          "CooldownSec": 6,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Dig"
+          ]
+        },
+        {
+          "AbilityId": "Undead_Worker.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Reset traps",
+          "DamageType": "None",
+          "BaseDamage": 0,
+          "CooldownSec": 10,
+          "RangeUU": 150,
+          "EffectTags": [
+            "TrapReset"
+          ]
+        }
+      ],
       "DefenderAI": {
         "WorkerRole": "Dig",
-        "AggroStyle": "Chase",
-        "LeashRadiusUU": 900,
+        "AggroStyle": "Guard",
+        "LeashRadiusUU": 600,
         "PreferredRange": "Melee",
-        "UsesParagonAnimSet": false
+        "UsesParagonAnimSet": false,
+        "IntruderResponse": "Flee",
+        "FleeOnRaidIntel": true,
+        "HarassInvaders": false
       },
       "StartingKnowledgeTags": []
     },
@@ -1555,34 +1738,64 @@
       "ArchetypeId": "Fighter",
       "FamilyId": "Mutants",
       "Tier": "Worker",
-      "DisplayName": "Mutants Worker",
+      "DisplayName": "Mutant Worker",
       "MeshRef": "/Game/Monsters/Mutants/mutant_worker_v2",
-      "StatSource": "TierBaseline",
+      "StatSource": "HandTuned",
       "ReferenceTier": "Fodder",
       "Vitals": {
-        "MaxHealth": 18.0,
+        "MaxHealth": 18,
         "HealthRegenPerSec": 0,
         "MoveSpeed": 280,
-        "BasicDamage": 0,
+        "BasicDamage": 2,
         "AttackPeriod": 0.95,
-        "CleavePct": 0.15,
+        "CleavePct": 0.05,
         "BasicAffinity": "Physical",
-        "BasicDefense": 18,
-        "AbilityDefense": 14
+        "BasicDefense": 14,
+        "AbilityDefense": 11
       },
       "Ratings": {
-        "BasicDamage": 5,
+        "BasicDamage": 2,
         "AbilityDamage": 2,
-        "Durability": 5,
-        "Mobility": 4
+        "Durability": 2,
+        "Mobility": 3,
+        "Intelligence": 2,
+        "Wisdom": 2
       },
-      "Abilities": [],
+      "Abilities": [
+        {
+          "AbilityId": "Mutants_Worker.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Dig",
+          "DamageType": "None",
+          "BaseDamage": 0,
+          "CooldownSec": 6,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Dig"
+          ]
+        },
+        {
+          "AbilityId": "Mutants_Worker.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Reset traps",
+          "DamageType": "None",
+          "BaseDamage": 0,
+          "CooldownSec": 10,
+          "RangeUU": 150,
+          "EffectTags": [
+            "TrapReset"
+          ]
+        }
+      ],
       "DefenderAI": {
         "WorkerRole": "Both",
-        "AggroStyle": "Chase",
-        "LeashRadiusUU": 900,
+        "AggroStyle": "Guard",
+        "LeashRadiusUU": 600,
         "PreferredRange": "Melee",
-        "UsesParagonAnimSet": false
+        "UsesParagonAnimSet": false,
+        "IntruderResponse": "Flee",
+        "FleeOnRaidIntel": true,
+        "HarassInvaders": false
       },
       "StartingKnowledgeTags": []
     },
@@ -1841,21 +2054,23 @@
       "StatSource": "HandTuned",
       "ReferenceTier": "Fodder",
       "Vitals": {
-        "MaxHealth": 28.8,
+        "MaxHealth": 22,
         "HealthRegenPerSec": 0,
         "MoveSpeed": 285,
-        "BasicDamage": 4.4,
+        "BasicDamage": 3.5,
         "AttackPeriod": 0.95,
-        "CleavePct": 0.15,
+        "CleavePct": 0.1,
         "BasicAffinity": "Physical",
-        "BasicDefense": 18,
-        "AbilityDefense": 14
+        "BasicDefense": 15,
+        "AbilityDefense": 12
       },
       "Ratings": {
-        "BasicDamage": 5,
+        "BasicDamage": 3,
         "AbilityDamage": 2,
-        "Durability": 5,
-        "Mobility": 4
+        "Durability": 3,
+        "Mobility": 4,
+        "Intelligence": 7,
+        "Wisdom": 7
       },
       "Abilities": [
         {
@@ -1863,7 +2078,7 @@
           "Slot": "Primary",
           "DisplayName": "Opportunist strike",
           "DamageType": "Ability",
-          "BaseDamage": 7,
+          "BaseDamage": 5,
           "CooldownSec": 8,
           "RangeUU": 0,
           "EffectTags": [
@@ -1876,7 +2091,7 @@
           "Slot": "Secondary",
           "DisplayName": "Short sprint",
           "DamageType": "Ability",
-          "BaseDamage": 6,
+          "BaseDamage": 4,
           "CooldownSec": 12,
           "RangeUU": 0,
           "EffectTags": [
@@ -1892,14 +2107,19 @@
         "HasSustainedFlight": false
       },
       "InvaderBehavior": {
-        "Caution": 0.2,
+        "Caution": 0.45,
         "CohesionBias": 0.0,
         "FollowerWeight": 0.35,
         "HelperWeight": 0.45,
-        "ScoutRating": 0.15,
+        "ScoutRating": 0.4,
         "LootGreed": 0.65
       },
-      "StartingKnowledgeTags": []
+      "StartingKnowledgeTags": [
+        "Knows_LeyTraps",
+        "Knows_MimicRisk"
+      ],
+      "MeshPipeline": "Hi3D",
+      "MeshTargetPath": "/Game/Invaders/Wanderer/"
     },
     {
       "SheetId": "Invader.Thief.Common",
@@ -1911,21 +2131,24 @@
       "StatSource": "HandTuned",
       "ReferenceTier": "Fodder",
       "Vitals": {
-        "MaxHealth": 28.8,
+        "MaxHealth": 18,
         "HealthRegenPerSec": 0,
-        "MoveSpeed": 300,
-        "BasicDamage": 4.4,
+        "MoveSpeed": 310,
+        "BasicDamage": 3,
         "AttackPeriod": 0.95,
-        "CleavePct": 0.15,
+        "CleavePct": 0.08,
         "BasicAffinity": "Physical",
-        "BasicDefense": 18,
-        "AbilityDefense": 14
+        "BasicDefense": 13,
+        "AbilityDefense": 10
       },
       "Ratings": {
-        "BasicDamage": 5,
+        "BasicDamage": 2,
         "AbilityDamage": 2,
-        "Durability": 5,
-        "Mobility": 4
+        "Durability": 2,
+        "Mobility": 8,
+        "Agility": 9,
+        "Intelligence": 4,
+        "Wisdom": 4
       },
       "Abilities": [
         {
@@ -1943,13 +2166,13 @@
         {
           "AbilityId": "Invader_Thief_Common.Secondary",
           "Slot": "Secondary",
-          "DisplayName": "Smoke vanish",
+          "DisplayName": "Climb walls",
           "DamageType": "None",
           "BaseDamage": 0,
-          "CooldownSec": 12,
-          "RangeUU": 0,
+          "CooldownSec": 10,
+          "RangeUU": 300,
           "EffectTags": [
-            "Blink"
+            "ClimbWall"
           ]
         }
       ],
@@ -1969,8 +2192,12 @@
         "LootGreed": 0.55
       },
       "StartingKnowledgeTags": [
-        "Knows_MimicRisk"
-      ]
+        "Knows_MimicRisk",
+        "Knows_LeyTraps",
+        "Knows_MirageVeil"
+      ],
+      "MeshPipeline": "Hi3D",
+      "MeshTargetPath": "/Game/Invaders/Thief/"
     },
     {
       "SheetId": "Invader.HeroicWarrior.Common",
@@ -2597,11 +2824,11 @@
       },
       "InvaderBehavior": {
         "Caution": 0.35,
-        "CohesionBias": 0.2,
-        "FollowerWeight": 0.45,
-        "HelperWeight": 0.6,
+        "CohesionBias": 0.45,
+        "FollowerWeight": 0.6,
+        "HelperWeight": 0.65,
         "ScoutRating": 0.25,
-        "LootGreed": 0.5
+        "LootGreed": 0.45
       },
       "StartingKnowledgeTags": [],
       "ParagonRef": "Terra"
@@ -3109,12 +3336,12 @@
         "HasSustainedFlight": false
       },
       "InvaderBehavior": {
-        "Caution": 0.4,
-        "CohesionBias": 0.5,
-        "FollowerWeight": 0.65,
-        "HelperWeight": 0.85,
+        "Caution": 0.45,
+        "CohesionBias": 0.55,
+        "FollowerWeight": 0.7,
+        "HelperWeight": 0.9,
         "ScoutRating": 0.3,
-        "LootGreed": 0.25
+        "LootGreed": 0.2
       },
       "StartingKnowledgeTags": [],
       "ParagonRef": "Zinx"
@@ -3124,26 +3351,29 @@
       "EntityKind": "Invader",
       "ArchetypeId": "Champion",
       "DisplayName": "Warrior Queen",
-      "MeshRef": "",
+      "MeshRef": "/Game/Invaders/WarriorQueen/Warrior_Queen",
       "InvaderLine": "Common",
       "StatSource": "HandTuned",
       "ReferenceTier": "Fodder",
       "Vitals": {
-        "MaxHealth": 28.8,
+        "MaxHealth": 62,
         "HealthRegenPerSec": 0,
-        "MoveSpeed": 285,
-        "BasicDamage": 4.4,
+        "MoveSpeed": 288,
+        "BasicDamage": 9,
         "AttackPeriod": 0.95,
-        "CleavePct": 0.15,
+        "CleavePct": 0.12,
         "BasicAffinity": "Physical",
-        "BasicDefense": 18,
-        "AbilityDefense": 14
+        "BasicDefense": 17,
+        "AbilityDefense": 15
       },
       "Ratings": {
-        "BasicDamage": 5,
-        "AbilityDamage": 2,
-        "Durability": 5,
-        "Mobility": 4
+        "BasicDamage": 7,
+        "AbilityDamage": 6,
+        "Durability": 7,
+        "Mobility": 6,
+        "Agility": 6,
+        "Intelligence": 7,
+        "Wisdom": 7
       },
       "Abilities": [
         {
@@ -3151,7 +3381,7 @@
           "Slot": "Primary",
           "DisplayName": "Charged slam",
           "DamageType": "Ability",
-          "BaseDamage": 7,
+          "BaseDamage": 18,
           "CooldownSec": 8,
           "RangeUU": 0,
           "EffectTags": [
@@ -3164,11 +3394,12 @@
           "Slot": "Secondary",
           "DisplayName": "Zone control (slow/root)",
           "DamageType": "Ability",
-          "BaseDamage": 6,
+          "BaseDamage": 14,
           "CooldownSec": 12,
           "RangeUU": 0,
           "EffectTags": [
-            "Slow"
+            "Slow",
+            "Root"
           ]
         }
       ],
@@ -3181,13 +3412,15 @@
       },
       "InvaderBehavior": {
         "Caution": 0.35,
-        "CohesionBias": 0.2,
-        "FollowerWeight": 0.45,
-        "HelperWeight": 0.6,
+        "CohesionBias": 0.45,
+        "FollowerWeight": 0.6,
+        "HelperWeight": 0.65,
         "ScoutRating": 0.25,
-        "LootGreed": 0.5
+        "LootGreed": 0.45
       },
-      "StartingKnowledgeTags": []
+      "StartingKnowledgeTags": [],
+      "MeshPipeline": "InUE",
+      "MeshTargetPath": "/Game/Invaders/WarriorQueen/"
     },
     {
       "SheetId": "Invader.Cleric.FireflySlot",
@@ -3199,21 +3432,26 @@
       "StatSource": "HandTuned",
       "ReferenceTier": "Fodder",
       "Vitals": {
-        "MaxHealth": 28.8,
-        "HealthRegenPerSec": 0,
-        "MoveSpeed": 285,
-        "BasicDamage": 4.4,
+        "MaxHealth": 76,
+        "HealthRegenPerSec": 0.5,
+        "MoveSpeed": 275,
+        "BasicDamage": 3,
         "AttackPeriod": 0.95,
-        "CleavePct": 0.15,
+        "CleavePct": 0.05,
         "BasicAffinity": "Physical",
-        "BasicDefense": 18,
-        "AbilityDefense": 14
+        "BasicDefense": 16,
+        "AbilityDefense": 18,
+        "MaxStamina": 120,
+        "StaminaRegenPerSec": 2.5
       },
       "Ratings": {
-        "BasicDamage": 5,
-        "AbilityDamage": 2,
-        "Durability": 5,
-        "Mobility": 4
+        "BasicDamage": 3,
+        "AbilityDamage": 5,
+        "Durability": 4,
+        "Mobility": 3,
+        "Agility": 3,
+        "Intelligence": 3,
+        "Wisdom": 9
       },
       "Abilities": [
         {
@@ -3221,7 +3459,7 @@
           "Slot": "Primary",
           "DisplayName": "Heal pulse",
           "DamageType": "Ability",
-          "BaseDamage": 7,
+          "BaseDamage": 20,
           "CooldownSec": 8,
           "RangeUU": 0,
           "EffectTags": [
@@ -3233,11 +3471,12 @@
           "Slot": "Secondary",
           "DisplayName": "Ward or cleanse",
           "DamageType": "Ability",
-          "BaseDamage": 6,
+          "BaseDamage": 16,
           "CooldownSec": 12,
           "RangeUU": 0,
           "EffectTags": [
-            "Shield"
+            "Shield",
+            "Heal"
           ]
         }
       ],
@@ -3249,14 +3488,22 @@
         "HasSustainedFlight": false
       },
       "InvaderBehavior": {
-        "Caution": 0.4,
-        "CohesionBias": 0.5,
-        "FollowerWeight": 0.65,
-        "HelperWeight": 0.85,
+        "Caution": 0.45,
+        "CohesionBias": 0.55,
+        "FollowerWeight": 0.7,
+        "HelperWeight": 0.9,
         "ScoutRating": 0.3,
-        "LootGreed": 0.25
+        "LootGreed": 0.2
       },
-      "StartingKnowledgeTags": []
+      "StartingKnowledgeTags": [
+        "Knows_LeyTraps",
+        "Knows_AllyHeal"
+      ],
+      "MeshPipeline": "Hi3D",
+      "MeshTargetPath": "/Game/Invaders/Cleric/",
+      "PartyTemplates": [
+        "FireflyFour"
+      ]
     },
     {
       "SheetId": "Invader.Assassin.Countess",
@@ -4420,12 +4667,12 @@
         "HasSustainedFlight": false
       },
       "InvaderBehavior": {
-        "Caution": 0.4,
-        "CohesionBias": 0.5,
-        "FollowerWeight": 0.65,
-        "HelperWeight": 0.85,
+        "Caution": 0.45,
+        "CohesionBias": 0.55,
+        "FollowerWeight": 0.7,
+        "HelperWeight": 0.9,
         "ScoutRating": 0.3,
-        "LootGreed": 0.25
+        "LootGreed": 0.2
       },
       "StartingKnowledgeTags": [],
       "ParagonRef": "Muriel"
