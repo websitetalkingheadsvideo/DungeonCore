@@ -17,7 +17,10 @@ One character at a time: agent asks → you answer → agent patches `Data/chara
 | 8b | `*.Worker` (all families) | **done** (shared template) |
 | 9 | `Orcs.Elite` | **done** |
 | 10 | `Orcs.Boss` | **done** |
-| 11 | `EvilFairies.Minion` | **in progress** |
+| 11 | `EvilFairies.Minion` | **done** |
+| 12 | `EvilFairies.Elite` | **done** |
+| 13 | `EvilFairies.Boss` | **done** |
+| 14 | `Fungal.Minion` | **in progress** |
 | 9+ | Defender tiers | pending |
 
 ## Completed notes
@@ -78,3 +81,21 @@ One character at a time: agent asks → you answer → agent patches `Data/chara
 
 - **Orc Elite:** bruiser kit tuned (68 HP); harass chase. **Orc Boss:** tank kit (175 HP); frontline chase. Orc line INT/WIS **2**.
 - **`Orcs.Hero`** stays **Narbash** (Paragon) — already on sheet.
+
+### `EvilFairies.Minion` (Dark Fairy)
+
+- **Ranged burst** + **Glamour**; glass (**30 HP**, low basic).
+- **INT/WIS 8**, Agility **8**, Durability **2**.
+- **Guard** at **Long** range; **chase only if target &lt;35% HP** (`ChaseInjuredTargetsOnly`).
+
+### `EvilFairies.Elite` (Dark Fairy Elite) — auto
+
+- **Mage** (not bruiser): **Bramble lash** + **Cursed glamour**; 44 HP glass-elite.
+- INT **9** / WIS **8**; same injured-chase ranged guard as minion.
+
+### `EvilFairies.Boss` (Dark Fairy Matron) — auto
+
+- **Mage** room boss: **Bramble patch** + **Withering glam** (AOE control).
+- **72 HP** (fae glass boss); INT **10** / WIS **9**.
+- **Stationary**, **Long**, **300 UU** leash; chase finishers below **25% HP**.
+- **`EvilFairies.Hero`** = **The Fey** (Paragon) — unchanged.

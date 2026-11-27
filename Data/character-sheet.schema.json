@@ -223,7 +223,13 @@
         "UsesParagonAnimSet": { "type": "boolean" },
         "IntruderResponse": { "enum": ["Fight", "Flee", "Hold"] },
         "FleeOnRaidIntel": { "type": "boolean" },
-        "HarassInvaders": { "type": "boolean" }
+        "HarassInvaders": { "type": "boolean" },
+        "ChaseInjuredTargetsOnly": { "type": "boolean" },
+        "InjuredTargetHpPct": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
       },
       "additionalProperties": false
     }
