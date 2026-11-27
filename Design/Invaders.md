@@ -84,7 +84,7 @@ Mounted under `Invaders/Paragon*` (hero mesh + Epic anim sets). Use for **Parago
 | Cleric | `ParagonZinx` | `Zinx` |
 | — (extra migrated) | `ParagonGideon` | `Gideon` — no DC role row yet; candidate Bruiser/Mage |
 
-**Not in project:** Fab **Wanderer**, **Assassin**, **Free Medieval Assassin Girl** — still mount TBD ([Monsters.md](./Monsters.md#intruders-adventurers)).
+**Not in project:** Fab **Wanderer**, **Thief** (Medieval Assassin Girl), **Assassin** Paragon seats — still mount TBD ([Monsters.md](./Monsters.md#intruders-adventurers)).
 
 ### Composition hooks (Firefly + Fab)
 
@@ -112,8 +112,8 @@ Mounted under `Invaders/Paragon*` (hero mesh + Epic anim sets). Use for **Parago
 | **Trap literacy** | Set of knowledge tags relevant to traps and dungeon fixtures. |
 | **Witnessed** | Unit had line-of-sight (or was within N cells) when the event fired. |
 | **Raid wave** | One surface incursion: one `PartyId`, spawns near the dungeon mouth. Size and power depend on **invader line** ([below](#raid-scaling-core-level)). |
-| **Invader line** | `Common` (Fab / custom — Wanderer, Hero, Assassin, Firefly party) vs `Paragon` (Epic MOBA heroes). Same party AI; very different combat sheets. |
-| **Paragon-caliber** | Paragon line only: full MOBA-style kit on the sheet ([Character-Sheets.md](./Character-Sheets.md)); **not** full wiki level-15 numbers until the `ReferenceTier` band allows it. |
+| **Invader line** | `Common` (Fab / custom — Wanderer, Hero, **Thief**, Firefly party) vs `Paragon` (Epic MOBA heroes). Same party AI; very different combat sheets. |
+| **Paragon-caliber** | Paragon line only: **two actives** per archetype on the sheet ([Character-Sheets.md](./Character-Sheets.md)); **not** full wiki level-15 numbers until the `ReferenceTier` band allows it. |
 
 ## Raid scaling (core level)
 
@@ -161,7 +161,7 @@ Random mesh triples are forbidden. Each wave picks from **templates** (line-spec
 | Size | Templates (pick one) | Roles |
 | --- | --- | --- |
 | **2** | `FrontBack` | Tank or Bruiser + Mage, Archer, or Cleric |
-| **2** | `ScoutDuo` | Scout/Assassin + Fighter (Firefly dwarf + elf fits here) |
+| **2** | `ScoutDuo` | Scout or **Thief** + Fighter (Firefly dwarf + elf fits here; mount **Thief** on Fab rogue when ready) |
 | **3** | `Classic` | Tank + damage (Hero/Bruiser/Mage) + Cleric or Scout |
 | **3** | `GlassCannon` | Tank + Mage + Archer (high trap payoff if split) |
 
@@ -209,10 +209,10 @@ These fields belong on the **data asset or spawn table row** for each intruder a
 
 | Field | Notes |
 | --- | --- |
-| `ArchetypeId` | Wanderer, Tank, Cleric, Scout, Mage, etc. ([Monsters.md](./Monsters.md#intruders-adventurers)) |
+| `ArchetypeId` | Wanderer, Tank, Cleric, Scout, **Thief**, Mage, etc. ([Monsters.md](./Monsters.md#intruders-adventurers)) |
 | `InvaderLine` | `Common` \| `Paragon` — party-size rules and power scalar ([raid scaling](#raid-scaling-core-level)) |
 | `Mesh / rig` | Asset path — out of scope here |
-| Combat stats, ratings, abilities | Shared schema: [Character-Sheets.md](./Character-Sheets.md) (`EntityKind = Invader` + rows below) |
+| Combat stats, ratings, abilities | Shared schema: [Character-Sheets.md](./Character-Sheets.md) (`EntityKind = Invader`; **Primary + Secondary** actives per `ArchetypeId`) |
 
 ### Behavior (required for trap reactions)
 
@@ -251,7 +251,9 @@ Sheets list **starting tags** only. Runtime union = `Unit.StartingTags ∪ Party
 | Tank / Bruiser | 0.3 | +0.3 | 0.55 | 0.7 | 0.2 | 0.35 | `Knows_LeyTraps` (veterans only) |
 | Cleric | 0.4 | +0.5 | 0.65 | 0.85 | 0.3 | 0.25 | — |
 | Fighter / Hero | 0.35 | +0.2 | 0.45 | 0.6 | 0.25 | **0.50** | — |
-| Scout / Assassin | 0.75 | −0.2 | 0.15 | 0.35 | 0.85 | 0.30 | `Knows_MimicRisk` (weak) |
+| **Thief** | 0.75 | −0.25 | 0.10 | 0.30 | 0.70 | **0.55** | `Knows_MimicRisk` (weak) |
+| Scout | 0.70 | −0.15 | 0.15 | 0.35 | **0.90** | 0.30 | `Knows_MirageVeil` (veterans) |
+| Assassin | 0.45 | −0.1 | 0.20 | 0.35 | 0.40 | 0.35 | — |
 | Mage | 0.6 | −0.1 | 0.25 | 0.4 | 0.4 | 0.30 | — |
 | Wanderer (fodder) | 0.2 | 0 | 0.35 | 0.45 | 0.15 | 0.65 | none |
 

@@ -21,7 +21,9 @@ public class DungeonCore : ModuleRules
             new string[]
             {
                 "Slate",
-                "SlateCore"
+                "SlateCore",
+                "Json",
+                "JsonUtilities"
             }
         );
     }

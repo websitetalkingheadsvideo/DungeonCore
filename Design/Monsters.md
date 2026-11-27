@@ -125,7 +125,8 @@ Surface heroes — not dungeon families. **Full Epic Paragon hero catalog owned*
 | Role | Primary asset | Named / alternates |
 | --- | --- | --- |
 | **Wanderer** | Wanderer | — |
-| **Assassin** | Free Medieval Assassin Girl | — |
+| **Thief** | Free Medieval Assassin Girl | Fab — mount TBD; `ArchetypeId = Thief` (**lockpick** + **climb walls** on sheet) |
+| **Assassin** | — | Paragon: **Countess**, **Kallari**, … ([Invaders-Paragons.md](./Invaders-Paragons.md)); burst combat, not the Thief expedition kit |
 | **Hero** | `Invaders/HeroicWarrior/SM_HeroicWarrior` | Static mesh only — skeletal TBD |
 | **Champion** | Paragon: **Terra** (`/Game/Invaders/ParagonTerra`) | Warrior Queen (rigged) — alternate |
 | **Tank** | Paragon: **Greystone** (`/Game/Invaders/ParagonGreystone`) | Paragon **Rampage** (Tank alt); `Invaders/Paladin/Paladin` (CC); `Invaders/GKnight/` (**Gothic Knight** VA–VF) |

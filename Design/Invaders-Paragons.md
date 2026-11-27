@@ -8,6 +8,8 @@ Epic released Paragon (2016–2018) hero assets to UE; Dungeon Core uses them as
 
 **Status:** design reference — combat numbers in UE are TBD; values below are **last-live Paragon** (≈2018), not balanced for the dungeon grid yet.
 
+**Archetype skill names (generic):** [Character-Sheets.md — Invader archetypes (summary)](./Character-Sheets.md#invader-archetypes--two-skills-summary) · **Paragon wiki names:** [Paragon two-actives map](#paragon-two-actives-map-wiki-names) (below).
+
 ---
 
 ## External sources
@@ -39,6 +41,90 @@ Paragon’s **card deck / Power** loop (≈60 Power, ~6.5 physical or energy dam
 
 ---
 
+## Paragon two-actives map (wiki names)
+
+Dungeon Core stores **two actives** per sheet ([Character-Sheets.md](./Character-Sheets.md)). Names below match the **Paragon Fandom** ability pages (2018 balance). `ParagonAbilityKey` on each `Abilities[]` row = exact wiki string.
+
+### Pick rules
+
+| Slot | Source on wiki |
+| --- | --- |
+| **Primary** | **Primary Ability (Q)** |
+| **Secondary** | **Secondary Ability (E)** if it is a cast; else **Alternate Ability (RMB)** |
+| **Excluded** | LMB basic, passives, ultimates |
+
+When a hero’s **E** is passive-only (Greystone **Deflect**, Kwang **Gift of the Heavens**), use **RMB** for Secondary. **Sparrow** uses Q **Hail of Arrows** + RMB **Piercing Shot** (**Relentless** is passive). **Zinx (Cleric):** RMB **Bad Medicine** + E **Ricochet Stun** (Q **Kitty Claws** is a sustained toggle). **Tank** meshes that share a role still use **that hero’s** two picks, not a shared generic label.
+
+### Assigned roster (in UE)
+
+| DC seat | `ArchetypeId` | Hero | Primary (`ParagonAbilityKey`) | Secondary (`ParagonAbilityKey`) |
+| --- | --- | --- | --- | --- |
+| Champion | Champion | **Terra** | Ruthless Assault | Deafening Command |
+| Tank | Tank | **Greystone** | Make Way | Assault the Gates |
+| Tank (alt) | Tank | **Rampage** | Boulder Throw | Rumble |
+| Bruiser | Bruiser | **Kwang** | Judgement of the Heavens | Light of the Heavens |
+| Mage | Mage | **Phase** | Psychic Flare | Energy Lance |
+| Mage (alt) | Mage | **Aurora** | Glacial Charge | Hoarfrost |
+| Archer | Archer | **Sparrow** | Hail of Arrows | Piercing Shot |
+| Cleric | Cleric | **Zinx** | Bad Medicine | Ricochet Stun |
+| Orcs Hero | — (Defender) | **Narbash** | March! | Thump |
+| Evil Fairies Hero | — (Defender) | **The Fey** | Harvest Nettles | Bramble Patch |
+| Undead Hero | — (Defender) | **Sevarog** | Siphon | Subjugate |
+| Mutants Hero | — (Defender) | **Rampage** | Boulder Throw | Rumble |
+
+**Common / Fab invaders** (no `ParagonRef`): use the archetype template names in [Character-Sheets.md — Invader archetype kits](./Character-Sheets.md#invader-archetype-kits-2-actives); same `Primary` / `Secondary` slots, hand-tuned numbers.
+
+**Thief (Common):** Fab **Medieval Assassin Girl** → `ArchetypeId = Thief` — expedition **lockpick** + **climb walls** on sheet; combat actives **Lockpick** + **Smoke vanish** ([Character-Sheets.md](./Character-Sheets.md)). Not a Paragon row.
+
+**Assassin candidates** (Paragon burst, not Thief kit): **Countess** — Dark Tide + Shadow Slip; **Kallari** — Slash + Backdash Blade; **Revenant** — Scar + Hellfire Rounds; **Yin** — Lash Kick + Backlash.
+
+### Full owned catalog (36 heroes)
+
+All released Paragon heroes. **DC seat** = current design assignment (`—` = none). **Suggested archetype** only when no seat — for future casting.
+
+| Hero | DC seat | Suggested `ArchetypeId` | Primary | Secondary |
+| --- | --- | --- | --- | --- |
+| Aurora | Mage alt | Mage | Glacial Charge | Hoarfrost |
+| Countess | — | Assassin | Dark Tide | Shadow Slip |
+| Crunch | — | Bruiser | Left Crunch | Right Crunch |
+| Dekker | — | Mage | Stasis Bomb | Containment Fence |
+| Drongo | — | Archer | Rad Rounds | Guttler |
+| Feng Mao | — | Bruiser | Hamstring | Precision Strike |
+| Gadget | — | Mage | Sticky Mine | Seek & Destroy |
+| Gideon | — | Mage | Cosmic Rift | Torn Space |
+| Greystone | Tank | Tank | Make Way | Assault the Gates |
+| GRIM.exe | — | Mage | Deflect | GTFO |
+| Howitzer | — | Mage | R2000 Missile | Slow Grenades |
+| Iggy & Scorch | — | Mage | Oil Spill | Flame Turret |
+| Kallari | — | Assassin | Slash | Backdash Blade |
+| Khaimera | — | Bruiser | Ambush | Unleash |
+| Kwang | Bruiser | Bruiser | Judgement of the Heavens | Light of the Heavens |
+| Lt. Belica | — | Mage | Seismic Assault | Void Bomb |
+| Morigesh | — | Mage | Mark | Curse |
+| Murdock | — | Archer | Static Shield | Buckshot |
+| Muriel | — | Cleric | Alacrity | Serenity |
+| Narbash | Orc Hero | — | March! | Thump |
+| Phase | Mage | Mage | Psychic Flare | Energy Lance |
+| Rampage | Mutants Hero; Tank alt | Tank | Boulder Throw | Rumble |
+| Revenant | — | Assassin | Scar | Hellfire Rounds |
+| Riktor | — | Tank | Electrocute | Blade Rush |
+| Sevarog | Undead Hero | — | Siphon | Subjugate |
+| Serath | — | Assassin | Blazing Seraph | Fatal Grace |
+| Shinbi | — | Assassin | All-Kill | Circle Net |
+| Sparrow | Archer | Archer | Hail of Arrows | Piercing Shot |
+| Steel | — | Tank | Shield Bash | Bulwark |
+| Terra | Champion | Champion | Ruthless Assault | Deafening Command |
+| The Fey | Fairy Hero | — | Harvest Nettles | Bramble Patch |
+| TwinBlast | — | Archer | Vaporize | Rocket Dash |
+| Wukong | — | Bruiser | Tongue Lash | Four-Fisted Fury |
+| Wraith | — | Mage | Zap | Kinetic Pulse |
+| Yin | — | Assassin | Lash Kick | Backlash |
+| Zinx | Cleric | Cleric | Bad Medicine | Ricochet Stun |
+
+Wiki index: https://paragon.fandom.com/wiki/Heroes — verify spelling on the hero page before filling data tables.
+
+---
+
 ## Using Paragon data in Dungeon Core
 
 ### What to import
@@ -48,7 +134,7 @@ Paragon’s **card deck / Power** loop (≈60 Power, ~6.5 physical or energy dam
 | Role traits (Tank, Carry, Ganker, …) | Maps to `ArchetypeId` + spawn table row. |
 | Mobility / durability overview bars (1–10) | Hints for `Caution`, `ScoutRating`, `FollowerWeight` in [Invaders.md](./Invaders.md). |
 | Base HP, move speed, basic attack | Starting combat stat band; **must be rescaled** to grid (see below). |
-| Signature CC, dash, heal, ult | 1–3 **raid behaviors** (e.g. Greystone stone form = survive burst; Phase blink = ignore some traps once). |
+| Signature CC, dash, heal, ult | Map **two wiki actives** per [two-actives map](#paragon-two-actives-map-wiki-names); ult/passive flavor only in VFX or later powers pass. |
 | Low mobility carries (Sparrow) | Higher dependence on party cohesion; educate AI to stay behind tank. |
 
 ### What to leave out (unless scoped later)
@@ -73,16 +159,16 @@ These are **defenders**, not surface invaders. Use the same wiki kits for **enco
 
 Paths from [Monsters.md — Intruders](./Monsters.md#intruders-adventurers). Wiki links are the **canonical deep stat sheet** for each hero.
 
-| DC role | Paragon hero | UE primary path | Paragon wiki | Paragon lane / style (wiki) | Dungeon Core notes |
-| --- | --- | --- | --- | --- | --- |
-| **Champion** | **Terra** | `/Game/Invaders/ParagonTerra` | [Terra](https://paragon.fandom.com/wiki/Terra) | Fighter / solo; earth shields, sustained frontline | Map to **Hero / Fighter** archetype; high `CohesionBias`, moderate `Caution`. Veteran: `Knows_LeyTraps`. |
-| **Tank** | **Greystone** | `/Game/Invaders/ParagonGreystone` | [Greystone](https://paragon.fandom.com/wiki/Greystone) | Solo / jungle durable; stone ult, self-heal, split kit | **Tank** defaults in [Invaders.md](./Invaders.md); low `Caution`, high `HelperWeight`. |
-| **Tank (alt mesh)** | **Rampage** | `/Game/ParagonRampage/Characters/Heroes/Rampage/Meshes/Rampage` | [Rampage](https://paragon.fandom.com/wiki/Rampage) | Tank / jungler; leap, throw, high base HP | Same archetype as Greystone; higher durability flavor per wiki L1 stats; `Knows_LeyTraps` on veterans. |
-| **Bruiser** | **Kwang** | `/Game/Invaders/ParagonKwang` | [Kwang](https://paragon.fandom.com/wiki/Kwang) | Carry / bruiser; sword swing, lane pressure | **Tank / Bruiser** row; aggressive pathing, lower trap avoidance than Mage. |
-| **Mage** | **Phase** | ParagonPhase | [Phase](https://paragon.fandom.com/wiki/Phase) | Mid/support; dimensional mobility, poke, team save | **Mage** row; higher `Caution`; candidate for educated `Knows_DisplacementGlyphs` on veterans (blinks). |
-| **Mage (alt mesh)** | **Aurora** | `/Game/Invaders/ParagonAurora` | [Aurora](https://paragon.fandom.com/wiki/Aurora) | Mid; ice root, mobility, teamfight ult | Same archetype as Phase; **ice / root** kit → prefer **hold** formation vs scatter. |
-| **Archer** | **Sparrow** | `/Game/Invaders/ParagonSparrow` | [Sparrow](https://paragon.fandom.com/wiki/Sparrow) | Safe-lane carry; charged shot, no escape | Low mobility in Paragon → **stay behind tank**, high party cohesion dependency; `ScoutRating` moderate (line of sight, not traps). |
-| **Cleric** | **Zinx** | `/Game/Invaders/ParagonZinx` | [Zinx](https://paragon.fandom.com/wiki/Zinx) | Support; sustain, poke (sci-fi default skin — use non-sci-fi skin if fit) | **Cleric** row; highest `HelperWeight` / `CohesionBias`; anchor for reunite-after-glyph behavior. |
+| DC role | Paragon hero | Primary / Secondary (wiki) | UE primary path | Paragon wiki | Paragon lane / style (wiki) | Dungeon Core notes |
+| --- | --- | --- | --- | --- | --- | --- |
+| **Champion** | **Terra** | Ruthless Assault / Deafening Command | `/Game/Invaders/ParagonTerra` | [Terra](https://paragon.fandom.com/wiki/Terra) | Fighter / solo; earth shields, sustained frontline | Map to **Hero / Fighter** archetype; high `CohesionBias`, moderate `Caution`. Veteran: `Knows_LeyTraps`. |
+| **Tank** | **Greystone** | Make Way / Assault the Gates | `/Game/Invaders/ParagonGreystone` | [Greystone](https://paragon.fandom.com/wiki/Greystone) | Solo / jungle durable; stone ult, self-heal, split kit | **Tank** defaults in [Invaders.md](./Invaders.md); low `Caution`, high `HelperWeight`. |
+| **Tank (alt mesh)** | **Rampage** | Boulder Throw / Rumble | `/Game/ParagonRampage/Characters/Heroes/Rampage/Meshes/Rampage` | [Rampage](https://paragon.fandom.com/wiki/Rampage) | Tank / jungler; leap, throw, high base HP | Same archetype as Greystone; higher durability flavor per wiki L1 stats; `Knows_LeyTraps` on veterans. |
+| **Bruiser** | **Kwang** | Judgement of the Heavens / Light of the Heavens | `/Game/Invaders/ParagonKwang` | [Kwang](https://paragon.fandom.com/wiki/Kwang) | Carry / bruiser; sword swing, lane pressure | **Tank / Bruiser** row; aggressive pathing, lower trap avoidance than Mage. |
+| **Mage** | **Phase** | Psychic Flare / Energy Lance | ParagonPhase | [Phase](https://paragon.fandom.com/wiki/Phase) | Mid/support; dimensional mobility, poke, team save | **Mage** row; higher `Caution`; candidate for educated `Knows_DisplacementGlyphs` on veterans (blinks). |
+| **Mage (alt mesh)** | **Aurora** | Glacial Charge / Hoarfrost | `/Game/Invaders/ParagonAurora` | [Aurora](https://paragon.fandom.com/wiki/Aurora) | Mid; ice root, mobility, teamfight ult | Same archetype as Phase; **ice / root** kit → prefer **hold** formation vs scatter. |
+| **Archer** | **Sparrow** | Hail of Arrows / Piercing Shot | `/Game/Invaders/ParagonSparrow` | [Sparrow](https://paragon.fandom.com/wiki/Sparrow) | Safe-lane carry; charged shot, no escape | Low mobility in Paragon → **stay behind tank**, high party cohesion dependency; `ScoutRating` moderate (line of sight, not traps). |
+| **Cleric** | **Zinx** | Bad Medicine / Ricochet Stun | `/Game/Invaders/ParagonZinx` | [Zinx](https://paragon.fandom.com/wiki/Zinx) | Support; sustain, poke (sci-fi default skin — use non-sci-fi skin if fit) | **Cleric** row; highest `HelperWeight` / `CohesionBias`; anchor for reunite-after-glyph behavior. |
 
 **Alternates (non-Paragon):** Warrior Queen (Champion), Paladin RPG / Gothic Knight (Tank/Hero), Firefly party — no Paragon sheet; see [Monsters.md](./Monsters.md).
 
@@ -96,7 +182,8 @@ Not from Paragon canon — **Dungeon Core** hooks only. Tune in data tables.
 | Sparrow | — | Stays with party; learns from witnesses like default Mage. |
 | Greystone, Rampage, Terra, Kwang | `Knows_LeyTraps` | Frontliners who’ve survived powered rooms. |
 | Zinx | — | Supports learn via party memory; high follow-to-heal. |
-| Scout / Assassin (Fab today) | `Knows_MimicRisk` | **Owned pool:** Kallari, Countess, Yin, Revenant — migrate when Assassin seat goes Paragon ([full catalog](#owned-catalog-vs-in-project)). |
+| **Thief** (Fab) | `Knows_MimicRisk` | Common line; lockpick + climb on sheet — not Paragon. |
+| Scout / **Assassin** (Paragon) | `Knows_MimicRisk` | **Owned pool:** Kallari, Countess, Yin, Revenant — migrate when **Assassin** seat goes Paragon ([full catalog](#owned-catalog-vs-in-project)). |
 
 ---
 
@@ -167,6 +254,8 @@ The **git repo** tracks design + pipeline; **`DungeonCore/Content/`** is gitigno
 ### Full owned roster (migrate on demand)
 
 Fandom index: https://paragon.fandom.com/wiki/Heroes. **In UE** = migrated into this project. **DC seat** = current design assignment; `—` means no seat yet (casting notes are suggestions only, often from [library.md](../library.md)).
+
+**Primary / Secondary (wiki):** [Full owned catalog (36 heroes)](#full-owned-catalog-36-heroes) — do not duplicate ability names in this table.
 
 | Hero | In UE | DC seat | Paragon wiki | MoBA role (wiki summary) | Casting notes (optional) |
 | --- | ---: | --- | --- | --- | --- |

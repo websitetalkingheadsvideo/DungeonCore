@@ -1,0 +1,214 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dungeon-core.local/schemas/character-sheet.json",
+  "title": "DungeonCoreCharacterSheet",
+  "description": "Mirrors Design/Character-Sheets.md — combat + invader expedition/behavior.",
+  "type": "object",
+  "required": [
+    "SheetId",
+    "EntityKind",
+    "ArchetypeId",
+    "ReferenceTier",
+    "StatSource",
+    "Vitals",
+    "Ratings",
+    "Abilities"
+  ],
+  "properties": {
+    "SheetId": { "type": "string", "minLength": 1 },
+    "EntityKind": { "enum": ["Defender", "Invader"] },
+    "FamilyId": {
+      "enum": [
+        "Orcs",
+        "Undead",
+        "EvilFairies",
+        "Goblins",
+        "Fungal",
+        "Spiders",
+        "Mutants"
+      ]
+    },
+    "Tier": {
+      "enum": ["Worker", "Minion", "Elite", "Boss", "Hero"]
+    },
+    "ArchetypeId": {
+      "enum": [
+        "Wanderer",
+        "Thief",
+        "Assassin",
+        "Hero",
+        "Champion",
+        "Tank",
+        "Bruiser",
+        "Fighter",
+        "Mage",
+        "Archer",
+        "Cleric",
+        "Scout"
+      ]
+    },
+    "DisplayName": { "type": "string" },
+    "MeshRef": { "type": "string" },
+    "ParagonRef": { "type": "string" },
+    "InvaderLine": { "enum": ["Common", "Paragon"] },
+    "StatSource": {
+      "enum": ["ParagonWiki", "TierBaseline", "HandTuned"]
+    },
+    "ReferenceTier": {
+      "enum": ["Fodder", "Standard", "Veteran"]
+    },
+    "Vitals": {
+      "type": "object",
+      "required": [
+        "MaxHealth",
+        "HealthRegenPerSec",
+        "MoveSpeed",
+        "BasicDamage",
+        "AttackPeriod",
+        "CleavePct",
+        "BasicAffinity",
+        "BasicDefense",
+        "AbilityDefense"
+      ],
+      "properties": {
+        "MaxHealth": { "type": "number", "minimum": 0 },
+        "HealthRegenPerSec": { "type": "number", "minimum": 0 },
+        "MoveSpeed": { "type": "number", "minimum": 0 },
+        "BasicDamage": { "type": "number", "minimum": 0 },
+        "AttackPeriod": { "type": "number", "exclusiveMinimum": 0 },
+        "CleavePct": { "type": "number", "minimum": 0, "maximum": 1 },
+        "BasicAffinity": { "enum": ["Physical", "Energy"] },
+        "BasicDefense": { "type": "number", "minimum": 0 },
+        "AbilityDefense": { "type": "number", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "Ratings": {
+      "type": "object",
+      "required": [
+        "BasicDamage",
+        "AbilityDamage",
+        "Durability",
+        "Mobility"
+      ],
+      "properties": {
+        "BasicDamage": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "AbilityDamage": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "Durability": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "Mobility": { "type": "integer", "minimum": 1, "maximum": 10 }
+      },
+      "additionalProperties": false
+    },
+    "Abilities": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/Ability" },
+      "minItems": 0,
+      "maxItems": 4
+    },
+    "ExpeditionGear": { "$ref": "#/$defs/ExpeditionGear" },
+    "InvaderBehavior": { "$ref": "#/$defs/InvaderBehavior" },
+    "DefenderAI": { "$ref": "#/$defs/DefenderAI" },
+    "StartingKnowledgeTags": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "EntityKind": { "const": "Invader" } } },
+      "then": {
+        "required": ["InvaderLine", "InvaderBehavior"],
+        "properties": {
+          "Abilities": { "minItems": 2, "maxItems": 2 }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "EntityKind": { "const": "Defender" } } },
+      "then": {
+        "required": ["FamilyId", "Tier", "DefenderAI"]
+      }
+    }
+  ],
+  "$defs": {
+    "Ability": {
+      "type": "object",
+      "required": [
+        "AbilityId",
+        "Slot",
+        "DisplayName",
+        "DamageType",
+        "BaseDamage",
+        "CooldownSec",
+        "RangeUU",
+        "EffectTags"
+      ],
+      "properties": {
+        "AbilityId": { "type": "string" },
+        "Slot": {
+          "enum": ["Passive", "Primary", "Secondary", "Ultimate"]
+        },
+        "DisplayName": { "type": "string" },
+        "DamageType": { "enum": ["None", "Basic", "Ability"] },
+        "BaseDamage": { "type": "number", "minimum": 0 },
+        "CooldownSec": { "type": "number", "minimum": 0 },
+        "RangeUU": { "type": "number", "minimum": 0 },
+        "EffectTags": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "ParagonAbilityKey": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "ExpeditionGear": {
+      "type": "object",
+      "required": [
+        "HasRope",
+        "RopeLengthUU",
+        "HasLockpick",
+        "CanClimbWalls",
+        "HasSustainedFlight"
+      ],
+      "properties": {
+        "HasRope": { "type": "boolean" },
+        "RopeLengthUU": { "type": "number", "minimum": 0 },
+        "HasLockpick": { "type": "boolean" },
+        "CanClimbWalls": { "type": "boolean" },
+        "HasSustainedFlight": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "InvaderBehavior": {
+      "type": "object",
+      "required": [
+        "Caution",
+        "CohesionBias",
+        "FollowerWeight",
+        "HelperWeight",
+        "ScoutRating",
+        "LootGreed"
+      ],
+      "properties": {
+        "Caution": { "type": "number", "minimum": 0, "maximum": 1 },
+        "CohesionBias": { "type": "number", "minimum": -1, "maximum": 1 },
+        "FollowerWeight": { "type": "number", "minimum": 0, "maximum": 1 },
+        "HelperWeight": { "type": "number", "minimum": 0, "maximum": 1 },
+        "ScoutRating": { "type": "number", "minimum": 0, "maximum": 1 },
+        "LootGreed": { "type": "number", "minimum": 0, "maximum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "DefenderAI": {
+      "type": "object",
+      "properties": {
+        "WorkerRole": { "enum": ["None", "Dig", "Build", "Both"] },
+        "AggroStyle": { "enum": ["Guard", "Chase", "Stationary"] },
+        "LeashRadiusUU": { "type": "number", "minimum": 0 },
+        "PreferredRange": { "enum": ["Melee", "Short", "Long"] },
+        "UsesParagonAnimSet": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

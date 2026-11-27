@@ -1,0 +1,5098 @@
+{
+  "$schema": "./character-sheet.schema.json",
+  "schemaVersion": 3,
+  "designDoc": "Design/Character-Sheets.md",
+  "rules": {
+    "ArchetypeIdRequired": "Every sheet row (Defender and Invader) must set ArchetypeId.",
+    "SheetIdConvention": "Defender: Family.Tier \u2014 Invader: Invader.<Role>.<Variant>"
+  },
+  "defenderArchetypeDefaultsByTier": {
+    "Worker": "Fighter",
+    "Minion": "Fighter",
+    "Elite": "Bruiser",
+    "Boss": "Tank",
+    "Hero": null
+  },
+  "archetypeKits": {
+    "Wanderer": {
+      "primary": "Opportunist strike",
+      "secondary": "Short sprint",
+      "effectTagsPrimary": [
+        "Melee",
+        "Dash"
+      ],
+      "effectTagsSecondary": [
+        "Dash"
+      ]
+    },
+    "Thief": {
+      "primary": "Lockpick",
+      "secondary": "Smoke vanish",
+      "effectTagsPrimary": [
+        "PickLock"
+      ],
+      "effectTagsSecondary": [
+        "Blink"
+      ]
+    },
+    "Assassin": {
+      "primary": "Ambush / execute",
+      "secondary": "Blink or vanish step",
+      "effectTagsPrimary": [
+        "Melee",
+        "Execute"
+      ],
+      "effectTagsSecondary": [
+        "Blink"
+      ]
+    },
+    "Hero": {
+      "primary": "Power cleave",
+      "secondary": "Battle shout",
+      "effectTagsPrimary": [
+        "Melee",
+        "AOE"
+      ],
+      "effectTagsSecondary": [
+        "BuffAura"
+      ]
+    },
+    "Champion": {
+      "primary": "Charged slam",
+      "secondary": "Zone control (slow/root)",
+      "effectTagsPrimary": [
+        "Melee",
+        "AOE"
+      ],
+      "effectTagsSecondary": [
+        "Slow"
+      ]
+    },
+    "Tank": {
+      "primary": "Guard / damage soak taunt",
+      "secondary": "Shield slam",
+      "effectTagsPrimary": [
+        "Melee",
+        "AOE"
+      ],
+      "effectTagsSecondary": [
+        "Melee",
+        "AOE"
+      ]
+    },
+    "Bruiser": {
+      "primary": "Heavy cleave",
+      "secondary": "Bull rush",
+      "effectTagsPrimary": [
+        "Melee",
+        "Cleave"
+      ],
+      "effectTagsSecondary": [
+        "Melee",
+        "Dash"
+      ]
+    },
+    "Fighter": {
+      "primary": "Combo strike",
+      "secondary": "Brace",
+      "effectTagsPrimary": [
+        "Melee"
+      ],
+      "effectTagsSecondary": [
+        "Melee"
+      ]
+    },
+    "Mage": {
+      "primary": "Ranged burst",
+      "secondary": "Blink or reposition",
+      "effectTagsPrimary": [
+        "Ranged",
+        "Ability"
+      ],
+      "effectTagsSecondary": [
+        "Blink"
+      ]
+    },
+    "Archer": {
+      "primary": "Piercing shot",
+      "secondary": "Volley or marked target",
+      "effectTagsPrimary": [
+        "Ranged",
+        "Line"
+      ],
+      "effectTagsSecondary": [
+        "Ranged",
+        "AOE"
+      ]
+    },
+    "Cleric": {
+      "primary": "Heal pulse",
+      "secondary": "Ward or cleanse",
+      "effectTagsPrimary": [
+        "Heal"
+      ],
+      "effectTagsSecondary": [
+        "Shield"
+      ]
+    },
+    "Scout": {
+      "primary": "Trap probe / reveal edge",
+      "secondary": "Sprint",
+      "effectTagsPrimary": [
+        "Ranged"
+      ],
+      "effectTagsSecondary": [
+        "Dash"
+      ]
+    }
+  },
+  "sheets": [
+    {
+      "SheetId": "Orcs.Worker",
+      "EntityKind": "Defender",
+      "ArchetypeId": "Fighter",
+      "FamilyId": "Orcs",
+      "Tier": "Worker",
+      "DisplayName": "Orcs Worker",
+      "MeshRef": "/Game/Monsters/Orcs/StylizedGoblinMinion/SK_StylizedGoblinMinion",
+      "StatSource": "TierBaseline",
+      "ReferenceTier": "Fodder",
+      "Vitals": {
+        "MaxHealth": 18.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 280,
+        "BasicDamage": 0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [],
+      "DefenderAI": {
+        "WorkerRole": "Dig",
+        "AggroStyle": "Chase",
+        "LeashRadiusUU": 900,
+        "PreferredRange": "Melee",
+        "UsesParagonAnimSet": false
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "Orcs.Minion",
+      "EntityKind": "Defender",
+      "ArchetypeId": "Fighter",
+      "FamilyId": "Orcs",
+      "Tier": "Minion",
+      "DisplayName": "Orcs Minion",
+      "MeshRef": "/Game/Monsters/Orcs/Minion/Orc_Minion_Unreal",
+      "StatSource": "TierBaseline",
+      "ReferenceTier": "Fodder",
+      "Vitals": {
+        "MaxHealth": 32.4,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 280,
+        "BasicDamage": 4.4,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Orcs_Minion.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Combo strike",
+          "DamageType": "Ability",
+          "BaseDamage": 7,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee"
+          ]
+        }
+      ],
+      "DefenderAI": {
+        "WorkerRole": "None",
+        "AggroStyle": "Chase",
+        "LeashRadiusUU": 900,
+        "PreferredRange": "Melee",
+        "UsesParagonAnimSet": false
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "Orcs.Elite",
+      "EntityKind": "Defender",
+      "ArchetypeId": "Bruiser",
+      "FamilyId": "Orcs",
+      "Tier": "Elite",
+      "DisplayName": "Orcs Elite",
+      "MeshRef": "/Game/Monsters/Orcs/elite_orc",
+      "StatSource": "TierBaseline",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 280,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Orcs_Elite.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Heavy cleave",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "Cleave"
+          ]
+        },
+        {
+          "AbilityId": "Orcs_Elite.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Bull rush",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "Dash"
+          ]
+        }
+      ],
+      "DefenderAI": {
+        "WorkerRole": "None",
+        "AggroStyle": "Chase",
+        "LeashRadiusUU": 900,
+        "PreferredRange": "Melee",
+        "UsesParagonAnimSet": false
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "Orcs.Boss",
+      "EntityKind": "Defender",
+      "ArchetypeId": "Tank",
+      "FamilyId": "Orcs",
+      "Tier": "Boss",
+      "DisplayName": "Orcs Boss",
+      "MeshRef": "/Game/Monsters/Orcs/OrcBoss/Orc_Boss_unreal",
+      "StatSource": "TierBaseline",
+      "ReferenceTier": "Veteran",
+      "Vitals": {
+        "MaxHealth": 216.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 280,
+        "BasicDamage": 15.4,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 7,
+        "AbilityDamage": 2,
+        "Durability": 8,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Orcs_Boss.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Guard / damage soak taunt",
+          "DamageType": "Ability",
+          "BaseDamage": 25,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "AOE"
+          ]
+        },
+        {
+          "AbilityId": "Orcs_Boss.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Shield slam",
+          "DamageType": "Ability",
+          "BaseDamage": 20,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "AOE"
+          ]
+        }
+      ],
+      "DefenderAI": {
+        "WorkerRole": "None",
+        "AggroStyle": "Chase",
+        "LeashRadiusUU": 1200,
+        "PreferredRange": "Melee",
+        "UsesParagonAnimSet": false
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "Orcs.Hero",
+      "EntityKind": "Defender",
+      "ArchetypeId": "Cleric",
+      "FamilyId": "Orcs",
+      "Tier": "Hero",
+      "DisplayName": "Narbash",
+      "MeshRef": "/Game/Monsters/Orcs/ParagonNarbash/Characters/Heroes/Narbash/Meshes/Narbash",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Veteran",
+      "Vitals": {
+        "MaxHealth": 82.8,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 280,
+        "BasicDamage": 12.1,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 4,
+        "Durability": 8,
+        "Mobility": 5
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Orcs_Hero.Primary",
+          "Slot": "Primary",
+          "DisplayName": "March!",
+          "DamageType": "Ability",
+          "BaseDamage": 20,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Heal"
+          ],
+          "ParagonAbilityKey": "March!"
+        },
+        {
+          "AbilityId": "Orcs_Hero.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Thump",
+          "DamageType": "Ability",
+          "BaseDamage": 15,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Shield"
+          ],
+          "ParagonAbilityKey": "Thump"
+        }
+      ],
+      "DefenderAI": {
+        "WorkerRole": "None",
+        "AggroStyle": "Chase",
+        "LeashRadiusUU": 1200,
+        "PreferredRange": "Melee",
+        "UsesParagonAnimSet": true
+      },
+      "StartingKnowledgeTags": [],
+      "ParagonRef": "Narbash"
+    },
+    {
+      "SheetId": "EvilFairies.Worker",
+      "EntityKind": "Defender",
+      "ArchetypeId": "Fighter",
+      "FamilyId": "EvilFairies",
+      "Tier": "Worker",
+      "DisplayName": "EvilFairies Worker",
+      "MeshRef": "/Game/Monsters/EvilFairies/dark_fairy_worker_1",
+      "StatSource": "TierBaseline",
+      "ReferenceTier": "Fodder",
+      "Vitals": {
+        "MaxHealth": 18.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 280,
+        "BasicDamage": 0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [],
+      "DefenderAI": {
+        "WorkerRole": "Build",
+        "AggroStyle": "Chase",
+        "LeashRadiusUU": 900,
+        "PreferredRange": "Melee",
+        "UsesParagonAnimSet": false
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "EvilFairies.Minion",
+      "EntityKind": "Defender",
+      "ArchetypeId": "Mage",
+      "FamilyId": "EvilFairies",
+      "Tier": "Minion",
+      "DisplayName": "EvilFairies Minion",
+      "MeshRef": "/Game/Monsters/EvilFairies/dark_fairy_Minion_v1",
+      "StatSource": "TierBaseline",
+      "ReferenceTier": "Fodder",
+      "Vitals": {
+        "MaxHealth": 32.4,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 280,
+        "BasicDamage": 4.4,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "EvilFairies_Minion.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Ranged burst",
+          "DamageType": "Ability",
+          "BaseDamage": 7,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Ranged",
+            "Ability"
+          ]
+        }
+      ],
+      "DefenderAI": {
+        "WorkerRole": "None",
+        "AggroStyle": "Chase",
+        "LeashRadiusUU": 900,
+        "PreferredRange": "Melee",
+        "UsesParagonAnimSet": false
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "EvilFairies.Elite",
+      "EntityKind": "Defender",
+      "ArchetypeId": "Bruiser",
+      "FamilyId": "EvilFairies",
+      "Tier": "Elite",
+      "DisplayName": "EvilFairies Elite",
+      "MeshRef": "/Game/Monsters/EvilFairies/dark_fairy_elite_v1",
+      "StatSource": "TierBaseline",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 280,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "EvilFairies_Elite.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Heavy cleave",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "Cleave"
+          ]
+        },
+        {
+          "AbilityId": "EvilFairies_Elite.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Bull rush",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "Dash"
+          ]
+        }
+      ],
+      "DefenderAI": {
+        "WorkerRole": "None",
+        "AggroStyle": "Chase",
+        "LeashRadiusUU": 900,
+        "PreferredRange": "Melee",
+        "UsesParagonAnimSet": false
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "EvilFairies.Boss",
+      "EntityKind": "Defender",
+      "ArchetypeId": "Tank",
+      "FamilyId": "EvilFairies",
+      "Tier": "Boss",
+      "DisplayName": "EvilFairies Boss",
+      "MeshRef": "/Game/Monsters/EvilFairies/dark_fairy_boss_v1",
+      "StatSource": "TierBaseline",
+      "ReferenceTier": "Veteran",
+      "Vitals": {
+        "MaxHealth": 216.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 280,
+        "BasicDamage": 15.4,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 7,
+        "AbilityDamage": 2,
+        "Durability": 8,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "EvilFairies_Boss.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Guard / damage soak taunt",
+          "DamageType": "Ability",
+          "BaseDamage": 25,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "AOE"
+          ]
+        },
+        {
+          "AbilityId": "EvilFairies_Boss.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Shield slam",
+          "DamageType": "Ability",
+          "BaseDamage": 20,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "AOE"
+          ]
+        }
+      ],
+      "DefenderAI": {
+        "WorkerRole": "None",
+        "AggroStyle": "Chase",
+        "LeashRadiusUU": 1200,
+        "PreferredRange": "Melee",
+        "UsesParagonAnimSet": false
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "EvilFairies.Hero",
+      "EntityKind": "Defender",
+      "ArchetypeId": "Mage",
+      "FamilyId": "EvilFairies",
+      "Tier": "Hero",
+      "DisplayName": "The Fey",
+      "MeshRef": "/Game/Monsters/EvilFairies/ParagonFey/Characters/Heroes/Fey/Skins/Opaline/Meshes/Fey_Opaline",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Veteran",
+      "Vitals": {
+        "MaxHealth": 82.8,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 280,
+        "BasicDamage": 12.1,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 4,
+        "Durability": 8,
+        "Mobility": 5
+      },
+      "Abilities": [
+        {
+          "AbilityId": "EvilFairies_Hero.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Harvest Nettles",
+          "DamageType": "Ability",
+          "BaseDamage": 20,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Ranged",
+            "Ability"
+          ],
+          "ParagonAbilityKey": "Harvest Nettles"
+        },
+        {
+          "AbilityId": "EvilFairies_Hero.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Bramble Patch",
+          "DamageType": "Ability",
+          "BaseDamage": 15,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Blink"
+          ],
+          "ParagonAbilityKey": "Bramble Patch"
+        }
+      ],
+      "DefenderAI": {
+        "WorkerRole": "None",
+        "AggroStyle": "Chase",
+        "LeashRadiusUU": 1200,
+        "PreferredRange": "Melee",
+        "UsesParagonAnimSet": true
+      },
+      "StartingKnowledgeTags": [],
+      "ParagonRef": "The Fey"
+    },
+    {
+      "SheetId": "Fungal.Worker",
+      "EntityKind": "Defender",
+      "ArchetypeId": "Fighter",
+      "FamilyId": "Fungal",
+      "Tier": "Worker",
+      "DisplayName": "Fungal Worker",
+      "MeshRef": "/Game/Monsters/Fungal/Fungal_Worker_v2",
+      "StatSource": "TierBaseline",
+      "ReferenceTier": "Fodder",
+      "Vitals": {
+        "MaxHealth": 18.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 280,
+        "BasicDamage": 0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [],
+      "DefenderAI": {
+        "WorkerRole": "Dig",
+        "AggroStyle": "Chase",
+        "LeashRadiusUU": 900,
+        "PreferredRange": "Melee",
+        "UsesParagonAnimSet": false
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "Fungal.Minion",
+      "EntityKind": "Defender",
+      "ArchetypeId": "Fighter",
+      "FamilyId": "Fungal",
+      "Tier": "Minion",
+      "DisplayName": "Fungal Minion",
+      "MeshRef": "/Game/Monsters/Fungal/Fungal_Minion",
+      "StatSource": "TierBaseline",
+      "ReferenceTier": "Fodder",
+      "Vitals": {
+        "MaxHealth": 32.4,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 280,
+        "BasicDamage": 4.4,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Fungal_Minion.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Combo strike",
+          "DamageType": "Ability",
+          "BaseDamage": 7,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee"
+          ]
+        }
+      ],
+      "DefenderAI": {
+        "WorkerRole": "None",
+        "AggroStyle": "Chase",
+        "LeashRadiusUU": 900,
+        "PreferredRange": "Melee",
+        "UsesParagonAnimSet": false
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "Fungal.Elite",
+      "EntityKind": "Defender",
+      "ArchetypeId": "Bruiser",
+      "FamilyId": "Fungal",
+      "Tier": "Elite",
+      "DisplayName": "Fungal Elite",
+      "MeshRef": "/Game/Monsters/Fungal/SK_FungiInfestedKnight",
+      "StatSource": "TierBaseline",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 280,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Fungal_Elite.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Heavy cleave",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "Cleave"
+          ]
+        },
+        {
+          "AbilityId": "Fungal_Elite.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Bull rush",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "Dash"
+          ]
+        }
+      ],
+      "DefenderAI": {
+        "WorkerRole": "None",
+        "AggroStyle": "Chase",
+        "LeashRadiusUU": 900,
+        "PreferredRange": "Melee",
+        "UsesParagonAnimSet": false
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "Fungal.Boss",
+      "EntityKind": "Defender",
+      "ArchetypeId": "Tank",
+      "FamilyId": "Fungal",
+      "Tier": "Boss",
+      "DisplayName": "Fungal Boss",
+      "MeshRef": "/Game/Monsters/Fungal/SK_FungalMyconidGolem",
+      "StatSource": "TierBaseline",
+      "ReferenceTier": "Veteran",
+      "Vitals": {
+        "MaxHealth": 216.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 280,
+        "BasicDamage": 15.4,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 7,
+        "AbilityDamage": 2,
+        "Durability": 8,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Fungal_Boss.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Guard / damage soak taunt",
+          "DamageType": "Ability",
+          "BaseDamage": 25,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "AOE"
+          ]
+        },
+        {
+          "AbilityId": "Fungal_Boss.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Shield slam",
+          "DamageType": "Ability",
+          "BaseDamage": 20,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "AOE"
+          ]
+        }
+      ],
+      "DefenderAI": {
+        "WorkerRole": "None",
+        "AggroStyle": "Chase",
+        "LeashRadiusUU": 1200,
+        "PreferredRange": "Melee",
+        "UsesParagonAnimSet": false
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "Fungal.Hero",
+      "EntityKind": "Defender",
+      "ArchetypeId": "Mage",
+      "FamilyId": "Fungal",
+      "Tier": "Hero",
+      "DisplayName": "Fungal Queen",
+      "MeshRef": "/Game/Monsters/Fungal/FungalQueen/Fungal_Queen",
+      "StatSource": "HandTuned",
+      "ReferenceTier": "Veteran",
+      "Vitals": {
+        "MaxHealth": 82.8,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 280,
+        "BasicDamage": 12.1,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 4,
+        "Durability": 8,
+        "Mobility": 5
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Fungal_Hero.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Ranged burst",
+          "DamageType": "Ability",
+          "BaseDamage": 20,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Ranged",
+            "Ability"
+          ]
+        },
+        {
+          "AbilityId": "Fungal_Hero.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Blink or reposition",
+          "DamageType": "Ability",
+          "BaseDamage": 15,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Blink"
+          ]
+        }
+      ],
+      "DefenderAI": {
+        "WorkerRole": "None",
+        "AggroStyle": "Chase",
+        "LeashRadiusUU": 1200,
+        "PreferredRange": "Melee",
+        "UsesParagonAnimSet": false
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "Spiders.Worker",
+      "EntityKind": "Defender",
+      "ArchetypeId": "Fighter",
+      "FamilyId": "Spiders",
+      "Tier": "Worker",
+      "DisplayName": "Spiders Worker",
+      "MeshRef": "/Game/Monsters/Spiders/Argiope_v3",
+      "StatSource": "TierBaseline",
+      "ReferenceTier": "Fodder",
+      "Vitals": {
+        "MaxHealth": 18.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 280,
+        "BasicDamage": 0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [],
+      "DefenderAI": {
+        "WorkerRole": "None",
+        "AggroStyle": "Chase",
+        "LeashRadiusUU": 900,
+        "PreferredRange": "Melee",
+        "UsesParagonAnimSet": false
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "Spiders.Minion",
+      "EntityKind": "Defender",
+      "ArchetypeId": "Archer",
+      "FamilyId": "Spiders",
+      "Tier": "Minion",
+      "DisplayName": "Spiders Minion",
+      "MeshRef": "/Game/Monsters/Spiders/Blue_Tarantula_v3",
+      "StatSource": "TierBaseline",
+      "ReferenceTier": "Fodder",
+      "Vitals": {
+        "MaxHealth": 32.4,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 280,
+        "BasicDamage": 4.4,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Spiders_Minion.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Piercing shot",
+          "DamageType": "Ability",
+          "BaseDamage": 7,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Ranged",
+            "Line"
+          ]
+        }
+      ],
+      "DefenderAI": {
+        "WorkerRole": "None",
+        "AggroStyle": "Chase",
+        "LeashRadiusUU": 900,
+        "PreferredRange": "Long",
+        "UsesParagonAnimSet": false
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "Spiders.Elite",
+      "EntityKind": "Defender",
+      "ArchetypeId": "Bruiser",
+      "FamilyId": "Spiders",
+      "Tier": "Elite",
+      "DisplayName": "Spiders Elite",
+      "MeshRef": "/Game/Monsters/Spiders/Karakurt",
+      "StatSource": "TierBaseline",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 280,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Spiders_Elite.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Heavy cleave",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "Cleave"
+          ]
+        },
+        {
+          "AbilityId": "Spiders_Elite.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Bull rush",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "Dash"
+          ]
+        }
+      ],
+      "DefenderAI": {
+        "WorkerRole": "None",
+        "AggroStyle": "Chase",
+        "LeashRadiusUU": 900,
+        "PreferredRange": "Melee",
+        "UsesParagonAnimSet": false
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "Spiders.Boss",
+      "EntityKind": "Defender",
+      "ArchetypeId": "Tank",
+      "FamilyId": "Spiders",
+      "Tier": "Boss",
+      "DisplayName": "Spiders Boss",
+      "MeshRef": "/Game/Monsters/Spiders/Tarantula",
+      "StatSource": "TierBaseline",
+      "ReferenceTier": "Veteran",
+      "Vitals": {
+        "MaxHealth": 216.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 280,
+        "BasicDamage": 15.4,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 7,
+        "AbilityDamage": 2,
+        "Durability": 8,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Spiders_Boss.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Guard / damage soak taunt",
+          "DamageType": "Ability",
+          "BaseDamage": 25,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "AOE"
+          ]
+        },
+        {
+          "AbilityId": "Spiders_Boss.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Shield slam",
+          "DamageType": "Ability",
+          "BaseDamage": 20,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "AOE"
+          ]
+        }
+      ],
+      "DefenderAI": {
+        "WorkerRole": "None",
+        "AggroStyle": "Chase",
+        "LeashRadiusUU": 1200,
+        "PreferredRange": "Melee",
+        "UsesParagonAnimSet": false
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "Spiders.Hero",
+      "EntityKind": "Defender",
+      "ArchetypeId": "Archer",
+      "FamilyId": "Spiders",
+      "Tier": "Hero",
+      "DisplayName": "Peacock",
+      "MeshRef": "/Game/Monsters/Spiders/Peacock",
+      "StatSource": "HandTuned",
+      "ReferenceTier": "Veteran",
+      "Vitals": {
+        "MaxHealth": 82.8,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 280,
+        "BasicDamage": 12.1,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 4,
+        "Durability": 8,
+        "Mobility": 5
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Spiders_Hero.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Piercing shot",
+          "DamageType": "Ability",
+          "BaseDamage": 20,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Ranged",
+            "Line"
+          ]
+        },
+        {
+          "AbilityId": "Spiders_Hero.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Volley or marked target",
+          "DamageType": "Ability",
+          "BaseDamage": 15,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Ranged",
+            "AOE"
+          ]
+        }
+      ],
+      "DefenderAI": {
+        "WorkerRole": "None",
+        "AggroStyle": "Chase",
+        "LeashRadiusUU": 1200,
+        "PreferredRange": "Long",
+        "UsesParagonAnimSet": false
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "Undead.Worker",
+      "EntityKind": "Defender",
+      "ArchetypeId": "Fighter",
+      "FamilyId": "Undead",
+      "Tier": "Worker",
+      "DisplayName": "Undead Worker",
+      "MeshRef": "/Game/Monsters/Undead/Zombie",
+      "StatSource": "TierBaseline",
+      "ReferenceTier": "Fodder",
+      "Vitals": {
+        "MaxHealth": 18.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 280,
+        "BasicDamage": 0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [],
+      "DefenderAI": {
+        "WorkerRole": "Dig",
+        "AggroStyle": "Chase",
+        "LeashRadiusUU": 900,
+        "PreferredRange": "Melee",
+        "UsesParagonAnimSet": false
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "Undead.Minion",
+      "EntityKind": "Defender",
+      "ArchetypeId": "Fighter",
+      "FamilyId": "Undead",
+      "Tier": "Minion",
+      "DisplayName": "Undead Minion",
+      "MeshRef": "/Game/Monsters/Undead/skeleton_v1",
+      "StatSource": "TierBaseline",
+      "ReferenceTier": "Fodder",
+      "Vitals": {
+        "MaxHealth": 32.4,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 280,
+        "BasicDamage": 4.4,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Undead_Minion.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Combo strike",
+          "DamageType": "Ability",
+          "BaseDamage": 7,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee"
+          ]
+        }
+      ],
+      "DefenderAI": {
+        "WorkerRole": "None",
+        "AggroStyle": "Chase",
+        "LeashRadiusUU": 900,
+        "PreferredRange": "Melee",
+        "UsesParagonAnimSet": false
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "Undead.Elite",
+      "EntityKind": "Defender",
+      "ArchetypeId": "Bruiser",
+      "FamilyId": "Undead",
+      "Tier": "Elite",
+      "DisplayName": "Undead Elite",
+      "MeshRef": "/Game/Monsters/Undead/mummy_v1",
+      "StatSource": "TierBaseline",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 280,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Undead_Elite.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Heavy cleave",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "Cleave"
+          ]
+        },
+        {
+          "AbilityId": "Undead_Elite.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Bull rush",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "Dash"
+          ]
+        }
+      ],
+      "DefenderAI": {
+        "WorkerRole": "None",
+        "AggroStyle": "Chase",
+        "LeashRadiusUU": 900,
+        "PreferredRange": "Melee",
+        "UsesParagonAnimSet": false
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "Undead.Boss",
+      "EntityKind": "Defender",
+      "ArchetypeId": "Tank",
+      "FamilyId": "Undead",
+      "Tier": "Boss",
+      "DisplayName": "Undead Boss",
+      "MeshRef": "/Game/Monsters/Undead/litch_v1",
+      "StatSource": "TierBaseline",
+      "ReferenceTier": "Veteran",
+      "Vitals": {
+        "MaxHealth": 216.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 280,
+        "BasicDamage": 15.4,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 7,
+        "AbilityDamage": 2,
+        "Durability": 8,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Undead_Boss.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Guard / damage soak taunt",
+          "DamageType": "Ability",
+          "BaseDamage": 25,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "AOE"
+          ]
+        },
+        {
+          "AbilityId": "Undead_Boss.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Shield slam",
+          "DamageType": "Ability",
+          "BaseDamage": 20,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "AOE"
+          ]
+        }
+      ],
+      "DefenderAI": {
+        "WorkerRole": "None",
+        "AggroStyle": "Chase",
+        "LeashRadiusUU": 1200,
+        "PreferredRange": "Melee",
+        "UsesParagonAnimSet": false
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "Undead.Hero",
+      "EntityKind": "Defender",
+      "ArchetypeId": "Tank",
+      "FamilyId": "Undead",
+      "Tier": "Hero",
+      "DisplayName": "Sevarog",
+      "MeshRef": "/Game/Monsters/Undead/ParagonSevarog/Characters/Heroes/Sevarog/Meshes/Sevarog",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Veteran",
+      "Vitals": {
+        "MaxHealth": 95,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 280,
+        "BasicDamage": 12.1,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 20,
+        "AbilityDefense": 30
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 4,
+        "Durability": 8,
+        "Mobility": 5
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Undead_Hero.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Siphon",
+          "DamageType": "Ability",
+          "BaseDamage": 20,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "AOE"
+          ],
+          "ParagonAbilityKey": "Siphon"
+        },
+        {
+          "AbilityId": "Undead_Hero.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Subjugate",
+          "DamageType": "Ability",
+          "BaseDamage": 15,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "AOE",
+            "Root",
+            "Slow"
+          ],
+          "ParagonAbilityKey": "Subjugate"
+        }
+      ],
+      "DefenderAI": {
+        "WorkerRole": "None",
+        "AggroStyle": "Chase",
+        "LeashRadiusUU": 1200,
+        "PreferredRange": "Melee",
+        "UsesParagonAnimSet": true
+      },
+      "StartingKnowledgeTags": [],
+      "ParagonRef": "Sevarog"
+    },
+    {
+      "SheetId": "Mutants.Worker",
+      "EntityKind": "Defender",
+      "ArchetypeId": "Fighter",
+      "FamilyId": "Mutants",
+      "Tier": "Worker",
+      "DisplayName": "Mutants Worker",
+      "MeshRef": "/Game/Monsters/Mutants/mutant_worker_v2",
+      "StatSource": "TierBaseline",
+      "ReferenceTier": "Fodder",
+      "Vitals": {
+        "MaxHealth": 18.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 280,
+        "BasicDamage": 0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [],
+      "DefenderAI": {
+        "WorkerRole": "Both",
+        "AggroStyle": "Chase",
+        "LeashRadiusUU": 900,
+        "PreferredRange": "Melee",
+        "UsesParagonAnimSet": false
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "Mutants.Minion",
+      "EntityKind": "Defender",
+      "ArchetypeId": "Fighter",
+      "FamilyId": "Mutants",
+      "Tier": "Minion",
+      "DisplayName": "Mutants Minion",
+      "MeshRef": "/Game/Monsters/Mutants/Minion/Mutant_Minion_Unreal",
+      "StatSource": "TierBaseline",
+      "ReferenceTier": "Fodder",
+      "Vitals": {
+        "MaxHealth": 32.4,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 280,
+        "BasicDamage": 4.4,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Mutants_Minion.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Combo strike",
+          "DamageType": "Ability",
+          "BaseDamage": 7,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee"
+          ]
+        }
+      ],
+      "DefenderAI": {
+        "WorkerRole": "None",
+        "AggroStyle": "Chase",
+        "LeashRadiusUU": 900,
+        "PreferredRange": "Melee",
+        "UsesParagonAnimSet": false
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "Mutants.Elite",
+      "EntityKind": "Defender",
+      "ArchetypeId": "Bruiser",
+      "FamilyId": "Mutants",
+      "Tier": "Elite",
+      "DisplayName": "Mutants Elite",
+      "MeshRef": "/Game/Monsters/Mutants/mutant_worker_v2",
+      "StatSource": "TierBaseline",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 280,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Mutants_Elite.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Heavy cleave",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "Cleave"
+          ]
+        },
+        {
+          "AbilityId": "Mutants_Elite.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Bull rush",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "Dash"
+          ]
+        }
+      ],
+      "DefenderAI": {
+        "WorkerRole": "None",
+        "AggroStyle": "Chase",
+        "LeashRadiusUU": 900,
+        "PreferredRange": "Melee",
+        "UsesParagonAnimSet": false
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "Mutants.Boss",
+      "EntityKind": "Defender",
+      "ArchetypeId": "Tank",
+      "FamilyId": "Mutants",
+      "Tier": "Boss",
+      "DisplayName": "Mutants Boss",
+      "MeshRef": "/Game/Monsters/Mutants/Boss/Mutant_Boss",
+      "StatSource": "TierBaseline",
+      "ReferenceTier": "Veteran",
+      "Vitals": {
+        "MaxHealth": 216.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 280,
+        "BasicDamage": 15.4,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 7,
+        "AbilityDamage": 2,
+        "Durability": 8,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Mutants_Boss.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Guard / damage soak taunt",
+          "DamageType": "Ability",
+          "BaseDamage": 25,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "AOE"
+          ]
+        },
+        {
+          "AbilityId": "Mutants_Boss.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Shield slam",
+          "DamageType": "Ability",
+          "BaseDamage": 20,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "AOE"
+          ]
+        }
+      ],
+      "DefenderAI": {
+        "WorkerRole": "None",
+        "AggroStyle": "Chase",
+        "LeashRadiusUU": 1200,
+        "PreferredRange": "Melee",
+        "UsesParagonAnimSet": false
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "Mutants.Hero",
+      "EntityKind": "Defender",
+      "ArchetypeId": "Tank",
+      "FamilyId": "Mutants",
+      "Tier": "Hero",
+      "DisplayName": "Rampage",
+      "MeshRef": "/Game/ParagonRampage/Characters/Heroes/Rampage/Meshes/Rampage",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Veteran",
+      "Vitals": {
+        "MaxHealth": 82.8,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 280,
+        "BasicDamage": 12.1,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 4,
+        "Durability": 8,
+        "Mobility": 5
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Mutants_Hero.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Boulder Throw",
+          "DamageType": "Ability",
+          "BaseDamage": 20,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "AOE"
+          ],
+          "ParagonAbilityKey": "Boulder Throw"
+        },
+        {
+          "AbilityId": "Mutants_Hero.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Rumble",
+          "DamageType": "Ability",
+          "BaseDamage": 15,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "AOE"
+          ],
+          "ParagonAbilityKey": "Rumble"
+        }
+      ],
+      "DefenderAI": {
+        "WorkerRole": "None",
+        "AggroStyle": "Chase",
+        "LeashRadiusUU": 1200,
+        "PreferredRange": "Melee",
+        "UsesParagonAnimSet": true
+      },
+      "StartingKnowledgeTags": [],
+      "ParagonRef": "Rampage"
+    },
+    {
+      "SheetId": "Invader.Wanderer.Common",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Wanderer",
+      "DisplayName": "Wanderer",
+      "MeshRef": "",
+      "InvaderLine": "Common",
+      "StatSource": "HandTuned",
+      "ReferenceTier": "Fodder",
+      "Vitals": {
+        "MaxHealth": 28.8,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 4.4,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Wanderer_Common.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Opportunist strike",
+          "DamageType": "Ability",
+          "BaseDamage": 7,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "Dash"
+          ]
+        },
+        {
+          "AbilityId": "Invader_Wanderer_Common.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Short sprint",
+          "DamageType": "Ability",
+          "BaseDamage": 6,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Dash"
+          ]
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.2,
+        "CohesionBias": 0.0,
+        "FollowerWeight": 0.35,
+        "HelperWeight": 0.45,
+        "ScoutRating": 0.15,
+        "LootGreed": 0.65
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "Invader.Thief.Common",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Thief",
+      "DisplayName": "Thief",
+      "MeshRef": "",
+      "InvaderLine": "Common",
+      "StatSource": "HandTuned",
+      "ReferenceTier": "Fodder",
+      "Vitals": {
+        "MaxHealth": 28.8,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 300,
+        "BasicDamage": 4.4,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Thief_Common.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Lockpick",
+          "DamageType": "None",
+          "BaseDamage": 0,
+          "CooldownSec": 8,
+          "RangeUU": 150,
+          "EffectTags": [
+            "PickLock"
+          ]
+        },
+        {
+          "AbilityId": "Invader_Thief_Common.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Smoke vanish",
+          "DamageType": "None",
+          "BaseDamage": 0,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Blink"
+          ]
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": true,
+        "CanClimbWalls": true,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.75,
+        "CohesionBias": -0.25,
+        "FollowerWeight": 0.1,
+        "HelperWeight": 0.3,
+        "ScoutRating": 0.7,
+        "LootGreed": 0.55
+      },
+      "StartingKnowledgeTags": [
+        "Knows_MimicRisk"
+      ]
+    },
+    {
+      "SheetId": "Invader.HeroicWarrior.Common",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Hero",
+      "DisplayName": "Heroic Warrior",
+      "MeshRef": "/Game/Invaders/HeroicWarrior/SM_HeroicWarrior",
+      "InvaderLine": "Common",
+      "StatSource": "HandTuned",
+      "ReferenceTier": "Fodder",
+      "Vitals": {
+        "MaxHealth": 28.8,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 4.4,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_HeroicWarrior_Common.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Power cleave",
+          "DamageType": "Ability",
+          "BaseDamage": 7,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "AOE"
+          ]
+        },
+        {
+          "AbilityId": "Invader_HeroicWarrior_Common.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Battle shout",
+          "DamageType": "Ability",
+          "BaseDamage": 6,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "BuffAura"
+          ]
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.35,
+        "CohesionBias": 0.2,
+        "FollowerWeight": 0.45,
+        "HelperWeight": 0.6,
+        "ScoutRating": 0.25,
+        "LootGreed": 0.5
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "Invader.DwarfFighter.Common",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Fighter",
+      "DisplayName": "Dwarf Fighter",
+      "MeshRef": "/Game/Invaders/Dwarf/Dwarf_Fighter",
+      "InvaderLine": "Common",
+      "StatSource": "HandTuned",
+      "ReferenceTier": "Fodder",
+      "Vitals": {
+        "MaxHealth": 28.8,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 4.4,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_DwarfFighter_Common.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Combo strike",
+          "DamageType": "Ability",
+          "BaseDamage": 7,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee"
+          ]
+        },
+        {
+          "AbilityId": "Invader_DwarfFighter_Common.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Brace",
+          "DamageType": "Ability",
+          "BaseDamage": 6,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee"
+          ]
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.35,
+        "CohesionBias": 0.2,
+        "FollowerWeight": 0.45,
+        "HelperWeight": 0.6,
+        "ScoutRating": 0.25,
+        "LootGreed": 0.5
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "Invader.ElfArcher.Common",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Archer",
+      "DisplayName": "Elf Bowman",
+      "MeshRef": "/Game/Invaders/Elf-Archer/Elf_Archer",
+      "InvaderLine": "Common",
+      "StatSource": "HandTuned",
+      "ReferenceTier": "Fodder",
+      "Vitals": {
+        "MaxHealth": 28.8,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 4.4,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_ElfArcher_Common.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Piercing shot",
+          "DamageType": "Ability",
+          "BaseDamage": 7,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Ranged",
+            "Line"
+          ]
+        },
+        {
+          "AbilityId": "Invader_ElfArcher_Common.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Volley or marked target",
+          "DamageType": "Ability",
+          "BaseDamage": 6,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Ranged",
+            "AOE"
+          ]
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.6,
+        "CohesionBias": -0.1,
+        "FollowerWeight": 0.25,
+        "HelperWeight": 0.4,
+        "ScoutRating": 0.4,
+        "LootGreed": 0.3
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "Invader.Thelma.Common",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Fighter",
+      "DisplayName": "Thelma",
+      "MeshRef": "/Game/Invaders/Thelma/Invader_Thelma",
+      "InvaderLine": "Common",
+      "StatSource": "HandTuned",
+      "ReferenceTier": "Fodder",
+      "Vitals": {
+        "MaxHealth": 28.8,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 4.4,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Thelma_Common.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Combo strike",
+          "DamageType": "Ability",
+          "BaseDamage": 7,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee"
+          ]
+        },
+        {
+          "AbilityId": "Invader_Thelma_Common.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Brace",
+          "DamageType": "Ability",
+          "BaseDamage": 6,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee"
+          ]
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.35,
+        "CohesionBias": 0.2,
+        "FollowerWeight": 0.45,
+        "HelperWeight": 0.6,
+        "ScoutRating": 0.25,
+        "LootGreed": 0.5
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "Invader.Wizard.Common",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Mage",
+      "DisplayName": "Wizard",
+      "MeshRef": "/Game/Invaders/Wizard/Invader_Wizard_Unreal",
+      "InvaderLine": "Common",
+      "StatSource": "HandTuned",
+      "ReferenceTier": "Fodder",
+      "Vitals": {
+        "MaxHealth": 28.8,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 4.4,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Wizard_Common.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Ranged burst",
+          "DamageType": "Ability",
+          "BaseDamage": 7,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Ranged",
+            "Ability"
+          ]
+        },
+        {
+          "AbilityId": "Invader_Wizard_Common.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Blink or reposition",
+          "DamageType": "Ability",
+          "BaseDamage": 6,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Blink"
+          ]
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.6,
+        "CohesionBias": -0.1,
+        "FollowerWeight": 0.25,
+        "HelperWeight": 0.4,
+        "ScoutRating": 0.4,
+        "LootGreed": 0.3
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "Invader.ElfMage.Common",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Mage",
+      "DisplayName": "Elf Mage",
+      "MeshRef": "/Game/Invaders/Elf-Mage/Elf_Mage",
+      "InvaderLine": "Common",
+      "StatSource": "HandTuned",
+      "ReferenceTier": "Fodder",
+      "Vitals": {
+        "MaxHealth": 28.8,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 4.4,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_ElfMage_Common.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Ranged burst",
+          "DamageType": "Ability",
+          "BaseDamage": 7,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Ranged",
+            "Ability"
+          ]
+        },
+        {
+          "AbilityId": "Invader_ElfMage_Common.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Blink or reposition",
+          "DamageType": "Ability",
+          "BaseDamage": 6,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Blink"
+          ]
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.6,
+        "CohesionBias": -0.1,
+        "FollowerWeight": 0.25,
+        "HelperWeight": 0.4,
+        "ScoutRating": 0.4,
+        "LootGreed": 0.3
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "Invader.Paladin.Common",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Tank",
+      "DisplayName": "Paladin",
+      "MeshRef": "/Game/Invaders/Paladin/Paladin",
+      "InvaderLine": "Common",
+      "StatSource": "HandTuned",
+      "ReferenceTier": "Fodder",
+      "Vitals": {
+        "MaxHealth": 28.8,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 4.4,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Paladin_Common.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Guard / damage soak taunt",
+          "DamageType": "Ability",
+          "BaseDamage": 7,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "AOE"
+          ]
+        },
+        {
+          "AbilityId": "Invader_Paladin_Common.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Shield slam",
+          "DamageType": "Ability",
+          "BaseDamage": 6,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "AOE"
+          ]
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.3,
+        "CohesionBias": 0.3,
+        "FollowerWeight": 0.55,
+        "HelperWeight": 0.7,
+        "ScoutRating": 0.2,
+        "LootGreed": 0.35
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "Invader.GothicKnight.Common",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Bruiser",
+      "DisplayName": "Gothic Knight",
+      "MeshRef": "/Game/Invaders/GKnight/Meshes/SK_GothicKnight_VA",
+      "InvaderLine": "Common",
+      "StatSource": "HandTuned",
+      "ReferenceTier": "Fodder",
+      "Vitals": {
+        "MaxHealth": 28.8,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 4.4,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_GothicKnight_Common.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Heavy cleave",
+          "DamageType": "Ability",
+          "BaseDamage": 7,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "Cleave"
+          ]
+        },
+        {
+          "AbilityId": "Invader_GothicKnight_Common.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Bull rush",
+          "DamageType": "Ability",
+          "BaseDamage": 6,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "Dash"
+          ]
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.3,
+        "CohesionBias": 0.3,
+        "FollowerWeight": 0.55,
+        "HelperWeight": 0.7,
+        "ScoutRating": 0.2,
+        "LootGreed": 0.35
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "Invader.Champion.Terra",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Champion",
+      "DisplayName": "Terra",
+      "MeshRef": "/Game/Invaders/ParagonTerra",
+      "InvaderLine": "Paragon",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Veteran",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Champion_Terra.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Ruthless Assault",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "AOE"
+          ],
+          "ParagonAbilityKey": "Ruthless Assault"
+        },
+        {
+          "AbilityId": "Invader_Champion_Terra.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Deafening Command",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Slow",
+            "Ability"
+          ],
+          "ParagonAbilityKey": "Deafening Command"
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.35,
+        "CohesionBias": 0.2,
+        "FollowerWeight": 0.45,
+        "HelperWeight": 0.6,
+        "ScoutRating": 0.25,
+        "LootGreed": 0.5
+      },
+      "StartingKnowledgeTags": [],
+      "ParagonRef": "Terra"
+    },
+    {
+      "SheetId": "Invader.Tank.Greystone",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Tank",
+      "DisplayName": "Greystone",
+      "MeshRef": "/Game/Invaders/ParagonGreystone",
+      "InvaderLine": "Paragon",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Veteran",
+      "Vitals": {
+        "MaxHealth": 85,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 15,
+        "AbilityDefense": 30
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Tank_Greystone.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Make Way",
+          "DamageType": "Ability",
+          "BaseDamage": 50,
+          "CooldownSec": 13,
+          "RangeUU": 0,
+          "EffectTags": [
+            "AOE",
+            "Melee"
+          ],
+          "ParagonAbilityKey": "Make Way"
+        },
+        {
+          "AbilityId": "Invader_Tank_Greystone.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Assault the Gates",
+          "DamageType": "Ability",
+          "BaseDamage": 36,
+          "CooldownSec": 10,
+          "RangeUU": 450,
+          "EffectTags": [
+            "Dash",
+            "Melee",
+            "AOE"
+          ],
+          "ParagonAbilityKey": "Assault the Gates"
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.3,
+        "CohesionBias": 0.3,
+        "FollowerWeight": 0.55,
+        "HelperWeight": 0.7,
+        "ScoutRating": 0.2,
+        "LootGreed": 0.35
+      },
+      "StartingKnowledgeTags": [],
+      "ParagonRef": "Greystone"
+    },
+    {
+      "SheetId": "Invader.Tank.Rampage",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Tank",
+      "DisplayName": "Rampage",
+      "MeshRef": "/Game/ParagonRampage/Characters/Heroes/Rampage/Meshes/Rampage",
+      "InvaderLine": "Paragon",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Veteran",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Tank_Rampage.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Boulder Throw",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee"
+          ],
+          "ParagonAbilityKey": "Boulder Throw"
+        },
+        {
+          "AbilityId": "Invader_Tank_Rampage.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Rumble",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "AOE",
+            "Ability"
+          ],
+          "ParagonAbilityKey": "Rumble"
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.3,
+        "CohesionBias": 0.3,
+        "FollowerWeight": 0.55,
+        "HelperWeight": 0.7,
+        "ScoutRating": 0.2,
+        "LootGreed": 0.35
+      },
+      "StartingKnowledgeTags": [],
+      "ParagonRef": "Rampage"
+    },
+    {
+      "SheetId": "Invader.Bruiser.Kwang",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Bruiser",
+      "DisplayName": "Kwang",
+      "MeshRef": "/Game/Invaders/ParagonKwang",
+      "InvaderLine": "Paragon",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Bruiser_Kwang.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Judgement of the Heavens",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee"
+          ],
+          "ParagonAbilityKey": "Judgement of the Heavens"
+        },
+        {
+          "AbilityId": "Invader_Bruiser_Kwang.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Light of the Heavens",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "AOE",
+            "Ability"
+          ],
+          "ParagonAbilityKey": "Light of the Heavens"
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.3,
+        "CohesionBias": 0.3,
+        "FollowerWeight": 0.55,
+        "HelperWeight": 0.7,
+        "ScoutRating": 0.2,
+        "LootGreed": 0.35
+      },
+      "StartingKnowledgeTags": [],
+      "ParagonRef": "Kwang"
+    },
+    {
+      "SheetId": "Invader.Mage.Phase",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Mage",
+      "DisplayName": "Phase",
+      "MeshRef": "/Game/Invaders/ParagonPhase",
+      "InvaderLine": "Paragon",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Mage_Phase.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Psychic Flare",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Ranged"
+          ],
+          "ParagonAbilityKey": "Psychic Flare"
+        },
+        {
+          "AbilityId": "Invader_Mage_Phase.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Energy Lance",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Root",
+            "Ability"
+          ],
+          "ParagonAbilityKey": "Energy Lance"
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.6,
+        "CohesionBias": -0.1,
+        "FollowerWeight": 0.25,
+        "HelperWeight": 0.4,
+        "ScoutRating": 0.4,
+        "LootGreed": 0.3
+      },
+      "StartingKnowledgeTags": [],
+      "ParagonRef": "Phase"
+    },
+    {
+      "SheetId": "Invader.Mage.Aurora",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Mage",
+      "DisplayName": "Aurora",
+      "MeshRef": "/Game/Invaders/ParagonAurora",
+      "InvaderLine": "Paragon",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Mage_Aurora.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Glacial Charge",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Blink"
+          ],
+          "ParagonAbilityKey": "Glacial Charge"
+        },
+        {
+          "AbilityId": "Invader_Mage_Aurora.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Hoarfrost",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Root",
+            "Ability"
+          ],
+          "ParagonAbilityKey": "Hoarfrost"
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.6,
+        "CohesionBias": -0.1,
+        "FollowerWeight": 0.25,
+        "HelperWeight": 0.4,
+        "ScoutRating": 0.4,
+        "LootGreed": 0.3
+      },
+      "StartingKnowledgeTags": [],
+      "ParagonRef": "Aurora"
+    },
+    {
+      "SheetId": "Invader.Archer.Sparrow",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Archer",
+      "DisplayName": "Sparrow",
+      "MeshRef": "/Game/Invaders/ParagonSparrow",
+      "InvaderLine": "Paragon",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Archer_Sparrow.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Hail of Arrows",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "AOE"
+          ],
+          "ParagonAbilityKey": "Hail of Arrows"
+        },
+        {
+          "AbilityId": "Invader_Archer_Sparrow.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Piercing Shot",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Line",
+            "Ability"
+          ],
+          "ParagonAbilityKey": "Piercing Shot"
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.6,
+        "CohesionBias": -0.1,
+        "FollowerWeight": 0.25,
+        "HelperWeight": 0.4,
+        "ScoutRating": 0.4,
+        "LootGreed": 0.3
+      },
+      "StartingKnowledgeTags": [],
+      "ParagonRef": "Sparrow"
+    },
+    {
+      "SheetId": "Invader.Cleric.Zinx",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Cleric",
+      "DisplayName": "Zinx",
+      "MeshRef": "/Game/Invaders/ParagonZinx",
+      "InvaderLine": "Paragon",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Cleric_Zinx.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Bad Medicine",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Slow"
+          ],
+          "ParagonAbilityKey": "Bad Medicine"
+        },
+        {
+          "AbilityId": "Invader_Cleric_Zinx.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Ricochet Stun",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Stun",
+            "Ability"
+          ],
+          "ParagonAbilityKey": "Ricochet Stun"
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.4,
+        "CohesionBias": 0.5,
+        "FollowerWeight": 0.65,
+        "HelperWeight": 0.85,
+        "ScoutRating": 0.3,
+        "LootGreed": 0.25
+      },
+      "StartingKnowledgeTags": [],
+      "ParagonRef": "Zinx"
+    },
+    {
+      "SheetId": "Invader.Champion.WarriorQueen",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Champion",
+      "DisplayName": "Warrior Queen",
+      "MeshRef": "",
+      "InvaderLine": "Common",
+      "StatSource": "HandTuned",
+      "ReferenceTier": "Fodder",
+      "Vitals": {
+        "MaxHealth": 28.8,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 4.4,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Champion_WarriorQueen.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Charged slam",
+          "DamageType": "Ability",
+          "BaseDamage": 7,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "AOE"
+          ]
+        },
+        {
+          "AbilityId": "Invader_Champion_WarriorQueen.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Zone control (slow/root)",
+          "DamageType": "Ability",
+          "BaseDamage": 6,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Slow"
+          ]
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.35,
+        "CohesionBias": 0.2,
+        "FollowerWeight": 0.45,
+        "HelperWeight": 0.6,
+        "ScoutRating": 0.25,
+        "LootGreed": 0.5
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "Invader.Cleric.FireflySlot",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Cleric",
+      "DisplayName": "Firefly Cleric",
+      "MeshRef": "",
+      "InvaderLine": "Common",
+      "StatSource": "HandTuned",
+      "ReferenceTier": "Fodder",
+      "Vitals": {
+        "MaxHealth": 28.8,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 4.4,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Cleric_FireflySlot.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Heal pulse",
+          "DamageType": "Ability",
+          "BaseDamage": 7,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Heal"
+          ]
+        },
+        {
+          "AbilityId": "Invader_Cleric_FireflySlot.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Ward or cleanse",
+          "DamageType": "Ability",
+          "BaseDamage": 6,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Shield"
+          ]
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.4,
+        "CohesionBias": 0.5,
+        "FollowerWeight": 0.65,
+        "HelperWeight": 0.85,
+        "ScoutRating": 0.3,
+        "LootGreed": 0.25
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "Invader.Assassin.Countess",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Assassin",
+      "DisplayName": "Countess",
+      "MeshRef": "/Game/Invaders/ParagonCountess",
+      "InvaderLine": "Paragon",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 300,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Assassin_Countess.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Dark Tide",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee"
+          ],
+          "ParagonAbilityKey": "Dark Tide"
+        },
+        {
+          "AbilityId": "Invader_Assassin_Countess.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Shadow Slip",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Blink",
+            "Ability"
+          ],
+          "ParagonAbilityKey": "Shadow Slip"
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": true,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.45,
+        "CohesionBias": -0.1,
+        "FollowerWeight": 0.2,
+        "HelperWeight": 0.35,
+        "ScoutRating": 0.4,
+        "LootGreed": 0.35
+      },
+      "StartingKnowledgeTags": [
+        "Knows_MimicRisk"
+      ],
+      "ParagonRef": "Countess"
+    },
+    {
+      "SheetId": "Invader.Bruiser.Crunch",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Bruiser",
+      "DisplayName": "Crunch",
+      "MeshRef": "/Game/Invaders/ParagonCrunch",
+      "InvaderLine": "Paragon",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Bruiser_Crunch.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Left Crunch",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee"
+          ],
+          "ParagonAbilityKey": "Left Crunch"
+        },
+        {
+          "AbilityId": "Invader_Bruiser_Crunch.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Right Crunch",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "Ability"
+          ],
+          "ParagonAbilityKey": "Right Crunch"
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.3,
+        "CohesionBias": 0.3,
+        "FollowerWeight": 0.55,
+        "HelperWeight": 0.7,
+        "ScoutRating": 0.2,
+        "LootGreed": 0.35
+      },
+      "StartingKnowledgeTags": [],
+      "ParagonRef": "Crunch"
+    },
+    {
+      "SheetId": "Invader.Mage.Dekker",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Mage",
+      "DisplayName": "Dekker",
+      "MeshRef": "/Game/Invaders/ParagonDekker",
+      "InvaderLine": "Paragon",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Mage_Dekker.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Stasis Bomb",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Ranged"
+          ],
+          "ParagonAbilityKey": "Stasis Bomb"
+        },
+        {
+          "AbilityId": "Invader_Mage_Dekker.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Containment Fence",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Root",
+            "Ability"
+          ],
+          "ParagonAbilityKey": "Containment Fence"
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.6,
+        "CohesionBias": -0.1,
+        "FollowerWeight": 0.25,
+        "HelperWeight": 0.4,
+        "ScoutRating": 0.4,
+        "LootGreed": 0.3
+      },
+      "StartingKnowledgeTags": [],
+      "ParagonRef": "Dekker"
+    },
+    {
+      "SheetId": "Invader.Archer.Drongo",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Archer",
+      "DisplayName": "Drongo",
+      "MeshRef": "/Game/Invaders/ParagonDrongo",
+      "InvaderLine": "Paragon",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Archer_Drongo.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Rad Rounds",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Ranged"
+          ],
+          "ParagonAbilityKey": "Rad Rounds"
+        },
+        {
+          "AbilityId": "Invader_Archer_Drongo.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Guttler",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "Ability"
+          ],
+          "ParagonAbilityKey": "Guttler"
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.6,
+        "CohesionBias": -0.1,
+        "FollowerWeight": 0.25,
+        "HelperWeight": 0.4,
+        "ScoutRating": 0.4,
+        "LootGreed": 0.3
+      },
+      "StartingKnowledgeTags": [],
+      "ParagonRef": "Drongo"
+    },
+    {
+      "SheetId": "Invader.Bruiser.FengMao",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Bruiser",
+      "DisplayName": "Feng Mao",
+      "MeshRef": "/Game/Invaders/ParagonFengMao",
+      "InvaderLine": "Paragon",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Bruiser_FengMao.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Hamstring",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee"
+          ],
+          "ParagonAbilityKey": "Hamstring"
+        },
+        {
+          "AbilityId": "Invader_Bruiser_FengMao.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Precision Strike",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "Ability"
+          ],
+          "ParagonAbilityKey": "Precision Strike"
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.3,
+        "CohesionBias": 0.3,
+        "FollowerWeight": 0.55,
+        "HelperWeight": 0.7,
+        "ScoutRating": 0.2,
+        "LootGreed": 0.35
+      },
+      "StartingKnowledgeTags": [],
+      "ParagonRef": "Feng Mao"
+    },
+    {
+      "SheetId": "Invader.Mage.Gadget",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Mage",
+      "DisplayName": "Gadget",
+      "MeshRef": "/Game/Invaders/ParagonGadget",
+      "InvaderLine": "Paragon",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Mage_Gadget.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Sticky Mine",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Ranged"
+          ],
+          "ParagonAbilityKey": "Sticky Mine"
+        },
+        {
+          "AbilityId": "Invader_Mage_Gadget.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Seek & Destroy",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Ranged",
+            "Ability"
+          ],
+          "ParagonAbilityKey": "Seek & Destroy"
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.6,
+        "CohesionBias": -0.1,
+        "FollowerWeight": 0.25,
+        "HelperWeight": 0.4,
+        "ScoutRating": 0.4,
+        "LootGreed": 0.3
+      },
+      "StartingKnowledgeTags": [],
+      "ParagonRef": "Gadget"
+    },
+    {
+      "SheetId": "Invader.Mage.Gideon",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Mage",
+      "DisplayName": "Gideon",
+      "MeshRef": "/Game/Invaders/ParagonGideon",
+      "InvaderLine": "Paragon",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Mage_Gideon.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Cosmic Rift",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Ranged"
+          ],
+          "ParagonAbilityKey": "Cosmic Rift"
+        },
+        {
+          "AbilityId": "Invader_Mage_Gideon.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Torn Space",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Blink",
+            "Ability"
+          ],
+          "ParagonAbilityKey": "Torn Space"
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.6,
+        "CohesionBias": -0.1,
+        "FollowerWeight": 0.25,
+        "HelperWeight": 0.4,
+        "ScoutRating": 0.4,
+        "LootGreed": 0.3
+      },
+      "StartingKnowledgeTags": [],
+      "ParagonRef": "Gideon"
+    },
+    {
+      "SheetId": "Invader.Mage.GRIMexe",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Mage",
+      "DisplayName": "GRIM.exe",
+      "MeshRef": "/Game/Invaders/ParagonGRIMexe",
+      "InvaderLine": "Paragon",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Mage_GRIMexe.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Deflect",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Shield"
+          ],
+          "ParagonAbilityKey": "Deflect"
+        },
+        {
+          "AbilityId": "Invader_Mage_GRIMexe.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "GTFO",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Blink",
+            "Ability"
+          ],
+          "ParagonAbilityKey": "GTFO"
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.6,
+        "CohesionBias": -0.1,
+        "FollowerWeight": 0.25,
+        "HelperWeight": 0.4,
+        "ScoutRating": 0.4,
+        "LootGreed": 0.3
+      },
+      "StartingKnowledgeTags": [],
+      "ParagonRef": "GRIM.exe"
+    },
+    {
+      "SheetId": "Invader.Mage.Howitzer",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Mage",
+      "DisplayName": "Howitzer",
+      "MeshRef": "/Game/Invaders/ParagonHowitzer",
+      "InvaderLine": "Paragon",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Mage_Howitzer.Primary",
+          "Slot": "Primary",
+          "DisplayName": "R2000 Missile",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Ranged"
+          ],
+          "ParagonAbilityKey": "R2000 Missile"
+        },
+        {
+          "AbilityId": "Invader_Mage_Howitzer.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Slow Grenades",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Slow",
+            "Ability"
+          ],
+          "ParagonAbilityKey": "Slow Grenades"
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.6,
+        "CohesionBias": -0.1,
+        "FollowerWeight": 0.25,
+        "HelperWeight": 0.4,
+        "ScoutRating": 0.4,
+        "LootGreed": 0.3
+      },
+      "StartingKnowledgeTags": [],
+      "ParagonRef": "Howitzer"
+    },
+    {
+      "SheetId": "Invader.Mage.IggyScorch",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Mage",
+      "DisplayName": "Iggy & Scorch",
+      "MeshRef": "/Game/Invaders/ParagonIggyScorch",
+      "InvaderLine": "Paragon",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Mage_IggyScorch.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Oil Spill",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Ranged"
+          ],
+          "ParagonAbilityKey": "Oil Spill"
+        },
+        {
+          "AbilityId": "Invader_Mage_IggyScorch.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Flame Turret",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "AOE",
+            "Ability"
+          ],
+          "ParagonAbilityKey": "Flame Turret"
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.6,
+        "CohesionBias": -0.1,
+        "FollowerWeight": 0.25,
+        "HelperWeight": 0.4,
+        "ScoutRating": 0.4,
+        "LootGreed": 0.3
+      },
+      "StartingKnowledgeTags": [],
+      "ParagonRef": "IggyScorch"
+    },
+    {
+      "SheetId": "Invader.Assassin.Kallari",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Assassin",
+      "DisplayName": "Kallari",
+      "MeshRef": "/Game/Invaders/ParagonKallari",
+      "InvaderLine": "Paragon",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 300,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Assassin_Kallari.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Slash",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee"
+          ],
+          "ParagonAbilityKey": "Slash"
+        },
+        {
+          "AbilityId": "Invader_Assassin_Kallari.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Backdash Blade",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Blink",
+            "Ability"
+          ],
+          "ParagonAbilityKey": "Backdash Blade"
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": true,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.45,
+        "CohesionBias": -0.1,
+        "FollowerWeight": 0.2,
+        "HelperWeight": 0.35,
+        "ScoutRating": 0.4,
+        "LootGreed": 0.35
+      },
+      "StartingKnowledgeTags": [
+        "Knows_MimicRisk"
+      ],
+      "ParagonRef": "Kallari"
+    },
+    {
+      "SheetId": "Invader.Bruiser.Khaimera",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Bruiser",
+      "DisplayName": "Khaimera",
+      "MeshRef": "/Game/Invaders/ParagonKhaimera",
+      "InvaderLine": "Paragon",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Bruiser_Khaimera.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Ambush",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee"
+          ],
+          "ParagonAbilityKey": "Ambush"
+        },
+        {
+          "AbilityId": "Invader_Bruiser_Khaimera.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Unleash",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "Ability"
+          ],
+          "ParagonAbilityKey": "Unleash"
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.3,
+        "CohesionBias": 0.3,
+        "FollowerWeight": 0.55,
+        "HelperWeight": 0.7,
+        "ScoutRating": 0.2,
+        "LootGreed": 0.35
+      },
+      "StartingKnowledgeTags": [],
+      "ParagonRef": "Khaimera"
+    },
+    {
+      "SheetId": "Invader.Mage.LtBelica",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Mage",
+      "DisplayName": "Lt. Belica",
+      "MeshRef": "/Game/Invaders/ParagonLtBelica",
+      "InvaderLine": "Paragon",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Mage_LtBelica.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Seismic Assault",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Ranged"
+          ],
+          "ParagonAbilityKey": "Seismic Assault"
+        },
+        {
+          "AbilityId": "Invader_Mage_LtBelica.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Void Bomb",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "AOE",
+            "Ability"
+          ],
+          "ParagonAbilityKey": "Void Bomb"
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.6,
+        "CohesionBias": -0.1,
+        "FollowerWeight": 0.25,
+        "HelperWeight": 0.4,
+        "ScoutRating": 0.4,
+        "LootGreed": 0.3
+      },
+      "StartingKnowledgeTags": [],
+      "ParagonRef": "LtBelica"
+    },
+    {
+      "SheetId": "Invader.Mage.Morigesh",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Mage",
+      "DisplayName": "Morigesh",
+      "MeshRef": "/Game/Invaders/ParagonMorigesh",
+      "InvaderLine": "Paragon",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Mage_Morigesh.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Mark",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Ranged"
+          ],
+          "ParagonAbilityKey": "Mark"
+        },
+        {
+          "AbilityId": "Invader_Mage_Morigesh.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Curse",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Slow",
+            "Ability"
+          ],
+          "ParagonAbilityKey": "Curse"
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.6,
+        "CohesionBias": -0.1,
+        "FollowerWeight": 0.25,
+        "HelperWeight": 0.4,
+        "ScoutRating": 0.4,
+        "LootGreed": 0.3
+      },
+      "StartingKnowledgeTags": [],
+      "ParagonRef": "Morigesh"
+    },
+    {
+      "SheetId": "Invader.Archer.Murdock",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Archer",
+      "DisplayName": "Murdock",
+      "MeshRef": "/Game/Invaders/ParagonMurdock",
+      "InvaderLine": "Paragon",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Archer_Murdock.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Static Shield",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Shield"
+          ],
+          "ParagonAbilityKey": "Static Shield"
+        },
+        {
+          "AbilityId": "Invader_Archer_Murdock.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Buckshot",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Ranged",
+            "Ability"
+          ],
+          "ParagonAbilityKey": "Buckshot"
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.6,
+        "CohesionBias": -0.1,
+        "FollowerWeight": 0.25,
+        "HelperWeight": 0.4,
+        "ScoutRating": 0.4,
+        "LootGreed": 0.3
+      },
+      "StartingKnowledgeTags": [],
+      "ParagonRef": "Murdock"
+    },
+    {
+      "SheetId": "Invader.Cleric.Muriel",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Cleric",
+      "DisplayName": "Muriel",
+      "MeshRef": "/Game/Invaders/ParagonMuriel",
+      "InvaderLine": "Paragon",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Cleric_Muriel.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Alacrity",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Heal"
+          ],
+          "ParagonAbilityKey": "Alacrity"
+        },
+        {
+          "AbilityId": "Invader_Cleric_Muriel.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Serenity",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Shield",
+            "Ability"
+          ],
+          "ParagonAbilityKey": "Serenity"
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.4,
+        "CohesionBias": 0.5,
+        "FollowerWeight": 0.65,
+        "HelperWeight": 0.85,
+        "ScoutRating": 0.3,
+        "LootGreed": 0.25
+      },
+      "StartingKnowledgeTags": [],
+      "ParagonRef": "Muriel"
+    },
+    {
+      "SheetId": "Invader.Assassin.Revenant",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Assassin",
+      "DisplayName": "Revenant",
+      "MeshRef": "/Game/Invaders/ParagonRevenant",
+      "InvaderLine": "Paragon",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 300,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Assassin_Revenant.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Scar",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Ranged"
+          ],
+          "ParagonAbilityKey": "Scar"
+        },
+        {
+          "AbilityId": "Invader_Assassin_Revenant.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Hellfire Rounds",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "Ability"
+          ],
+          "ParagonAbilityKey": "Hellfire Rounds"
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": true,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.45,
+        "CohesionBias": -0.1,
+        "FollowerWeight": 0.2,
+        "HelperWeight": 0.35,
+        "ScoutRating": 0.4,
+        "LootGreed": 0.35
+      },
+      "StartingKnowledgeTags": [
+        "Knows_MimicRisk"
+      ],
+      "ParagonRef": "Revenant"
+    },
+    {
+      "SheetId": "Invader.Tank.Riktor",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Tank",
+      "DisplayName": "Riktor",
+      "MeshRef": "/Game/Invaders/ParagonRiktor",
+      "InvaderLine": "Paragon",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Tank_Riktor.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Electrocute",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee"
+          ],
+          "ParagonAbilityKey": "Electrocute"
+        },
+        {
+          "AbilityId": "Invader_Tank_Riktor.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Blade Rush",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "Ability"
+          ],
+          "ParagonAbilityKey": "Blade Rush"
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.3,
+        "CohesionBias": 0.3,
+        "FollowerWeight": 0.55,
+        "HelperWeight": 0.7,
+        "ScoutRating": 0.2,
+        "LootGreed": 0.35
+      },
+      "StartingKnowledgeTags": [],
+      "ParagonRef": "Riktor"
+    },
+    {
+      "SheetId": "Invader.Assassin.Serath",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Assassin",
+      "DisplayName": "Serath",
+      "MeshRef": "/Game/Invaders/ParagonSerath",
+      "InvaderLine": "Paragon",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 300,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Assassin_Serath.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Blazing Seraph",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee"
+          ],
+          "ParagonAbilityKey": "Blazing Seraph"
+        },
+        {
+          "AbilityId": "Invader_Assassin_Serath.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Fatal Grace",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Execute",
+            "Ability"
+          ],
+          "ParagonAbilityKey": "Fatal Grace"
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": true,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.45,
+        "CohesionBias": -0.1,
+        "FollowerWeight": 0.2,
+        "HelperWeight": 0.35,
+        "ScoutRating": 0.4,
+        "LootGreed": 0.35
+      },
+      "StartingKnowledgeTags": [
+        "Knows_MimicRisk"
+      ],
+      "ParagonRef": "Serath"
+    },
+    {
+      "SheetId": "Invader.Assassin.Shinbi",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Assassin",
+      "DisplayName": "Shinbi",
+      "MeshRef": "/Game/Invaders/ParagonShinbi",
+      "InvaderLine": "Paragon",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 300,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Assassin_Shinbi.Primary",
+          "Slot": "Primary",
+          "DisplayName": "All-Kill",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee"
+          ],
+          "ParagonAbilityKey": "All-Kill"
+        },
+        {
+          "AbilityId": "Invader_Assassin_Shinbi.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Circle Net",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Root",
+            "Ability"
+          ],
+          "ParagonAbilityKey": "Circle Net"
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": true,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.45,
+        "CohesionBias": -0.1,
+        "FollowerWeight": 0.2,
+        "HelperWeight": 0.35,
+        "ScoutRating": 0.4,
+        "LootGreed": 0.35
+      },
+      "StartingKnowledgeTags": [
+        "Knows_MimicRisk"
+      ],
+      "ParagonRef": "Shinbi"
+    },
+    {
+      "SheetId": "Invader.Tank.Steel",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Tank",
+      "DisplayName": "Steel",
+      "MeshRef": "/Game/Invaders/ParagonSteel",
+      "InvaderLine": "Paragon",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Tank_Steel.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Shield Bash",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee"
+          ],
+          "ParagonAbilityKey": "Shield Bash"
+        },
+        {
+          "AbilityId": "Invader_Tank_Steel.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Bulwark",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Shield",
+            "Ability"
+          ],
+          "ParagonAbilityKey": "Bulwark"
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.3,
+        "CohesionBias": 0.3,
+        "FollowerWeight": 0.55,
+        "HelperWeight": 0.7,
+        "ScoutRating": 0.2,
+        "LootGreed": 0.35
+      },
+      "StartingKnowledgeTags": [],
+      "ParagonRef": "Steel"
+    },
+    {
+      "SheetId": "Invader.Archer.TwinBlast",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Archer",
+      "DisplayName": "TwinBlast",
+      "MeshRef": "/Game/Invaders/ParagonTwinBlast",
+      "InvaderLine": "Paragon",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Archer_TwinBlast.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Vaporize",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Ranged"
+          ],
+          "ParagonAbilityKey": "Vaporize"
+        },
+        {
+          "AbilityId": "Invader_Archer_TwinBlast.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Rocket Dash",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Dash"
+          ],
+          "ParagonAbilityKey": "Rocket Dash"
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.6,
+        "CohesionBias": -0.1,
+        "FollowerWeight": 0.25,
+        "HelperWeight": 0.4,
+        "ScoutRating": 0.4,
+        "LootGreed": 0.3
+      },
+      "StartingKnowledgeTags": [],
+      "ParagonRef": "TwinBlast"
+    },
+    {
+      "SheetId": "Invader.Bruiser.Wukong",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Bruiser",
+      "DisplayName": "Wukong",
+      "MeshRef": "/Game/Invaders/ParagonWukong",
+      "InvaderLine": "Paragon",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Bruiser_Wukong.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Tongue Lash",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee"
+          ],
+          "ParagonAbilityKey": "Tongue Lash"
+        },
+        {
+          "AbilityId": "Invader_Bruiser_Wukong.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Four-Fisted Fury",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "AOE",
+            "Ability"
+          ],
+          "ParagonAbilityKey": "Four-Fisted Fury"
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.3,
+        "CohesionBias": 0.3,
+        "FollowerWeight": 0.55,
+        "HelperWeight": 0.7,
+        "ScoutRating": 0.2,
+        "LootGreed": 0.35
+      },
+      "StartingKnowledgeTags": [],
+      "ParagonRef": "Wukong"
+    },
+    {
+      "SheetId": "Invader.Mage.Wraith",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Mage",
+      "DisplayName": "Wraith",
+      "MeshRef": "/Game/Invaders/ParagonWraith",
+      "InvaderLine": "Paragon",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 285,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Mage_Wraith.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Zap",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Ranged"
+          ],
+          "ParagonAbilityKey": "Zap"
+        },
+        {
+          "AbilityId": "Invader_Mage_Wraith.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Kinetic Pulse",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Ranged",
+            "Ability"
+          ],
+          "ParagonAbilityKey": "Kinetic Pulse"
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": false,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.6,
+        "CohesionBias": -0.1,
+        "FollowerWeight": 0.25,
+        "HelperWeight": 0.4,
+        "ScoutRating": 0.4,
+        "LootGreed": 0.3
+      },
+      "StartingKnowledgeTags": [],
+      "ParagonRef": "Wraith"
+    },
+    {
+      "SheetId": "Invader.Assassin.Yin",
+      "EntityKind": "Invader",
+      "ArchetypeId": "Assassin",
+      "DisplayName": "Yin",
+      "MeshRef": "/Game/Invaders/ParagonYin",
+      "InvaderLine": "Paragon",
+      "StatSource": "ParagonWiki",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 72.0,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 300,
+        "BasicDamage": 11.0,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 18,
+        "AbilityDefense": 14
+      },
+      "Ratings": {
+        "BasicDamage": 5,
+        "AbilityDamage": 2,
+        "Durability": 5,
+        "Mobility": 4
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Invader_Assassin_Yin.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Lash Kick",
+          "DamageType": "Ability",
+          "BaseDamage": 18,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee"
+          ],
+          "ParagonAbilityKey": "Lash Kick"
+        },
+        {
+          "AbilityId": "Invader_Assassin_Yin.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Backlash",
+          "DamageType": "Ability",
+          "BaseDamage": 14,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "Ability"
+          ],
+          "ParagonAbilityKey": "Backlash"
+        }
+      ],
+      "ExpeditionGear": {
+        "HasRope": false,
+        "RopeLengthUU": 0,
+        "HasLockpick": false,
+        "CanClimbWalls": true,
+        "HasSustainedFlight": false
+      },
+      "InvaderBehavior": {
+        "Caution": 0.45,
+        "CohesionBias": -0.1,
+        "FollowerWeight": 0.2,
+        "HelperWeight": 0.35,
+        "ScoutRating": 0.4,
+        "LootGreed": 0.35
+      },
+      "StartingKnowledgeTags": [
+        "Knows_MimicRisk"
+      ],
+      "ParagonRef": "Yin"
+    }
+  ]
+}
