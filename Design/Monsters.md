@@ -49,6 +49,23 @@ Skeletal mesh or primary rig per tier. `—` = tier not imported yet.
 | **Undead**       | `Undead/Zombie`                                     | `Undead/skeleton_v1`                       | `Undead/mummy_v1`                                         | `Undead/litch_v1`                                                 | **Sevarog** — `Undead/ParagonSevarog/Characters/Heroes/Sevarog/Meshes/Sevarog` |
 | **Mutants**      | `Mutants/mutant_worker_v2`                          | `Mutants/Minion/Mutant_Minion_Unreal`      | `Mutants/mutant_worker_v2`                                | `Mutants/Boss/Mutant_Boss`                                          | **Rampage** — `/Game/ParagonRampage/Characters/Heroes/Rampage/Meshes/Rampage` |
 
+## Monster tier gallery (review map)
+
+**Map:** `/Game/Maps/Dev/L_MonsterTierGallery` — PIE showcase for the **In UE** grid above (6 families × Worker → Hero). Outliner: `Gallery` → `Displays/{Orcs, EvilFairies, Fungal, Undead, Mutants, Spiders}`, plus `Gallery/Environment`, `Gallery/Lighting`. Per-tier foot labels on the displays.
+
+**Paragon on this map (Epic launcher — not duplicated into repo wholesale):**
+
+| Family | Hero column on map | Mount style |
+| --- | --- | --- |
+| **Orcs** | Narbash — `Monsters/Orcs/ParagonNarbash/.../Meshes/Narbash` | Paragon pack under **Monsters** tree (subset in project) |
+| **Evil Fairies** | Fey Opaline — `Monsters/EvilFairies/ParagonFey/.../Fey_Opaline` | Same |
+| **Undead** | Sevarog — `Monsters/Undead/ParagonSevarog/.../Meshes/Sevarog` | Same |
+| **Mutants** | Rampage — `/Game/ParagonRampage/Characters/Heroes/Rampage/Meshes/Rampage` | **Default Epic mount** — vault/launcher; not under `Content/Monsters/Mutants/` |
+
+**Custom heroes on map (non-Paragon):** Fungal Queen, Spiders Peacock. **Invader** Firefly / launcher lineup is on **`/Game/Maps/Dev/L_Store`** ([Invaders.md](./Invaders.md#in-ue-gameinvaders)) — not this map unless you merge galleries in-editor.
+
+**Doc sync for agents:** Inventory this level from **Unreal** (MCP or `.umap` `/Game/` string scan), not only `DungeonCore/Content/` on disk.
+
 **Orc Minion** (`Orc_Minion_Unreal`): Hi3D → CC → UE at `Orcs/Minion/Orc_Minion_Unreal`. Ref [Goblin-Minion.png](./Reference%20Images/Orcs/Goblin-Minion.png) — same stocky goblin-orc species as worker, **open brown leather vest** + **matching leather miner hat**, no torch. CC rig under `Orcs/Minion/Post_Process/`. **Supersedes** Fab `Orcs/MetaGoblin/MHC_MetaGoblin` (retain Fab pack until spawn refs retargeted).
 
 **Orc Minion (superseded Fab)** (`MHC_MetaGoblin`): Fab **MetaGoblin** under `Orcs/MetaGoblin/` — not tier pick; was prior grid minion.
@@ -117,11 +134,12 @@ Surface heroes — not dungeon families. **Full Epic Paragon hero catalog owned*
 | **Archer** | Paragon: **Sparrow** (`/Game/Invaders/ParagonSparrow`) | — |
 | **Dwarf Fighter** | `Invaders/Dwarf/Dwarf_Fighter` | Firefly party · [Invader-Dward_v2.png](./Reference%20Images/Invaders/Invader-Dward_v2.png) |
 | **Elf Bowman** | `Invaders/Elf-Archer/Elf_Archer` | Firefly party · [Invader-Elf.png](./Reference%20Images/Invaders/Invader-Elf.png) |
-| **Elf Mage** | — | Firefly ref / `Invader-Elf-Mage` pipeline — **not** in Content yet |
-| **Old Wizard** | `Invaders/Thelma/Invader_Thelma` | Firefly party (**Thelma**) |
+| **Fighter (Thelma)** | `Invaders/Thelma/Invader_Thelma` | Armored fighter — helm, axe; CC (folder name = character, not role) |
+| **Wizard** | `Invaders/Wizard/Invader_Wizard_Unreal` | Old staff-mage; Firefly / CC in UE |
+| **Elf Mage** | `Invaders/Elf-Mage/Elf_Mage` | Firefly / CC in UE (separate from bowman) |
 | **Female Human Cleric** | Paragon: **Zinx** (`/Game/Invaders/ParagonZinx`) | Zinx non-sci-fi skin = default Cleric unless art review fails |
 
-**Intruder party** (Common line): shared kit — charcoal wool, ivory linen, dark leather, brushed steel, muted navy trim. **In UE:** dwarf, elf archer, wizard Thelma ([Invaders.md](./Invaders.md#in-ue-gameinvaders)). Elf **mage** mesh still pending.
+**Intruder party** (Common line): shared kit — charcoal wool, ivory linen, dark leather, brushed steel, muted navy trim. **In UE:** all under `/Game/Invaders/` — dwarf, elf archer, elf mage, **Thelma** (fighter), **Wizard** (staff mage); lineup on **`/Game/Maps/Dev/L_MonsterTierGallery`** ([Invaders.md](./Invaders.md#in-ue-gameinvaders)). Cleric slot: **Zinx** or future Firefly cleric.
 
 **Knight / paladin (Fab + CC):** `Invaders/GKnight/` (**Gothic Knight** variants VA–VF); `Invaders/Paladin/Paladin` — CC import with art-pillar retexture; assign to Tank / Bruiser spawn templates.
 

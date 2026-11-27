@@ -6,6 +6,46 @@ Surface **adventurer parties** that raid the dungeon. Visual roster and Fab pick
 
 ## In UE (`/Game/Invaders/`)
 
+**Two layers (do not conflate):**
+
+| Layer | Meaning | How agents should inventory |
+| --- | --- | --- |
+| **Unreal `/Game/`** | Everything PIE and spawn code can use: Firefly/CC imports, **plus** Paragon heroes **added from the Epic launcher** (vault mount — **no** full pack copy into the repo). | Unreal MCP / Asset Registry, or **Copy Reference** from Content Browser. |
+| **`DungeonCore/Content/` on disk** | Physical `.uasset` files under the game (folder is **gitignored**). Matches **custom** invaders and **migrated** Paragon subsets only. | Shell `dir` — reliable for Dwarf, Wizard, Thelma, etc.; **not** a complete Paragon roster. |
+
+**Source of truth for paths:** `/Game/Invaders/...` as shown in UE. **Source of truth for “on disk in repo”:** only what lives under `DungeonCore/Content/`. Missing `Content/Invaders/ParagonBoris/` does **not** mean Boris is unused — launcher-mounted heroes can sit in the vault and still appear under `Invaders` in the browser. Full owned Paragon list: [Invaders-Paragons.md — Owned catalog](./Invaders-Paragons.md#owned-catalog-vs-in-project). Migrate/copy only when a hero needs a fixed shipped path ([asset-library-first](../.cursor/rules/asset-library-first.mdc) — subset migration, not duplicate entire vault).
+
+**Custom party (always on disk):** Dwarf, Elf-Archer, Elf-Mage, Thelma, Wizard, Paladin, GKnight, HeroicWarrior, Shared, … — mesh rows below mirror those folders.
+
+**Review maps (Unreal — not git):** Use these levels to see what is **placed** in the project. Agents: prefer Unreal MCP; if down, scan the level `.umap` for `/Game/...` path strings (launcher Paragon may exist in the browser but not appear until placed on a map).
+
+| Map | Purpose |
+| --- | --- |
+| **`/Game/Maps/Dev/L_Store`** | **Invader / store lineup** — Firefly party + Fab knights + Paragon invader subset on display (see table below). |
+| **`/Game/Maps/Dev/L_MonsterTierGallery`** | **Dungeon family tier gallery** — 6×5 Worker→Hero grid; Paragon **defender** heroes on Hero column ([Monsters.md — Monster tier gallery](./Monsters.md#monster-tier-gallery-review-map)). |
+
+**Placed on `L_Store` (level asset refs, 2025-11):** foot labels → primary mesh idle/display path.
+
+| Label | Mesh (representative) |
+| --- | --- |
+| `Label_Dwarf` | `/Game/Invaders/Dwarf/Dwarf_Fighter` |
+| `Label_ElfArcher` | `/Game/Invaders/Elf-Archer/Elf_Archer` |
+| `Label_ElfMage` | `/Game/Invaders/Elf-Mage/Elf_Mage` |
+| `Label_Thelma` | `/Game/Invaders/Thelma/Invader_Thelma` |
+| `Label_Wizard` | `/Game/Invaders/Wizard/Invader_Wizard_Unreal` |
+| `Label_Paladin` | `/Game/Invaders/Paladin/Paladin` |
+| `Label_GothicKnight` | `/Game/Invaders/GKnight/Meshes/SK_GothicKnight_VA` |
+| `Label_Terra` | `.../Invaders/ParagonTerra/.../Meshes/Terra` |
+| `Label_Greystone` | `.../ParagonGreystone/.../Meshes/Greystone` |
+| `Label_Kwang` | `.../ParagonKwang/.../Meshes/Kwang_GDC` |
+| `Label_Phase` | `.../ParagonPhase/.../Meshes/Phase_GDC` |
+| `Label_Aurora` | `.../ParagonAurora/.../Meshes/Aurora` |
+| `Label_Sparrow` | `.../ParagonSparrow/.../Meshes/Sparrow` |
+| `Label_Zinx` | `.../ParagonZinx/.../Meshes/Zinx` |
+| `Label_Gideon` | `.../ParagonGideon/.../Meshes/Gideon` |
+
+**Launcher-only Paragon** (e.g. **Boris**, **Crunch**, **Rampage** under `Invaders`, …) can show under `/Game/Invaders/` in Content Browser via Epic add **without** copying the pack into `DungeonCore/Content/`. They **won’t** appear in a `dir` of the repo; list them from UE or after you place them on a review map. Full owned roster: [Invaders-Paragons.md](./Invaders-Paragons.md#owned-catalog-vs-in-project).
+
 Primary **skeletal mesh** (or static mesh) per custom / Fab adventurer. `—` = not imported. Paragon paths also summarized in [Invaders-Paragons.md](./Invaders-Paragons.md#invader-roster-paragon-meshes). Pipeline: Hi3D / Firefly → CC → AccuRIG → UE unless noted.
 
 ### Firefly party (Common line)
@@ -16,8 +56,9 @@ Shared kit: charcoal wool, ivory linen, dark leather, brushed steel, muted navy 
 | --- | --- | --- | --- |
 | **Dwarf Fighter** | Fighter (+ tank bias in `ScoutDuo`) | `Dwarf/Dwarf_Fighter` | [Invader-Dward_v2.png](./Reference%20Images/Invaders/Invader-Dward_v2.png); `imports/hi3d/Invaders/Invader-Dwarf.ccProject` |
 | **Elf Bowman** | Scout / Archer | `Elf-Archer/Elf_Archer` | [Invader-Elf.png](./Reference%20Images/Invaders/Invader-Elf.png); `Invader-Elf-Archer.ccProject` |
-| **Old Wizard** (**Thelma**) | Mage | `Thelma/Invader_Thelma` | Firefly grey-robe wizard ref; `Invader_Thelma` FBX / CC export |
-| **Elf Mage** | Mage (party `GlassCannon` / `FrontBack`) | — | Pipeline WIP: `imports/hi3d/Invaders/Invader-Elf-Mage.*` — **not** in Content yet (archer is separate mesh) |
+| **Thelma** | Fighter (armored; helm + axe) | `Thelma/Invader_Thelma` | CC export — **character name**, not “wizard”; mesh gear = plate, helmet, axe |
+| **Wizard** | Mage (`GlassCannon` / `FrontBack`) | `Wizard/Invader_Wizard_Unreal` | Firefly staff-mage archetype; CC → UE |
+| **Elf Mage** | Mage (alt) | `Elf-Mage/Elf_Mage` | Separate mesh from bowman; CC in UE |
 | **Female Cleric** (optional party slot) | Cleric | — | Paragon **Zinx** or future Firefly cleric — see below |
 
 ### Fab / CC humanoids (Common line)
@@ -50,8 +91,9 @@ Mounted under `Invaders/Paragon*` (hero mesh + Epic anim sets). Use for **Parago
 | Template | Suggested Common meshes (when rigged) |
 | --- | --- |
 | `ScoutDuo` | `Dwarf_Fighter` + `Elf_Archer` |
-| `FrontBack` | `Dwarf_Fighter` or `Paladin` + `Invader_Thelma` or (later) `Elf_Mage` |
-| `Classic` | Tank slot: `Paladin` or `SK_GothicKnight_VA` + damage: `Elf_Archer` + support: `Invader_Thelma` or `Zinx` |
+| `FrontBack` | Front: `Dwarf_Fighter`, `Invader_Thelma`, or `Paladin` + back: `Invader_Wizard_Unreal` or `Elf_Mage` |
+| `Classic` | Front: `Paladin` or `SK_GothicKnight_VA` or `Dwarf_Fighter` / `Invader_Thelma` · damage: `Elf_Archer` · caster: `Invader_Wizard_Unreal` or `Elf_Mage` · heal: `Zinx` |
+| `FireflyFour` | `Dwarf_Fighter` + `Elf_Archer` + `Invader_Wizard_Unreal` + `Invader_Thelma` (cleric slot: **Zinx** or future Firefly cleric) |
 
 ## Goals
 
@@ -213,7 +255,7 @@ Sheets list **starting tags** only. Runtime union = `Unit.StartingTags ∪ Party
 | Mage | 0.6 | −0.1 | 0.25 | 0.4 | 0.4 | 0.30 | — |
 | Wanderer (fodder) | 0.2 | 0 | 0.35 | 0.45 | 0.15 | 0.65 | none |
 
-**Firefly party archetypes** (meshes in UE — see [In UE](#in-ue-gameinvaders)): `Dwarf_Fighter` → Fighter (tank-leaning); `Elf_Archer` → Scout / Archer; `Invader_Thelma` → Mage. **Elf Mage** when imported → Mage. **Paladin** / **Gothic Knight** → Tank or Bruiser per spawn template. **Zinx** → Cleric when Paragon line or mixed party.
+**Firefly party archetypes** (meshes in UE — see [In UE](#in-ue-gameinvaders)): `Dwarf_Fighter` → Fighter (tank-leaning); `Elf_Archer` → Scout / Archer; `Invader_Thelma` → Fighter (armor / helm / axe); `Invader_Wizard_Unreal` or `Elf_Mage` → Mage. **Paladin** / **Gothic Knight** → Tank or Bruiser per spawn template. **Zinx** → Cleric when Paragon line or mixed party.
 
 ## Learning, witnessing, and events
 

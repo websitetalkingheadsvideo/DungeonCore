@@ -140,6 +140,10 @@ Use Narendur’s sheet or side-by-side charts for assigned heroes without transc
 
 **Rule:** Wiki + spreadsheets cover **all 36** released heroes. **UE paths** exist only after pack migration ([asset-library-first](../.cursor/rules/asset-library-first.mdc) — copy heroes actually used, not the whole vault).
 
+### Inventory note (Unreal vs git)
+
+The **git repo** tracks design + pipeline; **`DungeonCore/Content/`** is gitignored and **incomplete** for Paragon. **Unreal** is authoritative: Content Browser + review maps **`L_MonsterTierGallery`** (defender Hero tiers) and **`L_Store`** (invader lineup). Epic launcher adds (Boris, Crunch, …) appear under `/Game/Invaders/Paragon*` **without** copying the full vault into the repo — see [Invaders.md — In UE](./Invaders.md#in-ue-gameinvaders).
+
 ### Currently in `/Game/` (assigned)
 
 | Hero | Dungeon Core seat | Typical mount |
