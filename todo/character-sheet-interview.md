@@ -20,8 +20,20 @@ One character at a time: agent asks → you answer → agent patches `Data/chara
 | 11 | `EvilFairies.Minion` | **done** |
 | 12 | `EvilFairies.Elite` | **done** |
 | 13 | `EvilFairies.Boss` | **done** |
-| 14 | `Fungal.Minion` | **in progress** |
-| 9+ | Defender tiers | pending |
+| 14 | `Fungal.Minion` | **done** |
+| 15 | `Fungal.Elite` | **done** |
+| 16 | `Fungal.Boss` | **done** |
+| 17 | `Spiders.Minion` | **done** |
+| 18 | `Spiders.Elite` | **done** |
+| 19 | `Spiders.Boss` | **done** |
+| 20 | `Undead.Minion` | **done** |
+| 21 | `Undead.Elite` | **done** |
+| 22 | `Undead.Boss` | **done** |
+| 23 | `Mutants.Minion` | **done** |
+| 24 | `Mutants.Elite` | **done** |
+| 25 | `Mutants.Boss` | **done** |
+| — | **Defender tier pass** | **complete** (6×5 + shared workers) |
+| next | Paragon / Common invaders (non-interviewed) | optional |
 
 ## Completed notes
 
@@ -99,3 +111,61 @@ One character at a time: agent asks → you answer → agent patches `Data/chara
 - **72 HP** (fae glass boss); INT **10** / WIS **9**.
 - **Stationary**, **Long**, **300 UU** leash; chase finishers below **25% HP**.
 - **`EvilFairies.Hero`** = **The Fey** (Paragon) — unchanged.
+
+### `Fungal.Minion` (Fungal Minion)
+
+- **Spore jab** + **Bloat rot**; **Standard** medium bruiser (52 HP, 8 basic).
+- INT/WIS **1**; chase + **HarassInvaders** (orc minion pattern).
+
+### `Fungal.Elite` — auto
+
+- **Spore cleave** + **Mycelium rush**; 70 HP bruiser; INT/WIS **1**; harass chase.
+
+### `Fungal.Boss` (Myconid Golem) — auto
+
+- **Spore bulwark** + **Golem slam**; **132 HP** tank; INT/WIS **1**; slow chase harass.
+- Fungal family complete except tier baselines if you revisit later.
+
+### `Spiders.Minion` (Spider Minion) — auto
+
+- **Venom shot** + **Entangling web**; agile glass (38 HP); INT/WIS **2**.
+- **Guard** / **Long**; harass + chase finishers below **35% HP** (Peacock family pattern).
+
+### `Spiders.Elite` — auto
+
+- **Archer** (not bruiser): **Venom burst** + **Pounce strike**; 54 HP; same ranged-guard AI.
+
+### `Spiders.Boss` (Brood Tarantula) — auto
+
+- **Web storm** + **Leg rend**; **96 HP**; room **Stationary** / **Long** / **300 UU** (Peacock-style).
+- Chase finishers below **25% HP**. **`Spiders.Hero`** = **Peacock** — unchanged.
+
+### `Undead.Minion` (Skeleton Soldier) — auto
+
+- **Bone slash** + **Rattle fear**; sturdy **50 HP**, slow; INT/WIS **1**; harass **Chase**.
+
+### `Undead.Elite` (Mummy)
+
+- **Shroud strike** + **Grave choke**; damage bruiser (62 HP, high ability dmg).
+- **Guard** corridor hold, **500 UU** leash; no roam/harass. INT/WIS **1**.
+
+### `Undead.Boss` (Litch)
+
+- **Mage** necromancy: **Soul drain** + **Death coil**; drain-tank (**108 HP**, light regen).
+- **Stationary** room boss, **Long**, **300 UU**; INT/WIS **9**. (AI defaulted — say if you want corridor Guard instead.)
+
+### `Mutants.Minion` (Mutant Minion)
+
+- **Rending claw** + **Frenzy howl**; chunky **54 HP** but low defenses (fragile berserker).
+- INT/WIS **1**; chase + harass.
+
+### `Mutants.Elite` (Mutant Elite)
+
+- **Fighter** — **Maw slam** + **Lurching charge**; elite **76 HP** chunky.
+- **`PackTactics: true`** (sheet hook for pack engage); harass chase. WIS **2** (pack sniff); INT **1**.
+
+### `Mutants.Boss` (Maw Titan)
+
+- **Tank**: **Devour** + **Ground pound**; **158 HP**, high defenses.
+- **Stationary** **300 UU**; **`PackTactics`** pack alpha. INT **2** / WIS **4**.
+- **`Mutants.Hero`** = **Rampage** (Paragon) — unchanged.

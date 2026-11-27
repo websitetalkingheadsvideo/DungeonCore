@@ -911,45 +911,65 @@
       "Tier": "Minion",
       "DisplayName": "Fungal Minion",
       "MeshRef": "/Game/Monsters/Fungal/Fungal_Minion",
-      "StatSource": "TierBaseline",
-      "ReferenceTier": "Fodder",
+      "StatSource": "HandTuned",
+      "ReferenceTier": "Standard",
       "Vitals": {
-        "MaxHealth": 32.4,
+        "MaxHealth": 52,
         "HealthRegenPerSec": 0,
         "MoveSpeed": 280,
-        "BasicDamage": 4.4,
+        "BasicDamage": 8,
         "AttackPeriod": 0.95,
-        "CleavePct": 0.15,
+        "CleavePct": 0.12,
         "BasicAffinity": "Physical",
-        "BasicDefense": 18,
-        "AbilityDefense": 14
+        "BasicDefense": 16,
+        "AbilityDefense": 13
       },
       "Ratings": {
         "BasicDamage": 5,
-        "AbilityDamage": 2,
-        "Durability": 5,
-        "Mobility": 4
+        "AbilityDamage": 4,
+        "Durability": 6,
+        "Mobility": 5,
+        "Intelligence": 1,
+        "Wisdom": 1
       },
       "Abilities": [
         {
           "AbilityId": "Fungal_Minion.Primary",
           "Slot": "Primary",
-          "DisplayName": "Combo strike",
+          "DisplayName": "Spore jab",
           "DamageType": "Ability",
-          "BaseDamage": 7,
+          "BaseDamage": 13,
           "CooldownSec": 8,
+          "RangeUU": 150,
+          "EffectTags": [
+            "Melee",
+            "Ranged",
+            "Slow"
+          ]
+        },
+        {
+          "AbilityId": "Fungal_Minion.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Bloat rot",
+          "DamageType": "Ability",
+          "BaseDamage": 10,
+          "CooldownSec": 13,
           "RangeUU": 0,
           "EffectTags": [
-            "Melee"
+            "Melee",
+            "Slow",
+            "AOE"
           ]
         }
       ],
       "DefenderAI": {
         "WorkerRole": "None",
         "AggroStyle": "Chase",
-        "LeashRadiusUU": 900,
+        "LeashRadiusUU": 1100,
         "PreferredRange": "Melee",
-        "UsesParagonAnimSet": false
+        "UsesParagonAnimSet": false,
+        "IntruderResponse": "Fight",
+        "HarassInvaders": true
       },
       "StartingKnowledgeTags": []
     },
@@ -961,59 +981,65 @@
       "Tier": "Elite",
       "DisplayName": "Fungal Elite",
       "MeshRef": "/Game/Monsters/Fungal/SK_FungiInfestedKnight",
-      "StatSource": "TierBaseline",
+      "StatSource": "HandTuned",
       "ReferenceTier": "Standard",
       "Vitals": {
-        "MaxHealth": 72.0,
+        "MaxHealth": 70,
         "HealthRegenPerSec": 0,
         "MoveSpeed": 280,
-        "BasicDamage": 11.0,
+        "BasicDamage": 10,
         "AttackPeriod": 0.95,
         "CleavePct": 0.15,
         "BasicAffinity": "Physical",
-        "BasicDefense": 18,
+        "BasicDefense": 17,
         "AbilityDefense": 14
       },
       "Ratings": {
-        "BasicDamage": 5,
-        "AbilityDamage": 2,
-        "Durability": 5,
-        "Mobility": 4
+        "BasicDamage": 6,
+        "AbilityDamage": 5,
+        "Durability": 6,
+        "Mobility": 5,
+        "Intelligence": 1,
+        "Wisdom": 1
       },
       "Abilities": [
         {
           "AbilityId": "Fungal_Elite.Primary",
           "Slot": "Primary",
-          "DisplayName": "Heavy cleave",
+          "DisplayName": "Spore cleave",
           "DamageType": "Ability",
-          "BaseDamage": 18,
+          "BaseDamage": 19,
           "CooldownSec": 8,
           "RangeUU": 0,
           "EffectTags": [
             "Melee",
-            "Cleave"
+            "Cleave",
+            "Slow"
           ]
         },
         {
           "AbilityId": "Fungal_Elite.Secondary",
           "Slot": "Secondary",
-          "DisplayName": "Bull rush",
+          "DisplayName": "Mycelium rush",
           "DamageType": "Ability",
-          "BaseDamage": 14,
-          "CooldownSec": 12,
-          "RangeUU": 0,
+          "BaseDamage": 15,
+          "CooldownSec": 11,
+          "RangeUU": 320,
           "EffectTags": [
             "Melee",
-            "Dash"
+            "Dash",
+            "Root"
           ]
         }
       ],
       "DefenderAI": {
         "WorkerRole": "None",
         "AggroStyle": "Chase",
-        "LeashRadiusUU": 900,
+        "LeashRadiusUU": 1000,
         "PreferredRange": "Melee",
-        "UsesParagonAnimSet": false
+        "UsesParagonAnimSet": false,
+        "IntruderResponse": "Fight",
+        "HarassInvaders": true
       },
       "StartingKnowledgeTags": []
     },
@@ -1023,61 +1049,67 @@
       "ArchetypeId": "Tank",
       "FamilyId": "Fungal",
       "Tier": "Boss",
-      "DisplayName": "Fungal Boss",
+      "DisplayName": "Myconid Golem",
       "MeshRef": "/Game/Monsters/Fungal/SK_FungalMyconidGolem",
-      "StatSource": "TierBaseline",
+      "StatSource": "HandTuned",
       "ReferenceTier": "Veteran",
       "Vitals": {
-        "MaxHealth": 216.0,
+        "MaxHealth": 132,
         "HealthRegenPerSec": 0,
-        "MoveSpeed": 280,
-        "BasicDamage": 15.4,
+        "MoveSpeed": 265,
+        "BasicDamage": 12,
         "AttackPeriod": 0.95,
-        "CleavePct": 0.15,
+        "CleavePct": 0.14,
         "BasicAffinity": "Physical",
-        "BasicDefense": 18,
-        "AbilityDefense": 14
+        "BasicDefense": 19,
+        "AbilityDefense": 16
       },
       "Ratings": {
-        "BasicDamage": 7,
-        "AbilityDamage": 2,
+        "BasicDamage": 6,
+        "AbilityDamage": 5,
         "Durability": 8,
-        "Mobility": 4
+        "Mobility": 3,
+        "Intelligence": 1,
+        "Wisdom": 1
       },
       "Abilities": [
         {
           "AbilityId": "Fungal_Boss.Primary",
           "Slot": "Primary",
-          "DisplayName": "Guard / damage soak taunt",
+          "DisplayName": "Spore bulwark",
           "DamageType": "Ability",
-          "BaseDamage": 25,
-          "CooldownSec": 8,
+          "BaseDamage": 20,
+          "CooldownSec": 10,
           "RangeUU": 0,
           "EffectTags": [
             "Melee",
-            "AOE"
+            "AOE",
+            "Slow"
           ]
         },
         {
           "AbilityId": "Fungal_Boss.Secondary",
           "Slot": "Secondary",
-          "DisplayName": "Shield slam",
+          "DisplayName": "Golem slam",
           "DamageType": "Ability",
-          "BaseDamage": 20,
-          "CooldownSec": 12,
+          "BaseDamage": 26,
+          "CooldownSec": 13,
           "RangeUU": 0,
           "EffectTags": [
             "Melee",
-            "AOE"
+            "AOE",
+            "Root"
           ]
         }
       ],
       "DefenderAI": {
         "WorkerRole": "None",
         "AggroStyle": "Chase",
-        "LeashRadiusUU": 1200,
+        "LeashRadiusUU": 900,
         "PreferredRange": "Melee",
-        "UsesParagonAnimSet": false
+        "UsesParagonAnimSet": false,
+        "IntruderResponse": "Fight",
+        "HarassInvaders": true
       },
       "StartingKnowledgeTags": []
     },
@@ -1222,100 +1254,126 @@
       "ArchetypeId": "Archer",
       "FamilyId": "Spiders",
       "Tier": "Minion",
-      "DisplayName": "Spiders Minion",
+      "DisplayName": "Spider Minion",
       "MeshRef": "/Game/Monsters/Spiders/Blue_Tarantula_v3",
-      "StatSource": "TierBaseline",
-      "ReferenceTier": "Fodder",
+      "StatSource": "HandTuned",
+      "ReferenceTier": "Standard",
       "Vitals": {
-        "MaxHealth": 32.4,
+        "MaxHealth": 38,
         "HealthRegenPerSec": 0,
-        "MoveSpeed": 280,
-        "BasicDamage": 4.4,
+        "MoveSpeed": 305,
+        "BasicDamage": 6,
         "AttackPeriod": 0.95,
-        "CleavePct": 0.15,
+        "CleavePct": 0.08,
         "BasicAffinity": "Physical",
-        "BasicDefense": 18,
+        "BasicDefense": 13,
         "AbilityDefense": 14
       },
       "Ratings": {
         "BasicDamage": 5,
-        "AbilityDamage": 2,
-        "Durability": 5,
-        "Mobility": 4
+        "AbilityDamage": 5,
+        "Durability": 4,
+        "Mobility": 7,
+        "Agility": 8,
+        "Intelligence": 2,
+        "Wisdom": 2
       },
       "Abilities": [
         {
           "AbilityId": "Spiders_Minion.Primary",
           "Slot": "Primary",
-          "DisplayName": "Piercing shot",
+          "DisplayName": "Venom shot",
           "DamageType": "Ability",
-          "BaseDamage": 7,
+          "BaseDamage": 12,
           "CooldownSec": 8,
-          "RangeUU": 0,
+          "RangeUU": 580,
           "EffectTags": [
             "Ranged",
-            "Line"
+            "Line",
+            "Slow"
+          ]
+        },
+        {
+          "AbilityId": "Spiders_Minion.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Entangling web",
+          "DamageType": "Ability",
+          "BaseDamage": 8,
+          "CooldownSec": 11,
+          "RangeUU": 500,
+          "EffectTags": [
+            "Ranged",
+            "Root",
+            "Slow"
           ]
         }
       ],
       "DefenderAI": {
         "WorkerRole": "None",
-        "AggroStyle": "Chase",
-        "LeashRadiusUU": 900,
+        "AggroStyle": "Guard",
+        "LeashRadiusUU": 950,
         "PreferredRange": "Long",
-        "UsesParagonAnimSet": false
+        "UsesParagonAnimSet": false,
+        "IntruderResponse": "Fight",
+        "HarassInvaders": true,
+        "ChaseInjuredTargetsOnly": true,
+        "InjuredTargetHpPct": 0.35
       },
       "StartingKnowledgeTags": []
     },
     {
       "SheetId": "Spiders.Elite",
       "EntityKind": "Defender",
-      "ArchetypeId": "Bruiser",
+      "ArchetypeId": "Archer",
       "FamilyId": "Spiders",
       "Tier": "Elite",
-      "DisplayName": "Spiders Elite",
+      "DisplayName": "Spider Elite",
       "MeshRef": "/Game/Monsters/Spiders/Karakurt",
-      "StatSource": "TierBaseline",
+      "StatSource": "HandTuned",
       "ReferenceTier": "Standard",
       "Vitals": {
-        "MaxHealth": 72.0,
+        "MaxHealth": 54,
         "HealthRegenPerSec": 0,
-        "MoveSpeed": 280,
-        "BasicDamage": 11.0,
+        "MoveSpeed": 302,
+        "BasicDamage": 8,
         "AttackPeriod": 0.95,
-        "CleavePct": 0.15,
+        "CleavePct": 0.1,
         "BasicAffinity": "Physical",
-        "BasicDefense": 18,
-        "AbilityDefense": 14
+        "BasicDefense": 15,
+        "AbilityDefense": 15
       },
       "Ratings": {
-        "BasicDamage": 5,
-        "AbilityDamage": 2,
+        "BasicDamage": 6,
+        "AbilityDamage": 6,
         "Durability": 5,
-        "Mobility": 4
+        "Mobility": 7,
+        "Agility": 8,
+        "Intelligence": 2,
+        "Wisdom": 2
       },
       "Abilities": [
         {
           "AbilityId": "Spiders_Elite.Primary",
           "Slot": "Primary",
-          "DisplayName": "Heavy cleave",
+          "DisplayName": "Venom burst",
           "DamageType": "Ability",
-          "BaseDamage": 18,
+          "BaseDamage": 17,
           "CooldownSec": 8,
-          "RangeUU": 0,
+          "RangeUU": 600,
           "EffectTags": [
-            "Melee",
-            "Cleave"
+            "Ranged",
+            "AOE",
+            "Slow"
           ]
         },
         {
           "AbilityId": "Spiders_Elite.Secondary",
           "Slot": "Secondary",
-          "DisplayName": "Bull rush",
+          "DisplayName": "Pounce strike",
           "DamageType": "Ability",
-          "BaseDamage": 14,
-          "CooldownSec": 12,
-          "RangeUU": 0,
+          "BaseDamage": 20,
+          "CooldownSec": 11,
+          "RangeUU": 380,
           "EffectTags": [
             "Melee",
             "Dash"
@@ -1324,74 +1382,88 @@
       ],
       "DefenderAI": {
         "WorkerRole": "None",
-        "AggroStyle": "Chase",
+        "AggroStyle": "Guard",
         "LeashRadiusUU": 900,
-        "PreferredRange": "Melee",
-        "UsesParagonAnimSet": false
+        "PreferredRange": "Long",
+        "UsesParagonAnimSet": false,
+        "IntruderResponse": "Fight",
+        "HarassInvaders": true,
+        "ChaseInjuredTargetsOnly": true,
+        "InjuredTargetHpPct": 0.35
       },
       "StartingKnowledgeTags": []
     },
     {
       "SheetId": "Spiders.Boss",
       "EntityKind": "Defender",
-      "ArchetypeId": "Tank",
+      "ArchetypeId": "Archer",
       "FamilyId": "Spiders",
       "Tier": "Boss",
-      "DisplayName": "Spiders Boss",
+      "DisplayName": "Brood Tarantula",
       "MeshRef": "/Game/Monsters/Spiders/Tarantula",
-      "StatSource": "TierBaseline",
+      "StatSource": "HandTuned",
       "ReferenceTier": "Veteran",
       "Vitals": {
-        "MaxHealth": 216.0,
+        "MaxHealth": 96,
         "HealthRegenPerSec": 0,
-        "MoveSpeed": 280,
-        "BasicDamage": 15.4,
+        "MoveSpeed": 278,
+        "BasicDamage": 10,
         "AttackPeriod": 0.95,
-        "CleavePct": 0.15,
+        "CleavePct": 0.12,
         "BasicAffinity": "Physical",
-        "BasicDefense": 18,
-        "AbilityDefense": 14
+        "BasicDefense": 17,
+        "AbilityDefense": 16
       },
       "Ratings": {
-        "BasicDamage": 7,
-        "AbilityDamage": 2,
-        "Durability": 8,
-        "Mobility": 4
+        "BasicDamage": 6,
+        "AbilityDamage": 7,
+        "Durability": 7,
+        "Mobility": 6,
+        "Agility": 7,
+        "Intelligence": 2,
+        "Wisdom": 2
       },
       "Abilities": [
         {
           "AbilityId": "Spiders_Boss.Primary",
           "Slot": "Primary",
-          "DisplayName": "Guard / damage soak taunt",
+          "DisplayName": "Web storm",
           "DamageType": "Ability",
-          "BaseDamage": 25,
-          "CooldownSec": 8,
-          "RangeUU": 0,
+          "BaseDamage": 22,
+          "CooldownSec": 9,
+          "RangeUU": 620,
           "EffectTags": [
-            "Melee",
-            "AOE"
+            "Ranged",
+            "AOE",
+            "Root",
+            "Slow"
           ]
         },
         {
           "AbilityId": "Spiders_Boss.Secondary",
           "Slot": "Secondary",
-          "DisplayName": "Shield slam",
+          "DisplayName": "Leg rend",
           "DamageType": "Ability",
-          "BaseDamage": 20,
+          "BaseDamage": 24,
           "CooldownSec": 12,
-          "RangeUU": 0,
+          "RangeUU": 400,
           "EffectTags": [
             "Melee",
-            "AOE"
+            "AOE",
+            "Dash"
           ]
         }
       ],
       "DefenderAI": {
         "WorkerRole": "None",
-        "AggroStyle": "Chase",
-        "LeashRadiusUU": 1200,
-        "PreferredRange": "Melee",
-        "UsesParagonAnimSet": false
+        "AggroStyle": "Stationary",
+        "LeashRadiusUU": 300,
+        "PreferredRange": "Long",
+        "UsesParagonAnimSet": false,
+        "IntruderResponse": "Fight",
+        "HarassInvaders": false,
+        "ChaseInjuredTargetsOnly": true,
+        "InjuredTargetHpPct": 0.25
       },
       "StartingKnowledgeTags": []
     },
@@ -1535,47 +1607,64 @@
       "ArchetypeId": "Fighter",
       "FamilyId": "Undead",
       "Tier": "Minion",
-      "DisplayName": "Undead Minion",
+      "DisplayName": "Skeleton Soldier",
       "MeshRef": "/Game/Monsters/Undead/skeleton_v1",
-      "StatSource": "TierBaseline",
-      "ReferenceTier": "Fodder",
+      "StatSource": "HandTuned",
+      "ReferenceTier": "Standard",
       "Vitals": {
-        "MaxHealth": 32.4,
+        "MaxHealth": 50,
         "HealthRegenPerSec": 0,
-        "MoveSpeed": 280,
-        "BasicDamage": 4.4,
+        "MoveSpeed": 265,
+        "BasicDamage": 7,
         "AttackPeriod": 0.95,
-        "CleavePct": 0.15,
+        "CleavePct": 0.1,
         "BasicAffinity": "Physical",
-        "BasicDefense": 18,
-        "AbilityDefense": 14
+        "BasicDefense": 17,
+        "AbilityDefense": 15
       },
       "Ratings": {
         "BasicDamage": 5,
-        "AbilityDamage": 2,
-        "Durability": 5,
-        "Mobility": 4
+        "AbilityDamage": 3,
+        "Durability": 6,
+        "Mobility": 3,
+        "Intelligence": 1,
+        "Wisdom": 1
       },
       "Abilities": [
         {
           "AbilityId": "Undead_Minion.Primary",
           "Slot": "Primary",
-          "DisplayName": "Combo strike",
+          "DisplayName": "Bone slash",
           "DamageType": "Ability",
-          "BaseDamage": 7,
+          "BaseDamage": 12,
           "CooldownSec": 8,
           "RangeUU": 0,
           "EffectTags": [
             "Melee"
+          ]
+        },
+        {
+          "AbilityId": "Undead_Minion.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Rattle fear",
+          "DamageType": "Ability",
+          "BaseDamage": 6,
+          "CooldownSec": 12,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "Slow"
           ]
         }
       ],
       "DefenderAI": {
         "WorkerRole": "None",
         "AggroStyle": "Chase",
-        "LeashRadiusUU": 900,
+        "LeashRadiusUU": 1000,
         "PreferredRange": "Melee",
-        "UsesParagonAnimSet": false
+        "UsesParagonAnimSet": false,
+        "IntruderResponse": "Fight",
+        "HarassInvaders": true
       },
       "StartingKnowledgeTags": []
     },
@@ -1585,125 +1674,136 @@
       "ArchetypeId": "Bruiser",
       "FamilyId": "Undead",
       "Tier": "Elite",
-      "DisplayName": "Undead Elite",
+      "DisplayName": "Mummy",
       "MeshRef": "/Game/Monsters/Undead/mummy_v1",
-      "StatSource": "TierBaseline",
+      "StatSource": "HandTuned",
       "ReferenceTier": "Standard",
       "Vitals": {
-        "MaxHealth": 72.0,
+        "MaxHealth": 62,
         "HealthRegenPerSec": 0,
-        "MoveSpeed": 280,
-        "BasicDamage": 11.0,
+        "MoveSpeed": 258,
+        "BasicDamage": 10,
         "AttackPeriod": 0.95,
-        "CleavePct": 0.15,
+        "CleavePct": 0.14,
         "BasicAffinity": "Physical",
-        "BasicDefense": 18,
-        "AbilityDefense": 14
+        "BasicDefense": 15,
+        "AbilityDefense": 13
       },
       "Ratings": {
-        "BasicDamage": 5,
-        "AbilityDamage": 2,
+        "BasicDamage": 7,
+        "AbilityDamage": 5,
         "Durability": 5,
-        "Mobility": 4
+        "Mobility": 3,
+        "Intelligence": 1,
+        "Wisdom": 1
       },
       "Abilities": [
         {
           "AbilityId": "Undead_Elite.Primary",
           "Slot": "Primary",
-          "DisplayName": "Heavy cleave",
+          "DisplayName": "Shroud strike",
           "DamageType": "Ability",
-          "BaseDamage": 18,
+          "BaseDamage": 19,
           "CooldownSec": 8,
           "RangeUU": 0,
           "EffectTags": [
             "Melee",
-            "Cleave"
+            "Slow"
           ]
         },
         {
           "AbilityId": "Undead_Elite.Secondary",
           "Slot": "Secondary",
-          "DisplayName": "Bull rush",
+          "DisplayName": "Grave choke",
           "DamageType": "Ability",
-          "BaseDamage": 14,
-          "CooldownSec": 12,
+          "BaseDamage": 16,
+          "CooldownSec": 11,
           "RangeUU": 0,
           "EffectTags": [
             "Melee",
-            "Dash"
+            "Root",
+            "Slow"
           ]
         }
       ],
       "DefenderAI": {
         "WorkerRole": "None",
-        "AggroStyle": "Chase",
-        "LeashRadiusUU": 900,
+        "AggroStyle": "Guard",
+        "LeashRadiusUU": 500,
         "PreferredRange": "Melee",
-        "UsesParagonAnimSet": false
+        "UsesParagonAnimSet": false,
+        "IntruderResponse": "Fight",
+        "HarassInvaders": false
       },
       "StartingKnowledgeTags": []
     },
     {
       "SheetId": "Undead.Boss",
       "EntityKind": "Defender",
-      "ArchetypeId": "Tank",
+      "ArchetypeId": "Mage",
       "FamilyId": "Undead",
       "Tier": "Boss",
-      "DisplayName": "Undead Boss",
+      "DisplayName": "Litch",
       "MeshRef": "/Game/Monsters/Undead/litch_v1",
-      "StatSource": "TierBaseline",
+      "StatSource": "HandTuned",
       "ReferenceTier": "Veteran",
       "Vitals": {
-        "MaxHealth": 216.0,
-        "HealthRegenPerSec": 0,
-        "MoveSpeed": 280,
-        "BasicDamage": 15.4,
+        "MaxHealth": 108,
+        "HealthRegenPerSec": 0.35,
+        "MoveSpeed": 270,
+        "BasicDamage": 5,
         "AttackPeriod": 0.95,
-        "CleavePct": 0.15,
+        "CleavePct": 0.05,
         "BasicAffinity": "Physical",
-        "BasicDefense": 18,
-        "AbilityDefense": 14
+        "BasicDefense": 16,
+        "AbilityDefense": 21
       },
       "Ratings": {
-        "BasicDamage": 7,
-        "AbilityDamage": 2,
-        "Durability": 8,
-        "Mobility": 4
+        "BasicDamage": 3,
+        "AbilityDamage": 9,
+        "Durability": 7,
+        "Mobility": 4,
+        "Intelligence": 9,
+        "Wisdom": 9
       },
       "Abilities": [
         {
           "AbilityId": "Undead_Boss.Primary",
           "Slot": "Primary",
-          "DisplayName": "Guard / damage soak taunt",
+          "DisplayName": "Soul drain",
           "DamageType": "Ability",
-          "BaseDamage": 25,
-          "CooldownSec": 8,
-          "RangeUU": 0,
+          "BaseDamage": 18,
+          "CooldownSec": 9,
+          "RangeUU": 520,
           "EffectTags": [
-            "Melee",
-            "AOE"
+            "Ranged",
+            "Heal",
+            "Slow"
           ]
         },
         {
           "AbilityId": "Undead_Boss.Secondary",
           "Slot": "Secondary",
-          "DisplayName": "Shield slam",
+          "DisplayName": "Death coil",
           "DamageType": "Ability",
-          "BaseDamage": 20,
+          "BaseDamage": 22,
           "CooldownSec": 12,
-          "RangeUU": 0,
+          "RangeUU": 480,
           "EffectTags": [
-            "Melee",
-            "AOE"
+            "Ranged",
+            "AOE",
+            "Curse"
           ]
         }
       ],
       "DefenderAI": {
         "WorkerRole": "None",
-        "AggroStyle": "Chase",
-        "LeashRadiusUU": 1200,
-        "PreferredRange": "Melee",
-        "UsesParagonAnimSet": false
+        "AggroStyle": "Stationary",
+        "LeashRadiusUU": 300,
+        "PreferredRange": "Long",
+        "UsesParagonAnimSet": false,
+        "IntruderResponse": "Fight",
+        "HarassInvaders": false
       },
       "StartingKnowledgeTags": []
     },
@@ -1847,85 +1947,37 @@
       "ArchetypeId": "Fighter",
       "FamilyId": "Mutants",
       "Tier": "Minion",
-      "DisplayName": "Mutants Minion",
+      "DisplayName": "Mutant Minion",
       "MeshRef": "/Game/Monsters/Mutants/Minion/Mutant_Minion_Unreal",
-      "StatSource": "TierBaseline",
-      "ReferenceTier": "Fodder",
+      "StatSource": "HandTuned",
+      "ReferenceTier": "Standard",
       "Vitals": {
-        "MaxHealth": 32.4,
+        "MaxHealth": 54,
         "HealthRegenPerSec": 0,
-        "MoveSpeed": 280,
-        "BasicDamage": 4.4,
+        "MoveSpeed": 292,
+        "BasicDamage": 9,
         "AttackPeriod": 0.95,
-        "CleavePct": 0.15,
+        "CleavePct": 0.14,
         "BasicAffinity": "Physical",
-        "BasicDefense": 18,
-        "AbilityDefense": 14
+        "BasicDefense": 12,
+        "AbilityDefense": 10
       },
       "Ratings": {
-        "BasicDamage": 5,
-        "AbilityDamage": 2,
-        "Durability": 5,
-        "Mobility": 4
+        "BasicDamage": 7,
+        "AbilityDamage": 4,
+        "Durability": 4,
+        "Mobility": 6,
+        "Intelligence": 1,
+        "Wisdom": 1
       },
       "Abilities": [
         {
           "AbilityId": "Mutants_Minion.Primary",
           "Slot": "Primary",
-          "DisplayName": "Combo strike",
+          "DisplayName": "Rending claw",
           "DamageType": "Ability",
-          "BaseDamage": 7,
-          "CooldownSec": 8,
-          "RangeUU": 0,
-          "EffectTags": [
-            "Melee"
-          ]
-        }
-      ],
-      "DefenderAI": {
-        "WorkerRole": "None",
-        "AggroStyle": "Chase",
-        "LeashRadiusUU": 900,
-        "PreferredRange": "Melee",
-        "UsesParagonAnimSet": false
-      },
-      "StartingKnowledgeTags": []
-    },
-    {
-      "SheetId": "Mutants.Elite",
-      "EntityKind": "Defender",
-      "ArchetypeId": "Bruiser",
-      "FamilyId": "Mutants",
-      "Tier": "Elite",
-      "DisplayName": "Mutants Elite",
-      "MeshRef": "/Game/Monsters/Mutants/mutant_worker_v2",
-      "StatSource": "TierBaseline",
-      "ReferenceTier": "Standard",
-      "Vitals": {
-        "MaxHealth": 72.0,
-        "HealthRegenPerSec": 0,
-        "MoveSpeed": 280,
-        "BasicDamage": 11.0,
-        "AttackPeriod": 0.95,
-        "CleavePct": 0.15,
-        "BasicAffinity": "Physical",
-        "BasicDefense": 18,
-        "AbilityDefense": 14
-      },
-      "Ratings": {
-        "BasicDamage": 5,
-        "AbilityDamage": 2,
-        "Durability": 5,
-        "Mobility": 4
-      },
-      "Abilities": [
-        {
-          "AbilityId": "Mutants_Elite.Primary",
-          "Slot": "Primary",
-          "DisplayName": "Heavy cleave",
-          "DamageType": "Ability",
-          "BaseDamage": 18,
-          "CooldownSec": 8,
+          "BaseDamage": 16,
+          "CooldownSec": 7,
           "RangeUU": 0,
           "EffectTags": [
             "Melee",
@@ -1933,13 +1985,83 @@
           ]
         },
         {
+          "AbilityId": "Mutants_Minion.Secondary",
+          "Slot": "Secondary",
+          "DisplayName": "Frenzy howl",
+          "DamageType": "Ability",
+          "BaseDamage": 6,
+          "CooldownSec": 13,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "BuffAura",
+            "AOE"
+          ]
+        }
+      ],
+      "DefenderAI": {
+        "WorkerRole": "None",
+        "AggroStyle": "Chase",
+        "LeashRadiusUU": 1150,
+        "PreferredRange": "Melee",
+        "UsesParagonAnimSet": false,
+        "IntruderResponse": "Fight",
+        "HarassInvaders": true
+      },
+      "StartingKnowledgeTags": []
+    },
+    {
+      "SheetId": "Mutants.Elite",
+      "EntityKind": "Defender",
+      "ArchetypeId": "Fighter",
+      "FamilyId": "Mutants",
+      "Tier": "Elite",
+      "DisplayName": "Mutant Elite",
+      "MeshRef": "/Game/Monsters/Mutants/mutant_worker_v2",
+      "StatSource": "HandTuned",
+      "ReferenceTier": "Standard",
+      "Vitals": {
+        "MaxHealth": 76,
+        "HealthRegenPerSec": 0,
+        "MoveSpeed": 288,
+        "BasicDamage": 11,
+        "AttackPeriod": 0.95,
+        "CleavePct": 0.15,
+        "BasicAffinity": "Physical",
+        "BasicDefense": 14,
+        "AbilityDefense": 12
+      },
+      "Ratings": {
+        "BasicDamage": 7,
+        "AbilityDamage": 5,
+        "Durability": 5,
+        "Mobility": 6,
+        "Intelligence": 1,
+        "Wisdom": 2
+      },
+      "Abilities": [
+        {
+          "AbilityId": "Mutants_Elite.Primary",
+          "Slot": "Primary",
+          "DisplayName": "Maw slam",
+          "DamageType": "Ability",
+          "BaseDamage": 20,
+          "CooldownSec": 8,
+          "RangeUU": 0,
+          "EffectTags": [
+            "Melee",
+            "AOE",
+            "Cleave"
+          ]
+        },
+        {
           "AbilityId": "Mutants_Elite.Secondary",
           "Slot": "Secondary",
-          "DisplayName": "Bull rush",
+          "DisplayName": "Lurching charge",
           "DamageType": "Ability",
-          "BaseDamage": 14,
-          "CooldownSec": 12,
-          "RangeUU": 0,
+          "BaseDamage": 17,
+          "CooldownSec": 11,
+          "RangeUU": 340,
           "EffectTags": [
             "Melee",
             "Dash"
@@ -1949,9 +2071,12 @@
       "DefenderAI": {
         "WorkerRole": "None",
         "AggroStyle": "Chase",
-        "LeashRadiusUU": 900,
+        "LeashRadiusUU": 1000,
         "PreferredRange": "Melee",
-        "UsesParagonAnimSet": false
+        "UsesParagonAnimSet": false,
+        "IntruderResponse": "Fight",
+        "HarassInvaders": true,
+        "PackTactics": true
       },
       "StartingKnowledgeTags": []
     },
@@ -1961,61 +2086,68 @@
       "ArchetypeId": "Tank",
       "FamilyId": "Mutants",
       "Tier": "Boss",
-      "DisplayName": "Mutants Boss",
+      "DisplayName": "Maw Titan",
       "MeshRef": "/Game/Monsters/Mutants/Boss/Mutant_Boss",
-      "StatSource": "TierBaseline",
+      "StatSource": "HandTuned",
       "ReferenceTier": "Veteran",
       "Vitals": {
-        "MaxHealth": 216.0,
+        "MaxHealth": 158,
         "HealthRegenPerSec": 0,
-        "MoveSpeed": 280,
-        "BasicDamage": 15.4,
+        "MoveSpeed": 262,
+        "BasicDamage": 11,
         "AttackPeriod": 0.95,
-        "CleavePct": 0.15,
+        "CleavePct": 0.12,
         "BasicAffinity": "Physical",
-        "BasicDefense": 18,
-        "AbilityDefense": 14
+        "BasicDefense": 21,
+        "AbilityDefense": 18
       },
       "Ratings": {
-        "BasicDamage": 7,
-        "AbilityDamage": 2,
-        "Durability": 8,
-        "Mobility": 4
+        "BasicDamage": 6,
+        "AbilityDamage": 4,
+        "Durability": 9,
+        "Mobility": 3,
+        "Intelligence": 2,
+        "Wisdom": 4
       },
       "Abilities": [
         {
           "AbilityId": "Mutants_Boss.Primary",
           "Slot": "Primary",
-          "DisplayName": "Guard / damage soak taunt",
+          "DisplayName": "Devour",
           "DamageType": "Ability",
-          "BaseDamage": 25,
-          "CooldownSec": 8,
+          "BaseDamage": 24,
+          "CooldownSec": 10,
           "RangeUU": 0,
           "EffectTags": [
             "Melee",
-            "AOE"
+            "AOE",
+            "Execute"
           ]
         },
         {
           "AbilityId": "Mutants_Boss.Secondary",
           "Slot": "Secondary",
-          "DisplayName": "Shield slam",
+          "DisplayName": "Ground pound",
           "DamageType": "Ability",
-          "BaseDamage": 20,
-          "CooldownSec": 12,
+          "BaseDamage": 28,
+          "CooldownSec": 13,
           "RangeUU": 0,
           "EffectTags": [
             "Melee",
-            "AOE"
+            "AOE",
+            "Slow"
           ]
         }
       ],
       "DefenderAI": {
         "WorkerRole": "None",
-        "AggroStyle": "Chase",
-        "LeashRadiusUU": 1200,
+        "AggroStyle": "Stationary",
+        "LeashRadiusUU": 300,
         "PreferredRange": "Melee",
-        "UsesParagonAnimSet": false
+        "UsesParagonAnimSet": false,
+        "IntruderResponse": "Fight",
+        "HarassInvaders": false,
+        "PackTactics": true
       },
       "StartingKnowledgeTags": []
     },
